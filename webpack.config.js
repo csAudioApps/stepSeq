@@ -1,16 +1,37 @@
+
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require('path');
 
 module.exports = {
   mode: process.env.NODE_ENV,  
+  entry: './src/client/index.jsx',
 
   // Enable sourcemaps for debugging webpack's output.
   devtool: "source-map",
-  entry: './src/client/index.tsx',
 
-  resolve: {
-      // Add '.ts' and '.tsx' as resolvable extensions.
-      extensions: [".ts", ".tsx"]
+  // resolve: {
+  // //     // Add '.ts' and '.tsx' as resolvable extensions.
+  //     extensions: [".ts", ".tsx"]
+  // },
+  
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: '/',
+    filename: 'bundle.js',
+  },
+
+  devServer: {
+    host: 'localhost',
+    port: 8080,
+    // match the output path
+    contentBase: path.resolve(__dirname, 'dist'),
+    // enable HMR on the devServer
+    hot: true,
+    // match the output 'publicPath'
+    publicPath: '/',
+    // fallback to root for other urls
+    historyApiFallback: true,
   },
 
   module: {
@@ -24,11 +45,26 @@ module.exports = {
             presets: [
               "@babel/preset-env",
               "@babel/preset-react",
-              "@babel/typescript",
+              "@babel/preset-typescript",
             ],
           },
         }
       },
+      // {
+      //   test: /\.ts(x?)$/,
+      //   exclude: /node_modules/,
+      //   use: {
+      //     loader: "ts-loader"
+      //   }
+      // },
+      // {
+      //   test: /.(js|jsx)$/,
+      //   exclude: /node_modules/,
+      //   use: {
+      //     loader: 'babel-loader',
+      //   },
+      // },
+
       // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
       {
           enforce: "pre",
