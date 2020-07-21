@@ -81,4 +81,8 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({}),
   ],
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 };
