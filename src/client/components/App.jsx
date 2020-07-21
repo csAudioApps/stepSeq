@@ -1,9 +1,8 @@
-import * as React from 'react';
+import React from "react";
 
 // : React.FC
-
 const App = (props) => {
-  return(<div>Piss off, I'm hungry</div>);
+  return(<div>Piss off, I'm full BRO</div>);
 }
 
 export default App;
