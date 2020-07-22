@@ -1,23 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import io from 'socket.io-client';
 import MainContainer from '../containers/MainContainer';
 
 const App = (props) => {
   // let socket = io('http://localhost:3000');
-  let socket;
+  const socket = useRef(null);
   useEffect(() => {
-    socket = io('http://localhost:3000');
-    socket.on('sendMessage', (msg) => {
+    socket.current = io('http://localhost:3000');
+    socket.current.on('sendMessage', (msg) => {
       console.log(msg);
     });
-  });
+    return () => socket.current.disconnect();
+  }, []);
 
   const [inputText, setInputText] = useState('');
   console.log('react is rendering');
   const send = () => {
-    console.log(socket);
+    console.log(socket.current);
     console.log('sending text ', inputText);
-    socket.emit('sendMessage', inputText);
+    socket.current.emit('sendMessage', inputText);
   };
 
   return (
