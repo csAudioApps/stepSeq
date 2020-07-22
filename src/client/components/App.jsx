@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
+import MainContainer from '../containers/MainContainer';
 
 const App = (props) => {
   let socket = io('http://localhost:3000');
@@ -15,6 +16,7 @@ const App = (props) => {
   };
   return (
     <div>
+      <MainContainer />
       Piss off, I'm full
       <input onChange={(e) => setInputText(e.target.value)} type="text" />
       <button onClick={() => send()}>send</button>
