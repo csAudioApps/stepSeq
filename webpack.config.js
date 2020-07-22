@@ -7,13 +7,8 @@ module.exports = {
   entry: './src/client/index.js',
 
   // Enable sourcemaps for debugging webpack's output.
-  devtool: 'source-map',
-
-  // resolve: {
-  // //     // Add '.ts' and '.tsx' as resolvable extensions.
-  //     extensions: [".ts", ".tsx"]
-  // },
-
+  devtool: "source-map",
+  
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: './',
@@ -42,40 +37,29 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: [
-              '@babel/preset-env',
-              '@babel/preset-react',
-              '@babel/preset-typescript',
+              "@babel/preset-env",
+              "@babel/preset-react",
+              // "@babel/preset-typescript",
             ],
           },
         },
       },
-      // {
-      //   test: /\.ts(x?)$/,
-      //   exclude: /node_modules/,
-      //   use: {
-      //     loader: "ts-loader"
-      //   }
-      // },
-      // {
-      //   test: /.(js|jsx)$/,
-      //   exclude: /node_modules/,
-      //   use: {
-      //     loader: 'babel-loader',
-      //   },
-      // },
-
-      // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-      {
-        enforce: 'pre',
-        test: /\.js$/,
-        loader: 'source-map-loader',
-      },
-
       {
         test: /\.s[ac]ss$/i,
         use: ['style-loader', 'css-loader', 'sass-loader'],
       },
-    ],
+      {
+        test: /\.(mp3|wav)$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[contenthash].[ext]',
+            outputPath: 'assets/audio/',
+            publicPath: 'assets/audio/'
+          }
+        }
+      },
+    ]
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.jsx'],
