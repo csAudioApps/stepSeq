@@ -1,20 +1,19 @@
-
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
 module.exports = {
-  mode: process.env.NODE_ENV,  
+  mode: process.env.NODE_ENV,
   entry: './src/client/index.jsx',
 
   // Enable sourcemaps for debugging webpack's output.
-  devtool: "source-map",
+  devtool: 'source-map',
 
   // resolve: {
   // //     // Add '.ts' and '.tsx' as resolvable extensions.
   //     extensions: [".ts", ".tsx"]
   // },
-  
+
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: './',
@@ -38,17 +37,17 @@ module.exports = {
     rules: [
       {
         test: /\.(ts|js)x?$/,
-        include: [path.resolve(__dirname, "./")],
+        include: [path.resolve(__dirname, './src')],
         use: {
-          loader: "babel-loader",
+          loader: 'babel-loader',
           options: {
             presets: [
-              "@babel/preset-env",
-              "@babel/preset-react",
-              "@babel/preset-typescript",
+              '@babel/preset-env',
+              '@babel/preset-react',
+              '@babel/preset-typescript',
             ],
           },
-        }
+        },
       },
       // {
       //   test: /\.ts(x?)$/,
@@ -67,22 +66,16 @@ module.exports = {
 
       // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
       {
-          enforce: "pre",
-          test: /\.js$/,
-          loader: "source-map-loader"
+        enforce: 'pre',
+        test: /\.js$/,
+        loader: 'source-map-loader',
       },
 
       {
         test: /\.s[ac]ss$/i,
-        use: [ 'style-loader', 'css-loader','sass-loader' ],
+        use: ['style-loader', 'css-loader', 'sass-loader'],
       },
-    ]
+    ],
   },
-  plugins: [
-    new HtmlWebpackPlugin({}),
-  ],
-<<<<<<< HEAD
-=======
-
->>>>>>> master
+  plugins: [new HtmlWebpackPlugin({})],
 };

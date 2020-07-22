@@ -1,9 +1,19 @@
-const express = require("express");
-let app = express();
 const path = require('path');
+const express = require('express');
+const app = express();
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
 
-app.get('/', (req, res) => res.send("HELLO FROM EXPRESS"));
+app.use(express.static(path.resolve(__dirname, '/')));
 
-// app.use(express.static('public'))
+io.on('connection', (socket) => {
+  console.log('a user connected');
+});
 
-app.listen(3000,  () => console.log("Server listening on port 3000"));
+io.on('sendMessage', (socket) => {
+  console.log('received sendMessage');
+});
+
+http.listen(3000, () => {
+  console.log('listening on *:3000');
+});
