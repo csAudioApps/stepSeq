@@ -23,6 +23,7 @@
     "express": "^4.17.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "socket.io": "^2.3.0",
     "regenerator-runtime": "^0.13.6",
     "standardized-audio-context": "^24.1.22",
     "tone": "^14.7.32"

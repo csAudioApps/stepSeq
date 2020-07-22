@@ -9,7 +9,7 @@ html,
 body {
   color: #989898;
   margin: 0;
-  background-color: #2B2B2B;
+  background-color: #2b2b2b;
   height: 100%;
 }
 
@@ -22,13 +22,13 @@ body {
 }
 
 .HeaderContainer {
-  border :2px solid gray;
+  border: 2px solid gray;
   width: 100%;
   text-align: center;
 }
 
 .Footer {
-  border :2px solid gray;
+  border: 2px solid gray;
   width: 100%;
   text-align: center;
 }
@@ -54,7 +54,7 @@ body {
     .NavBar {
       height: 30px;
       padding: 10px;
-      border :2px solid gray;
+      border: 2px solid gray;
     }
 
     .row {
@@ -65,20 +65,20 @@ body {
         display: flex;
         flex-direction: column;
         .InstrumentColumn {
-          border :2px solid gray;
+          border: 2px solid gray;
           padding: 10px;
           min-width: 200px;
           flex-grow: 2;
         }
         .Knobs {
-          border :2px solid gray;
+          border: 2px solid gray;
           padding: 10px;
           flex-grow: 1;
         }
       }
 
       .Board {
-        border :2px solid gray;
+        border: 2px solid gray;
         flex-grow: 1;
         padding: 10px;
       }

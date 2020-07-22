@@ -19,7 +19,7 @@ const drumTrack = {
 
 const bassTrack = { 
 name: "Bass", soundPreset: "ClassicBassSynth", mono: true, legato: true, grid: 
-  [ [6], [3], [4], [], [0], [], [], [], [], [2], [], [0], [], [0], [1], [2] ] 
+  [ [5], [3], [4], [], [0], [], [], [], [], [2], [], [0], [], [0], [1], [2] ] 
 };
 // ***************************
 

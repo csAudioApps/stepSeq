@@ -1,10 +1,9 @@
-
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
 module.exports = {
-  mode: process.env.NODE_ENV,  
+  mode: process.env.NODE_ENV,
   entry: './src/client/index.js',
 
   // Enable sourcemaps for debugging webpack's output.
@@ -33,9 +32,9 @@ module.exports = {
     rules: [
       {
         test: /\.(ts|js)x?$/,
-        include: [path.resolve(__dirname, "./src")],
+        include: [path.resolve(__dirname, './src')],
         use: {
-          loader: "babel-loader",
+          loader: 'babel-loader',
           options: {
             presets: [
               "@babel/preset-env",
@@ -43,11 +42,11 @@ module.exports = {
               // "@babel/preset-typescript",
             ],
           },
-        }
+        },
       },
       {
         test: /\.s[ac]ss$/i,
-        use: [ 'style-loader', 'css-loader','sass-loader' ],
+        use: ['style-loader', 'css-loader', 'sass-loader'],
       },
       {
         test: /\.(mp3|wav)$/,
@@ -65,7 +64,5 @@ module.exports = {
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.jsx'],
   },
-  plugins: [
-    new HtmlWebpackPlugin({}),
-  ],
+  plugins: [new HtmlWebpackPlugin({})],
 };
