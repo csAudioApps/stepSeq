@@ -22,7 +22,10 @@
   "dependencies": {
     "express": "^4.17.1",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "regenerator-runtime": "^0.13.6",
+    "standardized-audio-context": "^24.1.22",
+    "tone": "^14.7.32"
   },
   "devDependencies": {
     "@babel/core": "^7.10.5",
@@ -42,6 +45,7 @@
     "nodemon": "^2.0.4",
     "sass-loader": "^9.0.2",
     "source-map-loader": "^1.0.1",
+    "style-loader": "^1.2.1",
     "ts-loader": "^8.0.1",
     "ts-node": "^8.10.2",
     "tslint": "^6.1.2",
