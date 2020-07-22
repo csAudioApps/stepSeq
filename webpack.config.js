@@ -46,17 +46,20 @@ module.exports = {
           },
         }
       },
-
-      // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-      // {
-      //     enforce: "pre",
-      //     test: /\.js$/,
-      //     loader: "source-map-loader"
-      // },
-
       {
         test: /\.s[ac]ss$/i,
         use: [ 'style-loader', 'css-loader','sass-loader' ],
+      },
+      {
+        test: /\.(mp3|wav)$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[contenthash].[ext]',
+            outputPath: 'assets/audio/',
+            publicPath: 'assets/audio/'
+          }
+        }
       },
     ]
   },
