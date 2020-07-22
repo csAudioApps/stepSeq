@@ -5,7 +5,7 @@ const path = require('path');
 
 module.exports = {
   mode: process.env.NODE_ENV,  
-  entry: './src/client/index.jsx',
+  entry: './src/client/index.js',
 
   // Enable sourcemaps for debugging webpack's output.
   devtool: "source-map",
@@ -34,7 +34,6 @@ module.exports = {
       {
         test: /\.(ts|js)x?$/,
         include: [path.resolve(__dirname, "./src")],
-
         use: {
           loader: "babel-loader",
           options: {
@@ -64,7 +63,7 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx']
+    extensions: ['.tsx', '.ts', '.js', '.jsx'],
   },
   plugins: [
     new HtmlWebpackPlugin({}),
