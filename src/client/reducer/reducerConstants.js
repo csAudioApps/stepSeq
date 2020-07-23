@@ -1,0 +1,3 @@
+export const TOGGLE_GRID_BUTTON = 'TOGGLE_GRID_BUTTON';
+
+export const UPDATE_STATUS = 'UPDATE_STATUS';

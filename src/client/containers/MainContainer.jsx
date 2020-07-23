@@ -6,7 +6,9 @@ import Footer from '../components/Footer';
 import * as Tone from "tone";
 import {updateNoteArray, playPause} from '../helpers/audioHelpers.js';
 import { initialState } from '../constants/initBoardState'
+import { reducer } from '../reducer/reducer';
 // import testSample from "../../server/audio/wamb_mbasefree_006.wav"
+import { TOGGLE_GRID_BUTTON } from '../reducer/reducerConstants'
 
 // ***** PULL FROM STATE *****
 const seqLen = 16;
@@ -22,62 +24,6 @@ const bassTrack = {
 name: "Bass", soundPreset: "ClassicBassSynth", mono: true, legato: true, grid: 
   [ [5], [3], [4], [], [0], [], [], [], [], [2], [], [0], [], [0], [1], [2] ] 
 };
-// ***************************
-const TOGGLE_GRID_BUTTON = 'TOGGLE_GRID_BUTTON';
-const UPDATE_STATUS = 'UPDATE_STATUS';
-
-// dispatch({ type: TOGGLE_GRID_BUTTON, payload: { 
-//   x: 4,
-//   y: 3
-// }})
-
-const reducer = (state, action) => {
-  console.log('reducing, state: ', state)
-  console.log('reducing, action: ', action)
-  switch (action.type) {
-    case TOGGLE_GRID_BUTTON: 
-      // make copy of grid at user's selected instrument
-      const { instrumentSelected } = state.users[state.local.localUserId];
-      const newGrid = [...state.instruments[instrumentSelected].grid];
-
-
-      // if value is included in grid, remove, else add it and sort array
-      const currentColumn = newGrid[action.payload.x]
-      const newColumn = currentColumn.includes(action.payload.y)?
-        currentColumn.filter(num => num !== action.payload.y) :
-        currentColumn.concat(action.payload.y).sort((a,b) => a-b);
-      
-      // set column into new grid
-      newGrid[action.payload.x] = newColumn;
-      
-      // set new grid into instrument list
-      const newInstruments = [...state.instruments];
-      newInstruments[instrumentSelected].grid = newGrid;
-
-      // return state with new intrument list
-      return {
-        ...state,
-        instruments: newInstruments
-      };
-
-    // case UPDATE_STATUS:
-    //   return {
-    //     ...state,
-    //     status: {
-    //       ...state.status,
-          
-    //     }
-    //   }
-
-    // toggle playback
-      // trigger helper pause, return updated state
-
-    
-    default:
-      throw new Error('Error: invalid reducer action type')
-  }
-}
-
 const MainContainer = () => {
   const [state, dispatch] = useReducer(reducer, initialState)
 
@@ -120,7 +66,7 @@ const MainContainer = () => {
         type: TOGGLE_GRID_BUTTON, 
         payload: { x: 5, y: 3}
         })}>
-        DISPATCH SICK PAYLOAD
+        DISPATCH SICK PAYLOAD (grid button 5,3)
       </button>
       <HeaderContainer />
       <VisualContainer />
