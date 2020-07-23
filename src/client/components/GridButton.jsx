@@ -14,10 +14,14 @@ const GridButton = ({x, y, curStepColNum, toggleButtonState, gridState}) => {
   })};
 
   if(curStepColNum === x) {
-    isBtnOn ? className = 'grid-btn-on-and-cur-step' : className = 'grid-btn-off-and-cur-step';
+    isBtnOn 
+      ? className = 'grid-btn grid-btn-on-and-cur-step' 
+      : className = 'grid-btn grid-btn-off-and-cur-step';
   }
   else {
-    isBtnOn ? className = 'grid-btn-on' : className = 'grid-btn-off';
+    isBtnOn 
+      ? className = 'grid-btn grid-btn-on' 
+      : className = 'grid-btn grid-btn-off';
   }
 
   return (
