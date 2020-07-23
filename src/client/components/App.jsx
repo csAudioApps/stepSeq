@@ -6,6 +6,7 @@ const App = (props) => {
   // let socket = io('http://localhost:3000');
   const socket = useRef(null);
   useEffect(() => {
+    console.log('**** use effect- connecting socket ****')
     socket.current = io('http://localhost:3000');
     socket.current.on('sendMessage', (msg) => {
       console.log(msg);
@@ -14,7 +15,6 @@ const App = (props) => {
   }, []);
 
   const [inputText, setInputText] = useState('');
-  console.log('react is rendering');
   const send = () => {
     console.log(socket.current);
     console.log('sending text ', inputText);

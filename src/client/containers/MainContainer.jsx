@@ -10,6 +10,10 @@ import { reducer } from '../reducer/reducer';
 // import testSample from "../../server/audio/wamb_mbasefree_006.wav"
 import * as reducerConstants from '../reducer/reducerConstants'
 
+import { initialState2 } from '../constants/initBoardState'
+import { initialState3 } from '../constants/initBoardState'
+
+
 // ***** PULL FROM STATE *****
 const seqLen = 16;
 Tone.Transport.bpm.value = 180;
@@ -74,6 +78,35 @@ const MainContainer = () => {
         })}>
         SICK PLAY/PAUSE BUTTON
       </button>
+      <button onClick={() => dispatch({
+        type: reducerConstants.TOGGLE_IS_PLAYING, 
+        payload: initialState2
+        })}>
+        SICK SET STATE2 BUTTON
+      </button>
+      <button onClick={() => dispatch({
+        type: reducerConstants.TOGGLE_IS_PLAYING, 
+        payload: initialState3
+        })}>
+        SICK SET STATE3 BUTTON
+      </button>
+      <button onClick={() => dispatch({
+        type: reducerConstants.ADD_USER, 
+        payload: {'aaa111': { userName: 'tom', instrumentSelected: 0, color: 'red'}},
+
+        })}>
+        SICK NEW USER BUTTON
+      </button>
+      <button onClick={() => dispatch({
+        type: reducerConstants.REMOVE_USER, 
+        payload: 'aaa111',
+
+        })}>
+        SICK REMOVE USER BUTTON
+      </button>
+
+
+
       <HeaderContainer />
       <VisualContainer />
       <Footer />

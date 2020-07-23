@@ -7,6 +7,34 @@ export const reducer = (state, action) => {
   console.log('reducing, state: ', state);
   console.log('reducing, action: ', action);
   switch (action.type) {
+    // payload = state object
+    case reducerConstants.SET_STATE_FROM_SOCKET: 
+      return {...action.payload};
+
+    // payload = user object {string: {username, instrument...}}
+    case reducerConstants.ADD_USER:
+      return {
+        ...state,
+        users: {
+          ...state.users,
+          ...action.payload,
+        }
+      }
+
+    // payload = userId: string
+    case reducerConstants.REMOVE_USER:
+      const userID = action.payload;
+      const newUsers = {...state.users};
+      delete newUsers[userID];
+
+      return {
+        ...state,
+        users: newUsers
+      }
+  
+
+
+    // payoad: object with x and y coordinates of grid button: {x: number, y: number}
     case reducerConstants.TOGGLE_GRID_BUTTON:
       // make copy of grid at user's selected instrument
       const { instrumentSelected } = state.users[state.local.localUserId];
@@ -31,24 +59,25 @@ export const reducer = (state, action) => {
         instruments: newInstruments
       };
 
-    case reducerConstants.TOGGLE_IS_PLAYING:
-      return {
-        ...state,
-        status: {
-          ...state.status,
-          isPlaying: !state.status.isPlaying
+      // no payload
+      case reducerConstants.TOGGLE_IS_PLAYING:
+        return {
+          ...state,
+          status: {
+            ...state.status,
+            isPlaying: !state.status.isPlaying
+          }
         }
-      }
 
-    // case UPDATE_STATUS:
-    //   return {
-    //     ...state,
-    //     status: {
-    //       ...state.status,
-    //     }
-    //   }
-    // toggle playback
-    // trigger helper pause, return updated state
+      // case UPDATE_STATUS:
+      //   return {
+      //     ...state,
+      //     status: {
+      //       ...state.status,
+      //     }
+      //   }
+      // toggle playback
+      // trigger helper pause, return updated state
     default:
       throw new Error('Error: invalid reducer action type');
   }
