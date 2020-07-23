@@ -23,9 +23,8 @@ export const reducer = (state, action) => {
 
     // payload = userId: string
     case reducerConstants.REMOVE_USER:
-      const userID = action.payload;
       const newUsers = {...state.users};
-      delete newUsers[userID];
+      delete newUsers[action.payload];
 
       return {
         ...state,

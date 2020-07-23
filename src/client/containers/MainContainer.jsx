@@ -13,6 +13,9 @@ import * as reducerConstants from '../reducer/reducerConstants'
 import { initialState2 } from '../constants/initBoardState'
 import { initialState3 } from '../constants/initBoardState'
 
+import { socket } from '../helpers/socket'
+
+
 
 // ***** PULL FROM STATE *****
 const seqLen = 16;
@@ -29,6 +32,7 @@ name: "Bass", soundPreset: "ClassicBassSynth", mono: true, legato: true, grid:
   [ [5], [3], [4], [], [0], [], [], [], [], [2], [], [0], [], [0], [1], [2] ] 
 };
 const MainContainer = () => {
+  useEffect(() => (console.log('socket', socket)))
   const [state, dispatch] = useReducer(reducer, initialState)
 
   const [isLoaded, setLoaded] = useState(false);

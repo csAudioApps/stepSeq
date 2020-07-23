@@ -8,9 +8,9 @@ app.use(express.static(path.resolve(__dirname, '/')));
 
 io.on('connection', (socket) => {
   console.log('a user connected');
-  socket.on('sendMessage', (msg) => {
-    console.log(msg);
-    io.emit('sendMessage', msg);
+  socket.on('updateServer', (msg) => {
+    console.log(msg + 'updated server');
+    io.emit('updateClient', msg+ 'updating client');
   });
 });
 
