@@ -69,7 +69,10 @@ const MainContainer = () => {
       {/* <button disabled={!isLoaded} onClick={handleClick}>Trigger Sample</button> */}
       <div id="time"></div>
       <div id="seconds"></div>
-      <button onClick={playPause}>TOGGLE SICK BEATS</button>
+
+      {/* ***TEST BUTTONS*** */}
+      
+      {/* <button onClick={playPause}>TOGGLE SICK BEATS</button>
       <button onClick={() => dispatch({
         type: reducerConstants.TOGGLE_GRID_BUTTON, 
         payload: { x: 5, y: 3}
@@ -107,7 +110,7 @@ const MainContainer = () => {
 
         })}>
         SICK REMOVE USER BUTTON
-      </button>
+      </button> */}
 
 
 
