@@ -97,7 +97,7 @@ const MainContainer = () => {
       <button onClick={playPause}>TOGGLE SICK BEATS</button>
 
       {/* ***TEST BUTTONS*** */}
-      
+      {/* extra comment */}
       {/* 
       <button onClick={() => dispatch({
         type: reducerConstants.TOGGLE_GRID_BUTTON, 
