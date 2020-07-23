@@ -13,7 +13,10 @@ import * as reducerConstants from '../reducer/reducerConstants'
 import { initialState2 } from '../constants/initBoardState'
 import { initialState3 } from '../constants/initBoardState'
 
-import { socket } from '../helpers/socket'
+import { socket } from '../helpers/socket';
+
+import uuid from "uuid";
+
 
 
 
@@ -29,16 +32,47 @@ const drumTrack = {
 
 const bassTrack = { 
 name: "Bass", soundPreset: "ClassicBassSynth", mono: true, legato: true, grid: 
-  [ [5], [3], [4], [], [0], [], [], [], [], [2], [], [0], [], [0], [1], [2] ] 
+[ [5], [3], [4], [], [0], [], [], [], [], [2], [], [0], [], [0], [1], [2] ] 
 };
 const MainContainer = () => {
-  useEffect(() => (console.log('socket', socket)))
-  const [state, dispatch] = useReducer(reducer, initialState)
-
+  
+  const [state, dispatch] = useReducer(reducer, initialState);
+  
   const [isLoaded, setLoaded] = useState(false);
   const bassSynth = useRef(null);
   const drumSynth = useRef(null);
   // const sampler = useRef(null);
+  
+
+  // open socket connection
+  useEffect(() => {
+    // get initial state
+    console.log('socket: ', socket)
+    socket.emit('getInitialState');
+    // if we are first user, create state in the server
+    // socket.on('firstUser', () => {
+    //   console.log('first')
+    //   socket.emit('updateServerState', state, socket.id);
+    // })
+    // when we receive and updated state from server, update local state
+    // only update if update was sent fron another user
+    socket.on('updateClientState', (msg, senderId) => {
+      if (socket.id !== senderId){
+        console.log('***not equal****')
+        dispatch({type: reducerConstants.SET_STATE_FROM_SOCKET, payload: msg})
+      } else {
+        console.log('they are equal')
+      }
+    });
+
+    const id = uuid.v4();
+    dispatch({type: reducerConstants.ADD_USER, payload: {[id]: { userName: '', instrumentSelected: 0, color: 'red'}}})
+
+    
+    return () => socket.disconnect();
+  }, []);
+
+  
 
   useEffect(() => {
     // Bass Synth
@@ -47,14 +81,14 @@ const MainContainer = () => {
     const bassSynthSeq = new Tone.Sequence( (time, note) => {
       bassSynth.current.triggerAttackRelease(note, '16n', time);
     }, bassNoteArr).start(0);
-
+    
     // Drum Synth
     drumSynth.current = new Tone.MembraneSynth().toDestination();
     const drumNoteArr = ['A-1', null, null, 'G-1', 'A-1', null, null, 'C-1']
     const drumSynthSeq = new Tone.Sequence((time, note) => {
       drumSynth.current.triggerAttackRelease(note, '16n', time);
     }, drumNoteArr).start(0);
-  
+    
     // Sampler
     // sampler.current = new Tone.Sampler({testSample}, {
     //   onload: () => { setLoaded(true); }
@@ -72,7 +106,7 @@ const MainContainer = () => {
 
       {/* ***TEST BUTTONS*** */}
       
-      {/* <button onClick={playPause}>TOGGLE SICK BEATS</button>
+      <button onClick={playPause}>TOGGLE SICK BEATS</button>
       <button onClick={() => dispatch({
         type: reducerConstants.TOGGLE_GRID_BUTTON, 
         payload: { x: 5, y: 3}
@@ -110,7 +144,12 @@ const MainContainer = () => {
 
         })}>
         SICK REMOVE USER BUTTON
-      </button> */}
+      </button>
+      <button onClick={() => {
+        socket.emit('updateServerState', state)
+      }}>
+        SICK UPDATE SOCKET BUTTON
+      </button>
 
 
 

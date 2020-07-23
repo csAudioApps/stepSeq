@@ -1,4 +1,5 @@
 import * as reducerConstants from "./reducerConstants";
+import { socket } from '../helpers/socket'
 // dispatch({ type: TOGGLE_GRID_BUTTON, payload: { 
 //   x: 4,
 //   y: 3
@@ -6,20 +7,35 @@ import * as reducerConstants from "./reducerConstants";
 export const reducer = (state, action) => {
   console.log('reducing, state: ', state);
   console.log('reducing, action: ', action);
+  let newState;
   switch (action.type) {
+
+    // 
+    case reducerConstants.SET_NEW_USER:
+      return{
+        ...state,
+      }
+
     // payload = state object
     case reducerConstants.SET_STATE_FROM_SOCKET: 
       return {...action.payload};
 
     // payload = user object {string: {username, instrument...}}
     case reducerConstants.ADD_USER:
-      return {
+      newState = {
         ...state,
         users: {
           ...state.users,
           ...action.payload,
+        },
+        local: {
+          ...state.local,
+          localUserId: Object.keys(action.payload)[0]
         }
       }
+      socket.emit('updateServerState', newState, socket.id)
+      return newState;
+      
 
     // payload = userId: string
     case reducerConstants.REMOVE_USER:
@@ -51,20 +67,27 @@ export const reducer = (state, action) => {
       newInstruments[instrumentSelected].grid = newGrid;
 
       // return state with new intrument list
-      return {
+      newState = {
         ...state,
         instruments: newInstruments
       };
+      socket.emit('updateServerState', newState, socket.id)
+      return newState;
+
 
       // no payload
       case reducerConstants.TOGGLE_IS_PLAYING:
-        return {
+
+        newState =  {
           ...state,
           status: {
             ...state.status,
             isPlaying: !state.status.isPlaying
           }
         }
+        socket.emit('updateServerState', newState, socket.id)
+        return newState;
+  
 
       // not working yet
       // case UPDATE_STATUS:
