@@ -13,7 +13,7 @@ const App = (props) => {
 
   return (
     <div>
-      <MainContainer socket={socket}/>
+      <MainContainer />
       <input onChange={(e) => setInputText(e.target.value)} type="text" />
       <button onClick={() => send()}>send</button>
     </div>
@@ -21,3 +21,4 @@ const App = (props) => {
 };
 
 export default App;
+    

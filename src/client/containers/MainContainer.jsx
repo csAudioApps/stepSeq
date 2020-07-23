@@ -40,17 +40,14 @@ name: "Bass", soundPreset: "ClassicBassSynth", mono: true, legato: true, grid:
 // ***************************
 
 const MainContainer = () => {
-  
-  const [state, dispatch] = useReducer(reducer, initialState);
-  
+  const [state, dispatch] = useReducer(reducer, initialState);  
   const [isLoaded, setLoaded] = useState(false);
   const transport = useRef(null);
   const bassSynth = useRef(null);
   const drumSynth = useRef(null);
   const [step, setStep] = useState(0);
-  // const sampler = useRef(null);
-  
-  // const toggleGridButton = () => 
+  let dly;
+  let dist;
 
   // open socket connection
   useEffect(() => {
@@ -80,48 +77,50 @@ const MainContainer = () => {
     return () => socket.disconnect();
   }, []);
 
-  // Transport
-  Tone.Context.latencyHint = 'playback'
-  transport.current = new Tone.Sequence((time, step) => {
-    // console.log("MainContainer -> step", step)
-    setStep(step);
-  }, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], "8n").start(0);
-  
-  const dly = new Tone.FeedbackDelay("8n", 0.5).toDestination();
-  const dist = new Tone.Distortion(0.4).connect(dly);
-  // const shift = new Tone.FrequencyShifter(42).connect(dist);
-
-  
+  // Transport and Setup
   useEffect(() => {
-    // Bass Synth
-    bassSynth.current = new Tone.Synth().connect(dist);//toDestination();
-    const bassNoteArr = updateNoteArray(state.instruments[1].grid, selectedScale, 2); 
-    // console.log("MainContainer -> bassNoteArr", bassNoteArr)
-    const bassSynthSeq = new Tone.Sequence( (time, note) => {
-      bassSynth.current.triggerAttackRelease(note, "8n", time);
-    }, bassNoteArr).start(0);
-    return () => bassSynth.current.dispose();
+    console.log("A");
+    Tone.Context.latencyHint = 'playback'
+    transport.current = new Tone.Sequence((time, step) => {
+      setStep(step);
+    }, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], "8n").start(0);
+    
+    dly = new Tone.FeedbackDelay("8n", 0.5).toDestination();
+    dist = new Tone.Distortion(0.4).connect(dly);
+    bassSynth.current = new Tone.Synth().connect(dist);
+    drumSynth.current = new Tone.MembraneSynth().toDestination();
+    console.log("B");
+    return () => {
+      transport.current.dispose();
+      dly.dispose();
+      dist.dispose();
+      drumSynth.current.dispose();
+      bassSynth.current.dispose();
+    }
+  }, []);
+  
+  // Bass Synth
+  useEffect(() => {
+    console.log("C");
+    if(bassSynth && bassSynth.current) {
+      const bassNoteArr = updateNoteArray(state.instruments[1].grid, selectedScale, 2); 
+      // console.log("MainContainer -> bassNoteArr", bassNoteArr)
+      const bassSynthSeq = new Tone.Sequence( (time, note) => {
+        bassSynth.current.triggerAttackRelease(note, "8n", time);
+      }, bassNoteArr).start(0);
+    }
   }, [state.instruments[1].grid, selectedScale])
   
+  // Drum Synth
   useEffect(() => {
-    // Drum Synth
-    drumSynth.current = new Tone.MembraneSynth().toDestination();
-    // const drumNoteArr = updateNoteArray(drumTrack.grid, selectedScale);
-    // const drumNoteArr = ['A-1', null, null, 'G-1', 'A-1', null, null, 'C-1'];
-    const drumNoteArr = ['A-1', null, null, null, 'A-1', null, null, null];
-    const drumSynthSeq = new Tone.Sequence((time, note) => {
-      drumSynth.current.triggerAttackRelease(note, "8n", time);
-    }, drumNoteArr).start(0);
-    return () => drumSynth.current.dispose();
+    console.log("D");
+    if(drumSynth && drumSynth.current) {  
+      const drumNoteArr = ['A-1', null, null, null, 'A-1', null, null, null];
+      const drumSynthSeq = new Tone.Sequence((time, note) => {
+        drumSynth.current.triggerAttackRelease(note, "8n", time);
+      }, drumNoteArr).start(0);
+    }
   }, [state.instruments[0].grid, selectedScale])
-
-    // Sampler
-    // sampler.current = new Tone.Sampler({testSample}, {
-    //   onload: () => { setLoaded(true); }
-    // }).toMaster();
-
-  // console.log("state.instruments: ", state.instruments);
-  // const { instrumentSelected } = state.users[state.local.localUserId];
 
   return (
     <div className="MainContainer">
@@ -222,3 +221,12 @@ export default MainContainer;
   //     sampler.triggerAttackRelease(["C1"], 0.5);
   //   },
   // });
+
+
+    // Sampler
+    // sampler.current = new Tone.Sampler({testSample}, {
+    //   onload: () => { setLoaded(true); }
+    // }).toMaster();
+
+  // console.log("state.instruments: ", state.instruments);
+  // const { instrumentSelected } = state.users[state.local.localUserId];
