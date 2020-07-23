@@ -86,13 +86,15 @@ const MainContainer = () => {
 
   const handleClick = () => sampler.current.triggerAttack("testSample");
 
+  console.log("state.instruments: ", state.instruments);
+
   return (
     <div className="MainContainer">
       {/* <button disabled={!isLoaded} onClick={handleClick}>Trigger Sample</button> */}
       <div id="time"></div>
       <div id="seconds"></div>
       <button onClick={playPause}>TOGGLE SICK BEATS</button>
-      
+
       {/* ***TEST BUTTONS*** */}
       
       {/* 
@@ -142,7 +144,9 @@ const MainContainer = () => {
         numRows={15} 
         numColumns={16} 
         curStepColNum={step}
-        gridState={bassTrack.grid} />
+        gridState={bassTrack.grid} 
+        instruments={state.instruments}
+        />
       <Footer />
     </div>
   )

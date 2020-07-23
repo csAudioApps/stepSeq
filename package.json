@@ -21,10 +21,12 @@
   "homepage": "https://github.com/csAudioApps/stepSeq#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "nexusui": "^2.1.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "socket.io": "^2.3.0",
+    "react-nexusui": "^0.1.7",
     "regenerator-runtime": "^0.13.6",
+    "socket.io": "^2.3.0",
     "standardized-audio-context": "^24.1.22",
     "tone": "^14.7.32"
   },
