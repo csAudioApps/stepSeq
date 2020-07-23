@@ -23,7 +23,9 @@ export const updateNoteArray = (grid, scaleNum, rootOctaveNum) => {
   return retArr;
 }
 
-export const playPause = (e) => {
+export const togglePlayback =  async (e) => {
+  await Tone.start();
+
   if (Tone.Transport.state === "stopped" || Tone.Transport.state === "paused") {
     Tone.Transport.start();
   }

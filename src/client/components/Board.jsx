@@ -1,7 +1,7 @@
 import React from 'react';
 import GridButton from './GridButton';
 
-const Board = ({numRows, numColumns, curStepColNum, gridState, toggleButtonState}) => {
+const Board = ({numRows, numColumns, curStepColNum, gridState, dispatch}) => {
 
   const renderButtons = () => {
     let grid = [];
@@ -14,7 +14,7 @@ const Board = ({numRows, numColumns, curStepColNum, gridState, toggleButtonState
           <GridButton x={x} y={y}
             key={x.toString() + '-' + y.toString()}
             curStepColNum={curStepColNum}
-            toggleButtonState={toggleButtonState}
+            dispatch={dispatch}
             gridState={gridState}        
           />
           </td>)
@@ -23,7 +23,7 @@ const Board = ({numRows, numColumns, curStepColNum, gridState, toggleButtonState
                   key={y.toString()}>{buttonRow}
                 </tr>)
     }
-    console.log("renderButtons -> grid", grid)
+    // console.log("renderButtons -> grid", grid)
     return grid;
   }
 

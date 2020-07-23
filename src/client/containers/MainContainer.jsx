@@ -5,7 +5,7 @@ import Footer from '../components/Footer';
 // import "regenerator-runtime/runtime.js";
 import * as Tone from "tone";
 import {scales} from '../constants/scales.js'
-import {updateNoteArray, playPause} from '../helpers/audioHelpers.js';
+import {updateNoteArray} from '../helpers/audioHelpers.js';
 import { initialState } from '../constants/initBoardState'
 import { reducer } from '../reducer/reducer';
 // import testSample from "../../server/audio/wamb_mbasefree_006.wav"
@@ -14,7 +14,10 @@ import * as reducerConstants from '../reducer/reducerConstants'
 import { initialState2 } from '../constants/initBoardState'
 import { initialState3 } from '../constants/initBoardState'
 
-import { socket } from '../helpers/socket'
+import { socket } from '../helpers/socket';
+
+import uuid from "uuid";
+
 
 
 
@@ -31,75 +34,104 @@ const drumTrack = {
 
 const bassTrack = { 
 name: "Bass", soundPreset: "ClassicBassSynth", mono: true, legato: true, grid: 
-  [ [14], [3], [4], [13], [0], [14], [7], [], [0], [2], [7], [0], [7], [0], [1], [] ] 
+  [ [14], [4], [4], [13], [0], [14], [7], [], [0], [2], [7], [0], [7], [0], [1], [] ] 
   // [ [14], [3], [4], [13], [0], [14], [], [], [], [0], [], [0], [7], [0], [1], [] ] 
 };
 // ***************************
 
 const MainContainer = () => {
-  useEffect(() => (console.log('socket', socket)))
-  const [state, dispatch] = useReducer(reducer, initialState)
-
+  const [state, dispatch] = useReducer(reducer, initialState);  
   const [isLoaded, setLoaded] = useState(false);
   const transport = useRef(null);
   const bassSynth = useRef(null);
   const drumSynth = useRef(null);
   const [step, setStep] = useState(0);
-  // const sampler = useRef(null);
- 
-  useEffect(() => {
+  let dly;
+  let dist;
 
-    // Transport
+  // open socket connection
+  useEffect(() => {
+    // get initial state
+    console.log('socket: ', socket)
+    socket.emit('getInitialState');
+    // if we are first user, create state in the server
+    // socket.on('firstUser', () => {
+    //   console.log('first')
+    //   socket.emit('updateServerState', state, socket.id);
+    // })
+    // when we receive and updated state from server, update local state
+    // only update if update was sent fron another user
+    socket.on('updateClientState', (msg, senderId) => {
+      if (socket.id !== senderId){
+        // console.log('***not equal****')
+        dispatch({type: reducerConstants.SET_STATE_FROM_SOCKET, payload: msg})
+      } else {
+        // console.log('they are equal')
+      }
+    });
+
+    const id = uuid.v4();
+    dispatch({type: reducerConstants.ADD_USER, payload: {[id]: { userName: '', instrumentSelected: 1, color: 'red'}}})
+
+    
+    return () => socket.disconnect();
+  }, []);
+
+  // Transport and Setup
+  useEffect(() => {
+    console.log("A");
+    Tone.Context.latencyHint = 'playback'
     transport.current = new Tone.Sequence((time, step) => {
-      // console.log("MainContainer -> step", step)
       setStep(step);
     }, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], "8n").start(0);
     
-    const dly = new Tone.FeedbackDelay("8n", 0.5).toDestination();
-    const dist = new Tone.Distortion(0.4).connect(dly);
-    // const shift = new Tone.FrequencyShifter(42).connect(dist);
-
-    // Bass Synth
-    bassSynth.current = new Tone.Synth().connect(dist);//toDestination();
-    const bassNoteArr = updateNoteArray(bassTrack.grid, selectedScale, 2); 
-    console.log("MainContainer -> bassNoteArr", bassNoteArr)
-    const bassSynthSeq = new Tone.Sequence( (time, note) => {
-      bassSynth.current.triggerAttackRelease(note, "8n", time);
-    }, bassNoteArr).start(0);
-
-
-
-    // Drum Synth
+    dly = new Tone.FeedbackDelay("8n", 0.5).toDestination();
+    dist = new Tone.Distortion(0.4).connect(dly);
+    bassSynth.current = new Tone.Synth().connect(dist);
     drumSynth.current = new Tone.MembraneSynth().toDestination();
-    // const drumNoteArr = updateNoteArray(drumTrack.grid, selectedScale);
-    // const drumNoteArr = ['A-1', null, null, 'G-1', 'A-1', null, null, 'C-1'];
-    const drumNoteArr = ['A-1', null, null, null, 'A-1', null, null, null];
-    const drumSynthSeq = new Tone.Sequence((time, note) => {
-      drumSynth.current.triggerAttackRelease(note, "8n", time);
-    }, drumNoteArr).start(0);
-  
-    // Sampler
-    // sampler.current = new Tone.Sampler({testSample}, {
-    //   onload: () => { setLoaded(true); }
-    // }).toMaster();
-
+    console.log("B");
+    return () => {
+      transport.current.dispose();
+      dly.dispose();
+      dist.dispose();
+      drumSynth.current.dispose();
+      bassSynth.current.dispose();
+    }
   }, []);
-
-  const handleClick = () => sampler.current.triggerAttack("testSample");
-
-  console.log("state.instruments: ", state.instruments);
+  
+  // Bass Synth
+  useEffect(() => {
+    console.log("C");
+    if(bassSynth && bassSynth.current) {
+      const bassNoteArr = updateNoteArray(state.instruments[1].grid, selectedScale, 2); 
+      // console.log("MainContainer -> bassNoteArr", bassNoteArr)
+      const bassSynthSeq = new Tone.Sequence( (time, note) => {
+        bassSynth.current.triggerAttackRelease(note, "8n", time);
+      }, bassNoteArr).start(0);
+    }
+  }, [state.instruments[1].grid, selectedScale])
+  
+  // Drum Synth
+  useEffect(() => {
+    console.log("D");
+    if(drumSynth && drumSynth.current) {  
+      const drumNoteArr = ['A-1', null, null, null, 'A-1', null, null, null];
+      const drumSynthSeq = new Tone.Sequence((time, note) => {
+        drumSynth.current.triggerAttackRelease(note, "8n", time);
+      }, drumNoteArr).start(0);
+    }
+  }, [state.instruments[0].grid, selectedScale])
 
   return (
     <div className="MainContainer">
       {/* <button disabled={!isLoaded} onClick={handleClick}>Trigger Sample</button> */}
       <div id="time"></div>
       <div id="seconds"></div>
-      <button onClick={playPause}>TOGGLE SICK BEATS</button>
+      {/* <button onClick={playPause}>TOGGLE SICK BEATS</button> */}
 
       {/* ***TEST BUTTONS*** */}
-      
-      {/* 
-      <button onClick={() => dispatch({
+      {/* extra comment */}
+      {/* <button onClick={() => dispatch({
         type: reducerConstants.TOGGLE_GRID_BUTTON, 
         payload: { x: 5, y: 3}
         })}>
@@ -136,8 +168,13 @@ const MainContainer = () => {
 
         })}>
         SICK REMOVE USER BUTTON
-      </button> */}
-
+      </button>
+      <button onClick={() => {
+        socket.emit('updateServerState', state)
+      }}>
+        SICK UPDATE SOCKET BUTTON
+      </button>
+ */}
 
 
       <HeaderContainer />
@@ -145,7 +182,9 @@ const MainContainer = () => {
         numRows={15} 
         numColumns={16} 
         curStepColNum={step}
-        gridState={bassTrack.grid} 
+        // gridState={state.instruments[instrumentSelected].grid}
+        gridState={state.instruments[1].grid}
+        dispatch={dispatch}
         instruments={state.instruments}
         scales={scales}
         selectedScale={state.local.localScale}
@@ -182,3 +221,12 @@ export default MainContainer;
   //     sampler.triggerAttackRelease(["C1"], 0.5);
   //   },
   // });
+
+
+    // Sampler
+    // sampler.current = new Tone.Sampler({testSample}, {
+    //   onload: () => { setLoaded(true); }
+    // }).toMaster();
+
+  // console.log("state.instruments: ", state.instruments);
+  // const { instrumentSelected } = state.users[state.local.localUserId];

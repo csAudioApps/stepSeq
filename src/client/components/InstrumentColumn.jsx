@@ -1,7 +1,7 @@
 import React from 'react';
 
 const InstrumentColumn = ({instruments}) => {
-  console.log("InstrumentColumn -> instruments", instruments)
+  // console.log("InstrumentColumn -> instruments", instruments)
   return (
     <div className="InstrumentColumn">
       <ul>{

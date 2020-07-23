@@ -10,7 +10,7 @@ export const initialState = {
     },
     { 
       name: "Synth1", soundPreset: "SpaceySynth", mono: false, legato: false, grid:
-        [ [], [], [], [], [], [1,2, 3, 4, 5, 6], [], [], [], [], [], [], [], [], [], [] ] 
+        [ [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [] ] 
     },
   ],
 
@@ -21,13 +21,12 @@ export const initialState = {
   },
 
   users: {
-    'wsxk943KJk': { userName: '', instrumentSelected: 2, color: 'blue'},
-    'asv543fgs': { userName: '', instrumentSelected: 0, color: 'red'},
+    
   },
 
 
   local: {
-    localUserId: 'wsxk943KJk',
+    localUserId: '',
     localScale: 0,
     seqLen: 16,
     // localOctaveStart: 'C2'
@@ -63,7 +62,7 @@ export const initialState2 = {
 
 
   local: {
-    localUserId: 'wsxk943KJk',
+    localUserId: 'wsxsk943KJk',
     localScale: 0,
     seqLen: 16,
     // localOctaveStart: 'C2'

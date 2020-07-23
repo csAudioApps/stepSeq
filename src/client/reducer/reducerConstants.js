@@ -9,3 +9,5 @@ export const SET_STATE_FROM_SOCKET = 'SET_STATE_FROM_SOCKET';
 export const ADD_USER = 'ADD_USER';
 
 export const REMOVE_USER = 'REMOVE_USER';
+
+export const SET_NEW_USER = 'SET_NEW_USER'
