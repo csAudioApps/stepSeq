@@ -1,4 +1,4 @@
-import { TOGGLE_GRID_BUTTON } from "./reducerConstants";
+import * as reducerConstants from "./reducerConstants";
 // dispatch({ type: TOGGLE_GRID_BUTTON, payload: { 
 //   x: 4,
 //   y: 3
@@ -7,7 +7,7 @@ export const reducer = (state, action) => {
   console.log('reducing, state: ', state);
   console.log('reducing, action: ', action);
   switch (action.type) {
-    case TOGGLE_GRID_BUTTON:
+    case reducerConstants.TOGGLE_GRID_BUTTON:
       // make copy of grid at user's selected instrument
       const { instrumentSelected } = state.users[state.local.localUserId];
       const newGrid = [...state.instruments[instrumentSelected].grid];
@@ -30,6 +30,15 @@ export const reducer = (state, action) => {
         ...state,
         instruments: newInstruments
       };
+
+    case reducerConstants.TOGGLE_IS_PLAYING:
+      return {
+        ...state,
+        status: {
+          ...state.status,
+          isPlaying: !state.status.isPlaying
+        }
+      }
 
     // case UPDATE_STATUS:
     //   return {

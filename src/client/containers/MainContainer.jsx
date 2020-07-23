@@ -8,7 +8,7 @@ import {updateNoteArray, playPause} from '../helpers/audioHelpers.js';
 import { initialState } from '../constants/initBoardState'
 import { reducer } from '../reducer/reducer';
 // import testSample from "../../server/audio/wamb_mbasefree_006.wav"
-import { TOGGLE_GRID_BUTTON } from '../reducer/reducerConstants'
+import * as reducerConstants from '../reducer/reducerConstants'
 
 // ***** PULL FROM STATE *****
 const seqLen = 16;
@@ -63,10 +63,16 @@ const MainContainer = () => {
       <div id="seconds"></div>
       <button onClick={playPause}>TOGGLE SICK BEATS</button>
       <button onClick={() => dispatch({
-        type: TOGGLE_GRID_BUTTON, 
+        type: reducerConstants.TOGGLE_GRID_BUTTON, 
         payload: { x: 5, y: 3}
         })}>
         DISPATCH SICK PAYLOAD (grid button 5,3)
+      </button>
+      <button onClick={() => dispatch({
+        type: reducerConstants.TOGGLE_IS_PLAYING, 
+        payload: { x: 5, y: 3}
+        })}>
+        SICK PLAY/PAUSE BUTTON
       </button>
       <HeaderContainer />
       <VisualContainer />
