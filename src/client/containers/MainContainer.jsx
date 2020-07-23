@@ -1,11 +1,21 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useReducer} from 'react';
 import VisualContainer from './VisualContainer';
 import HeaderContainer from './HeaderContainer';
 import Footer from '../components/Footer';
 // import "regenerator-runtime/runtime.js";
 import * as Tone from "tone";
-import {updateNoteArray, playPause} from '../helpers/audioHelpers.js'
+import {updateNoteArray, playPause} from '../helpers/audioHelpers.js';
+import { initialState } from '../constants/initBoardState'
+import { reducer } from '../reducer/reducer';
 // import testSample from "../../server/audio/wamb_mbasefree_006.wav"
+import * as reducerConstants from '../reducer/reducerConstants'
+
+import { initialState2 } from '../constants/initBoardState'
+import { initialState3 } from '../constants/initBoardState'
+
+import { socket } from '../helpers/socket'
+
+
 
 // ***** PULL FROM STATE *****
 // const seqLen = 16;
@@ -26,6 +36,9 @@ name: "Bass", soundPreset: "ClassicBassSynth", mono: true, legato: true, grid:
 // ***************************
 
 const MainContainer = () => {
+  useEffect(() => (console.log('socket', socket)))
+  const [state, dispatch] = useReducer(reducer, initialState)
+
   const [isLoaded, setLoaded] = useState(false);
   const transport = useRef(null);
   const bassSynth = useRef(null);
@@ -79,6 +92,51 @@ const MainContainer = () => {
       <div id="time"></div>
       <div id="seconds"></div>
       <button onClick={playPause}>TOGGLE SICK BEATS</button>
+      
+      {/* ***TEST BUTTONS*** */}
+      
+      {/* 
+      <button onClick={() => dispatch({
+        type: reducerConstants.TOGGLE_GRID_BUTTON, 
+        payload: { x: 5, y: 3}
+        })}>
+        DISPATCH SICK PAYLOAD (grid button 5,3)
+      </button>
+      <button onClick={() => dispatch({
+        type: reducerConstants.TOGGLE_IS_PLAYING, 
+        payload: { x: 5, y: 3}
+        })}>
+        SICK PLAY/PAUSE BUTTON
+      </button>
+      <button onClick={() => dispatch({
+        type: reducerConstants.TOGGLE_IS_PLAYING, 
+        payload: initialState2
+        })}>
+        SICK SET STATE2 BUTTON
+      </button>
+      <button onClick={() => dispatch({
+        type: reducerConstants.TOGGLE_IS_PLAYING, 
+        payload: initialState3
+        })}>
+        SICK SET STATE3 BUTTON
+      </button>
+      <button onClick={() => dispatch({
+        type: reducerConstants.ADD_USER, 
+        payload: {'aaa111': { userName: 'tom', instrumentSelected: 0, color: 'red'}},
+
+        })}>
+        SICK NEW USER BUTTON
+      </button>
+      <button onClick={() => dispatch({
+        type: reducerConstants.REMOVE_USER, 
+        payload: 'aaa111',
+
+        })}>
+        SICK REMOVE USER BUTTON
+      </button> */}
+
+
+
       <HeaderContainer />
       <VisualContainer 
         numRows={15} 
