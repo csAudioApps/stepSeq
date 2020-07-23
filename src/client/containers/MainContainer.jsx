@@ -9,18 +9,19 @@ import {updateNoteArray, playPause} from '../helpers/audioHelpers.js'
 
 // ***** PULL FROM STATE *****
 // const seqLen = 16;
-Tone.Transport.bpm.value = 100;
+Tone.Transport.bpm.value = 180;
 let selectedScale = 2;
 
 const drumTrack = { 
   name: "Drums", soundPreset: "BasicDrumset", mono: null, legato: false, grid:
     // [ [3], [3], [4], [], [0], [], [], [], [], [2], [], [0], [], [0], [1], [2] ] 
-    [ [4], [], [], [], [], [], [], [], [4], [], [], [], [], [], [], [] ] 
+    [ [4], [], [], [], [4], [], [], [], [4], [], [], [], [4], [], [], [] ] 
 };
 
 const bassTrack = { 
 name: "Bass", soundPreset: "ClassicBassSynth", mono: true, legato: true, grid: 
-  [ [0], [3], [4], [], [0], [], [], [], [0], [2], [], [0], [], [0], [1], [2] ] 
+  [ [14], [3], [4], [13], [0], [14], [7], [], [0], [2], [7], [0], [7], [0], [1], [] ] 
+  // [ [14], [3], [4], [13], [0], [14], [], [], [], [0], [], [0], [7], [0], [1], [] ] 
 };
 // ***************************
 
@@ -31,7 +32,7 @@ const MainContainer = () => {
   const drumSynth = useRef(null);
   const [step, setStep] = useState(0);
   // const sampler = useRef(null);
-
+ 
   useEffect(() => {
 
     // Transport
@@ -39,14 +40,20 @@ const MainContainer = () => {
       // console.log("MainContainer -> step", step)
       setStep(step);
     }, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], "8n").start(0);
+    
+    const dly = new Tone.FeedbackDelay("8n", 0.5).toDestination();
+    const dist = new Tone.Distortion(0.4).connect(dly);
+    // const shift = new Tone.FrequencyShifter(42).connect(dist);
 
     // Bass Synth
-    bassSynth.current = new Tone.Synth().toDestination();
-    const bassNoteArr = updateNoteArray(bassTrack.grid, selectedScale); 
+    bassSynth.current = new Tone.Synth().connect(dist);//toDestination();
+    const bassNoteArr = updateNoteArray(bassTrack.grid, selectedScale, 2); 
     console.log("MainContainer -> bassNoteArr", bassNoteArr)
     const bassSynthSeq = new Tone.Sequence( (time, note) => {
       bassSynth.current.triggerAttackRelease(note, "8n", time);
     }, bassNoteArr).start(0);
+
+
 
     // Drum Synth
     drumSynth.current = new Tone.MembraneSynth().toDestination();

@@ -10,16 +10,16 @@ const Board = ({numRows, numColumns, curStepColNum, gridState, toggleButtonState
       let buttonRow = [];
 
       for(let x = 0; x < numColumns; x++) {
-        buttonRow.push(<td>
+        buttonRow.push(<td key={x.toString() + '-' + y.toString()}>
           <GridButton x={x} y={y}
-            key={x.toString() + y.toString()}
+            key={x.toString() + '-' + y.toString()}
             curStepColNum={curStepColNum}
             toggleButtonState={toggleButtonState}
             gridState={gridState}        
           />
           </td>)
       }
-      grid.push(<tr>{buttonRow}</tr>)
+      grid.push(<tr key={y.toString()}>{buttonRow}</tr>)
     }
     console.log("renderButtons -> grid", grid)
     return grid;
@@ -28,7 +28,9 @@ const Board = ({numRows, numColumns, curStepColNum, gridState, toggleButtonState
   return (
     <div className="Board">
       <table>
-        {renderButtons()}
+        <tbody>
+          {renderButtons()}
+        </tbody>
       </table>
     </div>
   )

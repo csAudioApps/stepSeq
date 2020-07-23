@@ -23,19 +23,19 @@ body {
 }
 
 .HeaderContainer {
-  border: 2px solid gray;
+  border: 0.5px solid gray;
   width: 100%;
   text-align: center;
 }
 
 .Footer {
-  border: 2px solid gray;
+  border: 0.5px solid gray;
   width: 100%;
   text-align: center;
 }
 
 .body {
-  border: 2px solid blue;
+  border: 0.5px solid blue;
   display: flex;
   height: 100%;
   width: 100%;
@@ -45,7 +45,7 @@ body {
     display: flex;
     flex-direction: column;
     padding: 30px;
-    border: 2px solid green;
+    border: 0.5px solid green;
     max-width: 1500px;
     min-width: 700px;
     min-height: 300px;
@@ -55,7 +55,7 @@ body {
     .NavBar {
       height: 30px;
       padding: 10px;
-      border: 2px solid gray;
+      border: 0.5px solid gray;
     }
 
     .row {
@@ -66,20 +66,20 @@ body {
         display: flex;
         flex-direction: column;
         .InstrumentColumn {
-          border: 2px solid gray;
+          border: 0.5px solid gray;
           padding: 10px;
           min-width: 200px;
           flex-grow: 2;
         }
         .Knobs {
-          border: 2px solid gray;
+          border: 0.5px solid gray;
           padding: 10px;
           flex-grow: 1;
         }
       }
 
       .Board {
-        border: 2px solid gray;
+        border: 0.5px solid gray;
         flex-grow: 1;
         padding: 10px;
       }
@@ -88,13 +88,16 @@ body {
 }
 
 button {
-  border: 0;
-  padding: 0;
+  // border: 0;
+  // padding: 0;
 }
 
 .grid-btn {
-  width: 40px;
-  height: 40px;
+  border: 0;
+  margin: 1px;
+  border-radius: 6px;
+  width: 50px;
+  height: 50px;
   float: left;
 }
 
