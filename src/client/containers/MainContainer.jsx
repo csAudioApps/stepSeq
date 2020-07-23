@@ -18,41 +18,63 @@ import { socket } from '../helpers/socket'
 
 
 // ***** PULL FROM STATE *****
-const seqLen = 16;
+// const seqLen = 16;
 Tone.Transport.bpm.value = 180;
 let selectedScale = 2;
 
 const drumTrack = { 
   name: "Drums", soundPreset: "BasicDrumset", mono: null, legato: false, grid:
-    [ [3], [3], [4], [], [0], [], [], [], [], [2], [], [0], [], [0], [1], [2] ] 
+    // [ [3], [3], [4], [], [0], [], [], [], [], [2], [], [0], [], [0], [1], [2] ] 
+    [ [4], [], [], [], [4], [], [], [], [4], [], [], [], [4], [], [], [] ] 
 };
 
 const bassTrack = { 
 name: "Bass", soundPreset: "ClassicBassSynth", mono: true, legato: true, grid: 
-  [ [5], [3], [4], [], [0], [], [], [], [], [2], [], [0], [], [0], [1], [2] ] 
+  [ [14], [3], [4], [13], [0], [14], [7], [], [0], [2], [7], [0], [7], [0], [1], [] ] 
+  // [ [14], [3], [4], [13], [0], [14], [], [], [], [0], [], [0], [7], [0], [1], [] ] 
 };
+// ***************************
+
 const MainContainer = () => {
   useEffect(() => (console.log('socket', socket)))
   const [state, dispatch] = useReducer(reducer, initialState)
 
   const [isLoaded, setLoaded] = useState(false);
+  const transport = useRef(null);
   const bassSynth = useRef(null);
   const drumSynth = useRef(null);
+  const [step, setStep] = useState(0);
   // const sampler = useRef(null);
-
+ 
   useEffect(() => {
+
+    // Transport
+    transport.current = new Tone.Sequence((time, step) => {
+      // console.log("MainContainer -> step", step)
+      setStep(step);
+    }, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], "8n").start(0);
+    
+    const dly = new Tone.FeedbackDelay("8n", 0.5).toDestination();
+    const dist = new Tone.Distortion(0.4).connect(dly);
+    // const shift = new Tone.FrequencyShifter(42).connect(dist);
+
     // Bass Synth
-    bassSynth.current = new Tone.Synth().toDestination();
-    const bassNoteArr = updateNoteArray(bassTrack.grid, selectedScale); 
+    bassSynth.current = new Tone.Synth().connect(dist);//toDestination();
+    const bassNoteArr = updateNoteArray(bassTrack.grid, selectedScale, 2); 
+    console.log("MainContainer -> bassNoteArr", bassNoteArr)
     const bassSynthSeq = new Tone.Sequence( (time, note) => {
-      bassSynth.current.triggerAttackRelease(note, '16n', time);
+      bassSynth.current.triggerAttackRelease(note, "8n", time);
     }, bassNoteArr).start(0);
+
+
 
     // Drum Synth
     drumSynth.current = new Tone.MembraneSynth().toDestination();
-    const drumNoteArr = ['A-1', null, null, 'G-1', 'A-1', null, null, 'C-1']
+    // const drumNoteArr = updateNoteArray(drumTrack.grid, selectedScale);
+    // const drumNoteArr = ['A-1', null, null, 'G-1', 'A-1', null, null, 'C-1'];
+    const drumNoteArr = ['A-1', null, null, null, 'A-1', null, null, null];
     const drumSynthSeq = new Tone.Sequence((time, note) => {
-      drumSynth.current.triggerAttackRelease(note, '16n', time);
+      drumSynth.current.triggerAttackRelease(note, "8n", time);
     }, drumNoteArr).start(0);
   
     // Sampler
@@ -60,7 +82,7 @@ const MainContainer = () => {
     //   onload: () => { setLoaded(true); }
     // }).toMaster();
 
-  }, []); 
+  }, []);
 
   const handleClick = () => sampler.current.triggerAttack("testSample");
 
@@ -69,10 +91,11 @@ const MainContainer = () => {
       {/* <button disabled={!isLoaded} onClick={handleClick}>Trigger Sample</button> */}
       <div id="time"></div>
       <div id="seconds"></div>
-
+      <button onClick={playPause}>TOGGLE SICK BEATS</button>
+      
       {/* ***TEST BUTTONS*** */}
       
-      {/* <button onClick={playPause}>TOGGLE SICK BEATS</button>
+      {/* 
       <button onClick={() => dispatch({
         type: reducerConstants.TOGGLE_GRID_BUTTON, 
         payload: { x: 5, y: 3}
@@ -115,11 +138,25 @@ const MainContainer = () => {
 
 
       <HeaderContainer />
-      <VisualContainer />
+      <VisualContainer 
+        numRows={15} 
+        numColumns={16} 
+        curStepColNum={step}
+        gridState={bassTrack.grid} />
       <Footer />
     </div>
   )
 }
+
+export default MainContainer;
+
+
+      // bassSynth.current = new Tone.Synth().toDestination();
+      // bassSynth.current.triggerAttackRelease('C4', '16n')
+      // console.log('Tone.now()', Tone.now());
+      // console.log('Tone.Destination.blockTime', Tone.Destination.blockTime);
+      // console.log('Tone.Transport.sampleTime', Tone.Transport.sampleTime);
+      // console.log('Tone.Transport.progress', Tone.Transport.progress);
 
 
   // Poly Synth
@@ -138,5 +175,3 @@ const MainContainer = () => {
   //     sampler.triggerAttackRelease(["C1"], 0.5);
   //   },
   // });
-
-export default MainContainer;
