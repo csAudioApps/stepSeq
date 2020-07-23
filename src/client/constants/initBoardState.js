@@ -20,7 +20,9 @@ export const initialState = {
     isPlaying: false,
   },
 
-  users: {},
+  users: {
+    
+  },
 
 
   local: {

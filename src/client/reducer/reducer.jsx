@@ -5,8 +5,8 @@ import { socket } from '../helpers/socket'
 //   y: 3
 // }})
 export const reducer = (state, action) => {
-  console.log('reducing, state: ', state);
-  console.log('reducing, action: ', action);
+  // console.log('reducing, state: ', state);
+  // console.log('reducing, action: ', action);
   let newState;
   switch (action.type) {
 

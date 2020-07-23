@@ -5,7 +5,7 @@ import Footer from '../components/Footer';
 // import "regenerator-runtime/runtime.js";
 import * as Tone from "tone";
 import {scales} from '../constants/scales.js'
-import {updateNoteArray, playPause} from '../helpers/audioHelpers.js';
+import {updateNoteArray} from '../helpers/audioHelpers.js';
 import { initialState } from '../constants/initBoardState'
 import { reducer } from '../reducer/reducer';
 // import testSample from "../../server/audio/wamb_mbasefree_006.wav"
@@ -50,6 +50,7 @@ const MainContainer = () => {
   const [step, setStep] = useState(0);
   // const sampler = useRef(null);
   
+  // const toggleGridButton = () => 
 
   // open socket connection
   useEffect(() => {
@@ -65,44 +66,44 @@ const MainContainer = () => {
     // only update if update was sent fron another user
     socket.on('updateClientState', (msg, senderId) => {
       if (socket.id !== senderId){
-        console.log('***not equal****')
+        // console.log('***not equal****')
         dispatch({type: reducerConstants.SET_STATE_FROM_SOCKET, payload: msg})
       } else {
-        console.log('they are equal')
+        // console.log('they are equal')
       }
     });
 
     const id = uuid.v4();
-    dispatch({type: reducerConstants.ADD_USER, payload: {[id]: { userName: '', instrumentSelected: 0, color: 'red'}}})
+    dispatch({type: reducerConstants.ADD_USER, payload: {[id]: { userName: '', instrumentSelected: 1, color: 'red'}}})
 
     
     return () => socket.disconnect();
   }, []);
 
+  // Transport
+  Tone.Context.latencyHint = 'playback'
+  transport.current = new Tone.Sequence((time, step) => {
+    // console.log("MainContainer -> step", step)
+    setStep(step);
+  }, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], "8n").start(0);
   
+  const dly = new Tone.FeedbackDelay("8n", 0.5).toDestination();
+  const dist = new Tone.Distortion(0.4).connect(dly);
+  // const shift = new Tone.FrequencyShifter(42).connect(dist);
 
+  
   useEffect(() => {
-
-    // Transport
-    transport.current = new Tone.Sequence((time, step) => {
-      // console.log("MainContainer -> step", step)
-      setStep(step);
-    }, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], "8n").start(0);
-    
-    const dly = new Tone.FeedbackDelay("8n", 0.5).toDestination();
-    const dist = new Tone.Distortion(0.4).connect(dly);
-    // const shift = new Tone.FrequencyShifter(42).connect(dist);
-
     // Bass Synth
     bassSynth.current = new Tone.Synth().connect(dist);//toDestination();
-    const bassNoteArr = updateNoteArray(bassTrack.grid, selectedScale, 2); 
-    console.log("MainContainer -> bassNoteArr", bassNoteArr)
+    const bassNoteArr = updateNoteArray(state.instruments[1].grid, selectedScale, 2); 
+    // console.log("MainContainer -> bassNoteArr", bassNoteArr)
     const bassSynthSeq = new Tone.Sequence( (time, note) => {
       bassSynth.current.triggerAttackRelease(note, "8n", time);
     }, bassNoteArr).start(0);
-
-
-
+    return () => bassSynth.current.dispose();
+  }, [state.instruments[1].grid, selectedScale])
+  
+  useEffect(() => {
     // Drum Synth
     drumSynth.current = new Tone.MembraneSynth().toDestination();
     // const drumNoteArr = updateNoteArray(drumTrack.grid, selectedScale);
@@ -111,24 +112,23 @@ const MainContainer = () => {
     const drumSynthSeq = new Tone.Sequence((time, note) => {
       drumSynth.current.triggerAttackRelease(note, "8n", time);
     }, drumNoteArr).start(0);
-    
+    return () => drumSynth.current.dispose();
+  }, [state.instruments[0].grid, selectedScale])
+
     // Sampler
     // sampler.current = new Tone.Sampler({testSample}, {
     //   onload: () => { setLoaded(true); }
     // }).toMaster();
 
-  }, []);
-
-  const handleClick = () => sampler.current.triggerAttack("testSample");
-
-  console.log("state.instruments: ", state.instruments);
+  // console.log("state.instruments: ", state.instruments);
+  // const { instrumentSelected } = state.users[state.local.localUserId];
 
   return (
     <div className="MainContainer">
       {/* <button disabled={!isLoaded} onClick={handleClick}>Trigger Sample</button> */}
       <div id="time"></div>
       <div id="seconds"></div>
-      <button onClick={playPause}>TOGGLE SICK BEATS</button>
+      {/* <button onClick={playPause}>TOGGLE SICK BEATS</button> */}
 
       {/* ***TEST BUTTONS*** */}
       {/* extra comment */}
@@ -183,7 +183,9 @@ const MainContainer = () => {
         numRows={15} 
         numColumns={16} 
         curStepColNum={step}
-        gridState={bassTrack.grid} 
+        // gridState={state.instruments[instrumentSelected].grid}
+        gridState={state.instruments[1].grid}
+        dispatch={dispatch}
         instruments={state.instruments}
         scales={scales}
         selectedScale={state.local.localScale}

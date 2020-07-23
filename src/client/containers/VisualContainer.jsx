@@ -1,18 +1,18 @@
 import React from 'react';
-import NavBar from '../components/NavBar';
+import ControlBar from '../components/ControlBar'
 import InstrumentColumn from '../components/InstrumentColumn';
 import Board from '../components/Board';
 import Knobs from '../components/Knobs';
 
 const VisualContainer = ({
     scales, selectedScale,
-    numRows, numColumns, curStepColNum, gridState, toggleButtonState, 
+    numRows, numColumns, curStepColNum, gridState, dispatch, 
     instruments,
   }) => {
   return (
     <div className="body">
       <div className="VisualContainer">
-        <NavBar 
+        <ControlBar 
           scales={scales}
           selectedScal={selectedScale}
         />
@@ -28,7 +28,7 @@ const VisualContainer = ({
               numColumns={numColumns} 
               curStepColNum={curStepColNum} 
               gridState={gridState}
-              toggleButtonState={toggleButtonState}
+              dispatch={dispatch}
             />
         </div>
       </div>

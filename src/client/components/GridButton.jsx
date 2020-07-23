@@ -1,6 +1,9 @@
 import React from 'react';
+import { TOGGLE_GRID_BUTTON } from '../reducer/reducerConstants'
 
-const GridButton = ({x, y, curStepColNum, toggleButtonState, gridState}) => {
+const GridButton = ({x, y, curStepColNum, dispatch, gridState}) => {
+
+  // console.log("GridButton -> gridState", gridState)
 
   let isBtnOn = false;
   let className;
@@ -25,7 +28,10 @@ const GridButton = ({x, y, curStepColNum, toggleButtonState, gridState}) => {
   }
 
   return (
-    <button className={className} onClick={toggleButtonState}></button>
+    <button className={className} onClick={() => dispatch({
+      type: TOGGLE_GRID_BUTTON,
+      payload: { x: x, y: y}
+    })}></button>
   )
 }
 
