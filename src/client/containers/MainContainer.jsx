@@ -4,6 +4,7 @@ import HeaderContainer from './HeaderContainer';
 import Footer from '../components/Footer';
 // import "regenerator-runtime/runtime.js";
 import * as Tone from "tone";
+import {scales} from '../constants/scales.js'
 import {updateNoteArray, playPause} from '../helpers/audioHelpers.js';
 import { initialState } from '../constants/initBoardState'
 import { reducer } from '../reducer/reducer';
@@ -146,6 +147,8 @@ const MainContainer = () => {
         curStepColNum={step}
         gridState={bassTrack.grid} 
         instruments={state.instruments}
+        scales={scales}
+        selectedScale={state.local.localScale}
         />
       <Footer />
     </div>
