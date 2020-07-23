@@ -1,14 +1,25 @@
 @import '_variables';
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;200;300;400&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Josefin+Slab:wght@300;400;600&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Josefin+Slab:wght@400;600&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Mulish:wght@200;300;400&display=swap');
 
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 html,
 body {
-  color: #989898;
-  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: .95em;
+  font-weight: 200;
+  letter-spacing: 0.15em;
+  color: $superlight;
+  // color: #989898;
+
   background-color: #2b2b2b;
   height: 100%;
 }
@@ -22,19 +33,19 @@ body {
 }
 
 .HeaderContainer {
-  border: 2px solid gray;
+  border: 0.5px solid gray;
   width: 100%;
   text-align: center;
 }
 
 .Footer {
-  border: 2px solid gray;
+  border: 0.5px solid gray;
   width: 100%;
   text-align: center;
 }
 
 .body {
-  border: 2px solid blue;
+  border: 0.5px solid blue;
   display: flex;
   height: 100%;
   width: 100%;
@@ -44,7 +55,7 @@ body {
     display: flex;
     flex-direction: column;
     padding: 30px;
-    border: 2px solid green;
+    border: 0.5px solid green;
     max-width: 1500px;
     min-width: 700px;
     min-height: 300px;
@@ -52,9 +63,9 @@ body {
     flex-grow: 1;
 
     .NavBar {
-      height: 30px;
+      height: 50px;
       padding: 10px;
-      border: 2px solid gray;
+      border: 0.5px solid gray;
     }
 
     .row {
@@ -65,23 +76,98 @@ body {
         display: flex;
         flex-direction: column;
         .InstrumentColumn {
-          border: 2px solid gray;
+          border: 0.5px solid gray;
           padding: 10px;
           min-width: 200px;
           flex-grow: 2;
         }
         .Knobs {
-          border: 2px solid gray;
+          border: 0.5px solid gray;
           padding: 10px;
           flex-grow: 1;
         }
       }
 
       .Board {
-        border: 2px solid gray;
+        border: 0.5px solid gray;
         flex-grow: 1;
         padding: 10px;
       }
     }
   }
 }
+
+button {
+  border: 0;
+  padding: 0;
+}
+
+.btn-play-pause {
+  margin-left: 10px;
+  font-size: 100%;
+  font-family: inherit;
+  padding: 5px;
+  float: left;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+ul {
+  list-style: none;
+}
+
+.scales {
+  margin-left: 25px;
+  padding: 5px;
+  float: left;
+}
+
+.scale-nums {
+  padding: 5px;
+  float: left;
+}
+
+.instrument-li {
+  margin: 0.7em;
+}
+
+.btn-row-root {
+  // border-left: gray;
+  // border-left-style: solid;
+  // border-width: 4px;
+  // border-radius: 6px;
+  // background-color:#4b4b4b;
+}
+
+.grid-btn {
+  border: 0;
+  margin: 1px;
+  border-radius: 6px;
+  width: 50px;
+  height: 50px;
+  float: left;
+}
+
+.grid-btn-on-and-cur-step {
+  background-color: $btn-cur-time;
+}
+
+.grid-btn-off-and-cur-step {
+  background-color: $btn-cur-time;
+}
+
+.grid-btn-on {
+  background-color: $btn-on;
+}
+
+.grid-btn-off {
+  background-color: $btn-off;
+}
+
+
+  // font-family: 'Mulish', sans-serif;
+  // font-family: 'Ruda', sans-serif;
+  // font-family: 'Josefin Slab', serif;
+  // font-family: 'Roboto Mono', monospace;

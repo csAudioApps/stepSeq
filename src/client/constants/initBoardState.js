@@ -101,4 +101,4 @@ export const initialState3 = {
     seqLen: 16,
     // localOctaveStart: 'C2'
   }
-}
+} 
