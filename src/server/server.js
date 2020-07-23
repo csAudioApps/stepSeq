@@ -14,9 +14,6 @@ io.on('connection', (socket) => {
   });
 });
 
-// io.on('sendMessage', (socket) => {
-//   console.log('received sendMessage');
-// });
 
 http.listen(3000, () => {
   console.log('listening on *:3000');

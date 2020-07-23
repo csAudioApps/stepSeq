@@ -30,8 +30,6 @@ export const reducer = (state, action) => {
         ...state,
         users: newUsers
       }
-  
-
 
     // payoad: object with x and y coordinates of grid button: {x: number, y: number}
     case reducerConstants.TOGGLE_GRID_BUTTON:
@@ -68,6 +66,7 @@ export const reducer = (state, action) => {
           }
         }
 
+      // not working yet
       // case UPDATE_STATUS:
       //   return {
       //     ...state,
