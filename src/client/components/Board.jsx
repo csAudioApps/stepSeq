@@ -19,7 +19,9 @@ const Board = ({numRows, numColumns, curStepColNum, gridState, toggleButtonState
           />
           </td>)
       }
-      grid.push(<tr key={y.toString()}>{buttonRow}</tr>)
+      grid.push(<tr className={y%7===0 ? 'btn-row-root' : 'btn-row'} 
+                  key={y.toString()}>{buttonRow}
+                </tr>)
     }
     console.log("renderButtons -> grid", grid)
     return grid;

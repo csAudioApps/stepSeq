@@ -4,6 +4,7 @@ import HeaderContainer from './HeaderContainer';
 import Footer from '../components/Footer';
 // import "regenerator-runtime/runtime.js";
 import * as Tone from "tone";
+import {scales} from '../constants/scales.js'
 import {updateNoteArray, playPause} from '../helpers/audioHelpers.js';
 import { initialState } from '../constants/initBoardState'
 import { reducer } from '../reducer/reducer';
@@ -86,13 +87,15 @@ const MainContainer = () => {
 
   const handleClick = () => sampler.current.triggerAttack("testSample");
 
+  console.log("state.instruments: ", state.instruments);
+
   return (
     <div className="MainContainer">
       {/* <button disabled={!isLoaded} onClick={handleClick}>Trigger Sample</button> */}
       <div id="time"></div>
       <div id="seconds"></div>
       <button onClick={playPause}>TOGGLE SICK BEATS</button>
-      
+
       {/* ***TEST BUTTONS*** */}
       
       {/* 
@@ -142,7 +145,11 @@ const MainContainer = () => {
         numRows={15} 
         numColumns={16} 
         curStepColNum={step}
-        gridState={bassTrack.grid} />
+        gridState={bassTrack.grid} 
+        instruments={state.instruments}
+        scales={scales}
+        selectedScale={state.local.localScale}
+        />
       <Footer />
     </div>
   )

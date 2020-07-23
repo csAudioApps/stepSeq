@@ -4,14 +4,23 @@ import InstrumentColumn from '../components/InstrumentColumn';
 import Board from '../components/Board';
 import Knobs from '../components/Knobs';
 
-const VisualContainer = ({numRows, numColumns, curStepColNum, gridState, toggleButtonState}) => {
+const VisualContainer = ({
+    scales, selectedScale,
+    numRows, numColumns, curStepColNum, gridState, toggleButtonState, 
+    instruments,
+  }) => {
   return (
     <div className="body">
       <div className="VisualContainer">
-        <NavBar />
+        <NavBar 
+          scales={scales}
+          selectedScal={selectedScale}
+        />
         <div className="row">
           <div className="column">
-            <InstrumentColumn />
+            <InstrumentColumn 
+              instruments={instruments}
+            />
             <Knobs />
           </div>
             <Board 
