@@ -19,10 +19,9 @@ const drumTrack = {
 
 const bassTrack = { 
 name: "Bass", soundPreset: "ClassicBassSynth", mono: true, legato: true, grid: 
-  [ [5], [3], [4], [], [0], [], [], [], [], [2], [], [0], [], [0], [1], [2] ] 
+  [ [4], [3], [4], [], [0], [], [], [], [], [2], [], [0], [], [0], [1], [2] ] 
 };
 // ***************************
-
 
 const MainContainer = () => {
   const [isLoaded, setLoaded] = useState(false);
@@ -61,7 +60,11 @@ const MainContainer = () => {
       <div id="seconds"></div>
       <button onClick={playPause}>TOGGLE SICK BEATS</button>
       <HeaderContainer />
-      <VisualContainer />
+      <VisualContainer 
+        numRows={7} 
+        numColumns={16} 
+        curStepColNum={2} 
+        gridState={bassTrack.grid} />
       <Footer />
     </div>
   )

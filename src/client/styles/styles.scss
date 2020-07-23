@@ -85,3 +85,31 @@ body {
     }
   }
 }
+
+.grid-btn-on-and-cur-step {
+  width: 20px;
+  height: 20px;
+  border: 1px solid white;
+  background-color: $btn-cur-time;
+}
+
+.grid-btn-off-and-cur-step {
+  width: 20px;
+  height: 20px;
+  border: 1px solid white;
+  background-color: $btn-cur-time;
+}
+
+.grid-btn-on {
+  width: 20px;
+  height: 20px;
+  border: 1px solid white;
+  background-color: $btn-on;
+}
+
+.grid-btn-off {
+  width: 20px;
+  height: 20px;
+  border: 1px solid white;
+  background-color: $btn-off;
+}

@@ -4,7 +4,7 @@ import InstrumentColumn from '../components/InstrumentColumn';
 import Board from '../components/Board';
 import Knobs from '../components/Knobs';
 
-const VisualContainer = () => {
+const VisualContainer = ({numRows, numColumns, curStepColNum, gridState, toggleButtonState}) => {
   return (
     <div className="body">
       <div className="VisualContainer">
@@ -14,7 +14,13 @@ const VisualContainer = () => {
             <InstrumentColumn />
             <Knobs />
           </div>
-          <Board />
+            <Board 
+              numRows={numRows} 
+              numColumns={numColumns} 
+              curStepColNum={curStepColNum} 
+              gridState={gridState}
+              toggleButtonState={toggleButtonState}
+            />
         </div>
       </div>
     </div>
