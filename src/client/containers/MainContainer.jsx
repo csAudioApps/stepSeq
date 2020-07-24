@@ -90,6 +90,8 @@ const MainContainer = () => {
     bassSynth.current = new Tone.Synth().connect(dist);
     drumSynth.current = new Tone.MembraneSynth().toDestination();
     console.log("B");
+
+    // clean up side effects
     return () => {
       transport.current.dispose();
       dly.dispose();
@@ -104,10 +106,13 @@ const MainContainer = () => {
     console.log("C");
     if(bassSynth && bassSynth.current) {
       const bassNoteArr = updateNoteArray(state.instruments[1].grid, selectedScale, 2); 
-      // console.log("MainContainer -> bassNoteArr", bassNoteArr)
+      console.log("MainContainer -> bassNoteArr", bassNoteArr)
       const bassSynthSeq = new Tone.Sequence( (time, note) => {
         bassSynth.current.triggerAttackRelease(note, "8n", time);
       }, bassNoteArr).start(0);
+
+      // clean up side effects
+      return () => bassSynthSeq.dispose();
     }
   }, [state.instruments[1].grid, selectedScale])
   
@@ -119,6 +124,9 @@ const MainContainer = () => {
       const drumSynthSeq = new Tone.Sequence((time, note) => {
         drumSynth.current.triggerAttackRelease(note, "8n", time);
       }, drumNoteArr).start(0);
+
+      // clean up side effects
+      return () => drumSynthSeq.dispose();
     }
   }, [state.instruments[0].grid, selectedScale])
 
