@@ -10,4 +10,8 @@ export const ADD_USER = 'ADD_USER';
 
 export const REMOVE_USER = 'REMOVE_USER';
 
-export const SET_NEW_USER = 'SET_NEW_USER'
+export const SET_NEW_USER = 'SET_NEW_USER';
+
+export const SET_LOCAL_USERID = 'SET_LOCAL_USERID';
+
+export const SET_SELECTED_INSTRUMENT = 'SET_SELECTED_INSTRUMENT'
