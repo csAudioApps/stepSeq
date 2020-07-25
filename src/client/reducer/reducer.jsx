@@ -8,7 +8,18 @@ export const reducer = (state, action) => {
   // console.log('reducing, state: ', state);
   // console.log('reducing, action: ', action);
   let newState;
+  let instrumentSelected;
+  console.log('action.type: ', action.type)
   switch (action.type) {
+
+    case reducerConstants.SET_LOCAL_USERID: 
+      return {
+        ...state,
+        local: {
+          ...state.local,
+          localUserId: action.payload
+        }
+      }
 
     // 
     case reducerConstants.SET_NEW_USER:
@@ -18,7 +29,10 @@ export const reducer = (state, action) => {
 
     // payload = state object
     case reducerConstants.SET_STATE_FROM_SOCKET: 
-      return {...action.payload};
+      return {
+        ...action.payload,
+        local: state.local
+      };
 
     // payload = user object {string: {username, instrument...}}
     case reducerConstants.ADD_USER:
@@ -50,7 +64,7 @@ export const reducer = (state, action) => {
     // payoad: object with x and y coordinates of grid button: {x: number, y: number}
     case reducerConstants.TOGGLE_GRID_BUTTON:
       // make copy of grid at user's selected instrument
-      const { instrumentSelected } = state.users[state.local.localUserId];
+      instrumentSelected = state.users[state.local.localUserId].instrumentSelected;
       const newGrid = [...state.instruments[instrumentSelected].grid];
 
       // if value is included in grid, remove, else add it and sort array
@@ -83,6 +97,23 @@ export const reducer = (state, action) => {
           status: {
             ...state.status,
             isPlaying: !state.status.isPlaying
+          }
+        }
+        socket.emit('updateServerState', newState, socket.id)
+        return newState;
+
+      case reducerConstants.SET_SELECTED_INSTRUMENT: 
+      console.log('here in reducer!!')
+      instrumentSelected = state.users[state.local.localUserId].instrumentSelected;
+
+        newState = {
+          ...state,
+          users: {
+            ...state.users,
+            [action.payload.localUserId]: {
+              ...state.users[action.payload.localUserId],
+              instrumentSelected: action.payload.instrumentSelected
+            }
           }
         }
         socket.emit('updateServerState', newState, socket.id)

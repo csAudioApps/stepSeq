@@ -70,12 +70,18 @@ const MainContainer = () => {
       }
     });
 
-    const id = uuid.v4();
-    dispatch({type: reducerConstants.ADD_USER, payload: {[id]: { userName: '', instrumentSelected: 1, color: 'red'}}})
 
+    
     
     return () => socket.disconnect();
   }, []);
+  
+  useEffect(() => {
+    if (!Object.keys(state.users).includes(state.local.localUserId)) {
+    const id = state.local.localUserId;
+    dispatch({type: reducerConstants.ADD_USER, payload: {[id]: { userName: '', instrumentSelected: 1, color: 'red'}}})
+    }
+  }, [state.users, state.local.localUserId])
 
   // Transport and Setup
   useEffect(() => {
@@ -90,6 +96,8 @@ const MainContainer = () => {
     bassSynth.current = new Tone.Synth().connect(dist);
     drumSynth.current = new Tone.MembraneSynth().toDestination();
     console.log("B");
+
+    // clean up side effects
     return () => {
       transport.current.dispose();
       dly.dispose();
@@ -104,10 +112,13 @@ const MainContainer = () => {
     console.log("C");
     if(bassSynth && bassSynth.current) {
       const bassNoteArr = updateNoteArray(state.instruments[1].grid, selectedScale, 2); 
-      // console.log("MainContainer -> bassNoteArr", bassNoteArr)
+      console.log("MainContainer -> bassNoteArr", bassNoteArr)
       const bassSynthSeq = new Tone.Sequence( (time, note) => {
         bassSynth.current.triggerAttackRelease(note, "8n", time);
       }, bassNoteArr).start(0);
+
+      // clean up side effects
+      return () => bassSynthSeq.dispose();
     }
   }, [state.instruments[1].grid, selectedScale])
   
@@ -115,12 +126,17 @@ const MainContainer = () => {
   useEffect(() => {
     console.log("D");
     if(drumSynth && drumSynth.current) {  
-      const drumNoteArr = ['A-1', null, null, null, 'A-1', null, null, null];
+      // const drumNoteArr = ['A-1', null, null, null, 'A-1', null, null, null];
+      const drumNoteArr = updateNoteArray(state.instruments[0].grid, selectedScale, 0); ;
       const drumSynthSeq = new Tone.Sequence((time, note) => {
         drumSynth.current.triggerAttackRelease(note, "8n", time);
       }, drumNoteArr).start(0);
+
+      // clean up side effects
+      return () => drumSynthSeq.dispose();
     }
   }, [state.instruments[0].grid, selectedScale])
+  let gridNumber = state.users[state.local.localUserId] ? state.instruments[state.users[state.local.localUserId].instrumentSelected].grid : 1
 
   return (
     <div className="MainContainer">
@@ -182,12 +198,13 @@ const MainContainer = () => {
         numRows={15} 
         numColumns={16} 
         curStepColNum={step}
-        // gridState={state.instruments[instrumentSelected].grid}
-        gridState={state.instruments[1].grid}
+        gridState={gridNumber}
+        // gridState={state.instruments[1].grid}
         dispatch={dispatch}
         instruments={state.instruments}
         scales={scales}
         selectedScale={state.local.localScale}
+        localUserId={state.local.localUserId}
         />
       <Footer />
     </div>
