@@ -1,11 +1,29 @@
-const express = require("express");
-let app = express();
 const path = require('path');
+const express = require('express');
+const app = express();
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
+const cache = require('./cache')();
 
-app.get('/', (req, res) => res.send("HELLO FROM EXPRESS"));
+app.use(express.static(path.resolve(__dirname, '/')));
+
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  socket.on('updateServerState', (msg, senderId) => {
+    // set cached state and broadcast to clients
+    cache.set('state', msg)
+    console.log(msg.users)
+    io.emit('updateClientState', cache.get('state'), senderId);
+  });
+
+  // if board has already been initialized, send state to client
+  socket.on('getInitialState', () => {
+    if (cache.get('users')) io.emit('updateClientState', cache.get('state'));
+    else (io.emit('firstUser'))
+  })
+});
 
 
-
-// app.use(express.static('public'))
-
-app.listen(3000,  () => console.log("Server listening on port 3000"));
+http.listen(3000, () => {
+  console.log('listening on *:3000');
+});

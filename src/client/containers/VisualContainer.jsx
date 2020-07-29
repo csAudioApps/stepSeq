@@ -1,20 +1,37 @@
 import React from 'react';
-import NavBar from '../components/NavBar';
+import ControlBar from '../components/ControlBar'
 import InstrumentColumn from '../components/InstrumentColumn';
 import Board from '../components/Board';
 import Knobs from '../components/Knobs';
 
-const VisualContainer = () => {
+const VisualContainer = ({
+    scales, selectedScale,
+    numRows, numColumns, curStepColNum, gridState, dispatch, 
+    instruments, localUserId
+  }) => {
   return (
     <div className="body">
       <div className="VisualContainer">
-        <NavBar />
+        <ControlBar 
+          scales={scales}
+          selectedScal={selectedScale}
+        />
         <div className="row">
           <div className="column">
-            <InstrumentColumn />
+            <InstrumentColumn 
+              instruments={instruments}
+              localUserId={localUserId}
+              dispatch={dispatch}
+            />
             <Knobs />
           </div>
-          <Board />
+            <Board 
+              numRows={numRows} 
+              numColumns={numColumns} 
+              curStepColNum={curStepColNum} 
+              gridState={gridState}
+              dispatch={dispatch}
+            />
         </div>
       </div>
     </div>
