@@ -103,8 +103,8 @@ export const reducer = (state, action) => {
         return newState;
 
       case reducerConstants.SET_SELECTED_INSTRUMENT: 
-      console.log('here in reducer!!')
-      instrumentSelected = state.users[state.local.localUserId].instrumentSelected;
+        console.log('in reducer->set selected instrument')
+        instrumentSelected = state.users[state.local.localUserId].instrumentSelected;
 
         newState = {
           ...state,
@@ -116,9 +116,26 @@ export const reducer = (state, action) => {
             }
           }
         }
+        console.log("reducer -> set selected instrument", newState)
         socket.emit('updateServerState', newState, socket.id)
         return newState;
-  
+
+      case reducerConstants.SET_SELECTED_SCALE:
+        console.log('in reducer->set selected scale')
+        console.log(action.payload);
+        newState = {
+          ...state,
+          users: {
+            ...state.users,
+            [action.payload.localUserId]: {
+              ...state.users[action.payload.localUserId],
+              selectedScale: action.payload.selectedScale
+            }
+          }
+        }
+        console.log("reducer -> set selected scale", newState)
+        // TODO This is gonna break - other users need to know what scale you're using, but display won't work right
+        return newState;
 
       // not working yet
       // case UPDATE_STATUS:
