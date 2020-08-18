@@ -3,7 +3,7 @@ import React from 'react';
 const Knobs = () => {
   return (
     <div className="Knobs">
-      <p>knobs</p>
+      {/* <p>knobs</p> */}
     </div>
   )
 }

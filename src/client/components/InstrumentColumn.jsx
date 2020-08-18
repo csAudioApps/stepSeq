@@ -1,7 +1,7 @@
 import React from 'react';
 import * as reducerConstants from '../reducer/reducerConstants'
 
-const InstrumentColumn = ({instruments, dispatch, localUserId}) => {
+const InstrumentColumn = React.memo(({instruments, dispatch, localUserId, selectedInstr}) => {
   // console.log("InstrumentColumn -> instruments", instruments)
   return (
     <div className="InstrumentColumn">
@@ -9,9 +9,8 @@ const InstrumentColumn = ({instruments, dispatch, localUserId}) => {
         instruments 
         ? instruments.map((item, i) => {
             return ( 
-              <div>
-                {/* <li className='instrument-li' key={instruments[i].name}>{instruments[i].name}</li> */}
-                <button className='instrument-btn' 
+              <div key={i}>
+                <button className={ selectedInstr === i ? 'instr-btn-selected' : 'instr-btn'} 
                   key={instruments[i].name} 
                   onClick={() => dispatch({
                     type: reducerConstants.SET_SELECTED_INSTRUMENT,
@@ -20,13 +19,13 @@ const InstrumentColumn = ({instruments, dispatch, localUserId}) => {
                 >
                   {instruments[i].name}
                 </button>
-              </div>  
+              </div>
             )
           })
         : <p>Loading...</p>
       }</ul>
     </div>
   ) 
-}
+})
 
 export default InstrumentColumn;

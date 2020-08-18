@@ -2,42 +2,19 @@ import React, {useState, useEffect, useRef, useReducer} from 'react';
 import VisualContainer from './VisualContainer';
 import HeaderContainer from './HeaderContainer';
 import Footer from '../components/Footer';
-// import "regenerator-runtime/runtime.js";
 import * as Tone from "tone";
 import {scales} from '../constants/scales.js'
 import {updateNoteArray} from '../helpers/audioHelpers.js';
 import { initialState } from '../constants/initBoardState'
 import { reducer } from '../reducer/reducer';
-// import testSample from "../../server/audio/wamb_mbasefree_006.wav"
 import * as reducerConstants from '../reducer/reducerConstants'
-
-import { initialState2 } from '../constants/initBoardState'
-import { initialState3 } from '../constants/initBoardState'
-
 import { socket } from '../helpers/socket';
-
-import uuid from "uuid";
-
-
-
+// import uuid from "uuid";
 
 // ***** PULL FROM STATE *****
 // const seqLen = 16;
-Tone.Transport.bpm.value = 180;
-let selectedScale = 2;
-
-const drumTrack = { 
-  name: "Drums", soundPreset: "BasicDrumset", mono: null, legato: false, grid:
-    // [ [3], [3], [4], [], [0], [], [], [], [], [2], [], [0], [], [0], [1], [2] ] 
-    [ [4], [], [], [], [4], [], [], [], [4], [], [], [], [4], [], [], [] ] 
-};
-
-const bassTrack = { 
-name: "Bass", soundPreset: "ClassicBassSynth", mono: true, legato: true, grid: 
-  [ [14], [4], [4], [13], [0], [14], [7], [], [0], [2], [7], [0], [7], [0], [1], [] ] 
-  // [ [14], [3], [4], [13], [0], [14], [], [], [], [0], [], [0], [7], [0], [1], [] ] 
-};
-// ***************************
+Tone.Transport.bpm.value = 120;
+let selectedScale = 0;
 
 const MainContainer = () => {
   const [state, dispatch] = useReducer(reducer, initialState);  
@@ -48,6 +25,19 @@ const MainContainer = () => {
   const [step, setStep] = useState(0);
   let dly;
   let dist;
+
+  selectedScale = state.users && state.local && state.users[state.local.localUserId]
+    ? state.users[state.local.localUserId].selectedScale
+    : 0;
+  
+  // is this a clear var name?
+  let gridNumber = state.users[state.local.localUserId] 
+    ? state.instruments[state.users[state.local.localUserId].instrumentSelected].grid
+    : 1
+
+  let selectedInstr = state.users[state.local.localUserId] 
+    ? state.users[state.local.localUserId].instrumentSelected
+    : 1;
 
   // open socket connection
   useEffect(() => {
@@ -69,17 +59,19 @@ const MainContainer = () => {
         // console.log('they are equal')
       }
     });
-
-
-    
     
     return () => socket.disconnect();
   }, []);
   
   useEffect(() => {
     if (!Object.keys(state.users).includes(state.local.localUserId)) {
-    const id = state.local.localUserId;
-    dispatch({type: reducerConstants.ADD_USER, payload: {[id]: { userName: '', instrumentSelected: 1, color: 'red'}}})
+      const id = state.local.localUserId;
+      dispatch({
+        type: reducerConstants.ADD_USER, 
+        payload: {
+          [id]: { userName: '', instrumentSelected: 1, selectedScale: 0, color: 'red' }
+        }
+      })
     }
   }, [state.users, state.local.localUserId])
 
@@ -136,13 +128,55 @@ const MainContainer = () => {
       return () => drumSynthSeq.dispose();
     }
   }, [state.instruments[0].grid, selectedScale])
-  let gridNumber = state.users[state.local.localUserId] ? state.instruments[state.users[state.local.localUserId].instrumentSelected].grid : 1
+
+  // console.log("MainContainer -> selectedScale", selectedScale)
 
   return (
     <div className="MainContainer">
-      {/* <button disabled={!isLoaded} onClick={handleClick}>Trigger Sample</button> */}
       <div id="time"></div>
       <div id="seconds"></div>
+      <HeaderContainer />
+      <VisualContainer 
+        numRows={15} 
+        numColumns={16} 
+        curStepColNum={step}
+        gridState={gridNumber}
+        dispatch={dispatch}
+        instruments={state.instruments}
+        selectedInstr={selectedInstr}
+        scales={scales}
+        selectedScale={selectedScale}
+        localUserId={state.local.localUserId}
+        />
+      <Footer />
+    </div>
+  )
+}
+
+export default MainContainer;
+
+
+
+
+
+
+
+
+// const drumTrack = { 
+//   name: "Drums", soundPreset: "BasicDrumset", mono: null, legato: false, grid:
+//     // [ [3], [3], [4], [], [0], [], [], [], [], [2], [], [0], [], [0], [1], [2] ] 
+//     [ [4], [], [], [], [4], [], [], [], [4], [], [], [], [4], [], [], [] ] 
+// };
+
+// const bassTrack = { 
+// name: "Bass", soundPreset: "ClassicBassSynth", mono: true, legato: true, grid: 
+//   [ [14], [4], [4], [13], [0], [14], [7], [], [0], [2], [7], [0], [7], [0], [1], [] ] 
+//   // [ [14], [3], [4], [13], [0], [14], [], [], [], [0], [], [0], [7], [0], [1], [] ] 
+// };
+// ***************************
+
+
+
       {/* <button onClick={playPause}>TOGGLE SICK BEATS</button> */}
 
       {/* ***TEST BUTTONS*** */}
@@ -191,28 +225,6 @@ const MainContainer = () => {
         SICK UPDATE SOCKET BUTTON
       </button>
  */}
-
-
-      <HeaderContainer />
-      <VisualContainer 
-        numRows={15} 
-        numColumns={16} 
-        curStepColNum={step}
-        gridState={gridNumber}
-        // gridState={state.instruments[1].grid}
-        dispatch={dispatch}
-        instruments={state.instruments}
-        scales={scales}
-        selectedScale={state.local.localScale}
-        localUserId={state.local.localUserId}
-        />
-      <Footer />
-    </div>
-  )
-}
-
-export default MainContainer;
-
 
       // bassSynth.current = new Tone.Synth().toDestination();
       // bassSynth.current.triggerAttackRelease('C4', '16n')
