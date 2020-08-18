@@ -129,6 +129,7 @@ ul {
 }
 
 .scale-btn {
+  cursor: pointer;
   padding: 5px;
   float: left;
 }
@@ -138,11 +139,8 @@ ul {
   font-weight: 500;
 }
 
-.instrument-li {
-  margin: 0.7em;
-}
-
 .instr-btn {
+  cursor: pointer;
   margin: 0.7em;
   background-color: transparent;
   font-size: 100%;
