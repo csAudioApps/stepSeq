@@ -24,10 +24,9 @@ export const initialState = {
     
   },
 
-
   local: {
     localUserId: '',
-    localScale: 0,
+    // localScale: 0,
     seqLen: 16,
     // localOctaveStart: 'C2'
   }
@@ -56,14 +55,14 @@ export const initialState2 = {
   },
 
   users: {
-    'wsxk943KJk': { userName: '', instrumentSelected: 2, color: 'blue'},
-    'asv543fgs': { userName: '', instrumentSelected: 0, color: 'red'},
+    'wsxk943KJk': { userName: '', instrumentSelected: 2, color: 'blue', selectedScale: 0},
+    'asv543fgs': { userName: '', instrumentSelected: 0, color: 'red', selectedScale: 0},
   },
 
 
   local: {
     localUserId: 'wsxsk943KJk',
-    localScale: 0,
+    // localScale: 0,
     seqLen: 16,
     // localOctaveStart: 'C2'
   }
@@ -92,14 +91,14 @@ export const initialState3 = {
   },
 
   users: {
-    'wsxk943KJk': { userName: '', instrumentSelected: 2, color: 'blue'},
-    'asv543fgs': { userName: '', instrumentSelected: 0, color: 'red'},
+    'wsxk943KJk': { userName: '', instrumentSelected: 2, color: 'blue', selectedScale: 0},
+    'asv543fgs': { userName: '', instrumentSelected: 0, color: 'red', selectedScale: 0},
   },
 
 
   local: {
     localUserId: 'wsxk943KJk',
-    localScale: 0,
+    // localScale: 0,
     seqLen: 16,
     // localOctaveStart: 'C2'
   }

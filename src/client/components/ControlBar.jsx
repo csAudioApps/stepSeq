@@ -1,7 +1,9 @@
 import React from 'react';
 import { togglePlayback } from '../helpers/audioHelpers.js';
+import { SET_SELECTED_SCALE } from '../reducer/reducerConstants'
 
-const ControlBar = ({scales, selectedScale}) => {
+const ControlBar = ({scales, selectedScale, dispatch, localUserId }) => {
+console.log("ControlBar -> selectedScale", selectedScale)
 
   // const scaleNums = scales.
 
@@ -13,7 +15,12 @@ const ControlBar = ({scales, selectedScale}) => {
         {
           scales 
           ? scales.map((item, i) => {
-            return <li className='scale-nums' key={i}>{i+1}</li>;
+            return <li className={selectedScale === i ? 'scale-btn-selected' : 'scale-btn'} 
+                        onClick={() => dispatch({
+                          type: SET_SELECTED_SCALE, 
+                          payload: { localUserId: localUserId, selectedScale: i }
+                        })}
+                        key={i}>{i+1}</li>;
           })
           : <p>Loading...</p>
         }

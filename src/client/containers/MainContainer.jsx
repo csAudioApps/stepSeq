@@ -24,7 +24,7 @@ import uuid from "uuid";
 // ***** PULL FROM STATE *****
 // const seqLen = 16;
 Tone.Transport.bpm.value = 180;
-let selectedScale = 2;
+let selectedScale = 0;
 
 // const drumTrack = { 
 //   name: "Drums", soundPreset: "BasicDrumset", mono: null, legato: false, grid:
@@ -48,6 +48,27 @@ const MainContainer = () => {
   const [step, setStep] = useState(0);
   let dly;
   let dist;
+
+  console.log("MainContainer -> state.local", state.local)
+  console.log("MainContainer -> state.user", state.user)
+
+  if(state.user && state.local && state.user[state.local.localUserId]) {
+    selectedScale = state.users[state.local.localUserId].selectedScale;
+    console.log("MainContainer -> selectedScale", selectedScale)
+  }
+  // let selectedScale = state.user && state.local && state.user[state.local.localUserId]
+  // ? state.users[state.local.localUserId].selectedScale
+  // : 0;
+  // console.log("MainContainer -> selectedScale", selectedScale)
+  
+  // is this a clear var name?
+  let gridNumber = state.users[state.local.localUserId] 
+    ? state.instruments[state.users[state.local.localUserId].instrumentSelected].grid
+    : 1
+
+  let selectedInstr = state.users[state.local.localUserId] 
+    ? state.users[state.local.localUserId].instrumentSelected
+    : 1;
 
   // open socket connection
   useEffect(() => {
@@ -75,8 +96,13 @@ const MainContainer = () => {
   
   useEffect(() => {
     if (!Object.keys(state.users).includes(state.local.localUserId)) {
-    const id = state.local.localUserId;
-    dispatch({type: reducerConstants.ADD_USER, payload: {[id]: { userName: '', instrumentSelected: 1, color: 'red'}}})
+      const id = state.local.localUserId;
+      dispatch({
+        type: reducerConstants.ADD_USER, 
+        payload: {
+          [id]: { userName: '', instrumentSelected: 1, selectedScale: 0, color: 'red' }
+        }
+      })
     }
   }, [state.users, state.local.localUserId])
 
@@ -134,15 +160,7 @@ const MainContainer = () => {
     }
   }, [state.instruments[0].grid, selectedScale])
 
-  let gridNumber = state.users[state.local.localUserId] 
-                  ? state.instruments[state.users[state.local.localUserId].instrumentSelected].grid
-                  : 1
-  
-  let selectedInstr = state.users[state.local.localUserId] 
-                  ? state.users[state.local.localUserId].instrumentSelected
-                  : 1;
-
-  // console.log("MainContainer -> gridNumber", gridNumber)
+  // console.log("MainContainer -> selectedScale", selectedScale)
 
   return (
     <div className="MainContainer">
@@ -210,7 +228,7 @@ const MainContainer = () => {
         instruments={state.instruments}
         selectedInstr={selectedInstr}
         scales={scales}
-        selectedScale={state.local.localScale}
+        selectedScale={selectedScale}
         localUserId={state.local.localUserId}
         />
       <Footer />

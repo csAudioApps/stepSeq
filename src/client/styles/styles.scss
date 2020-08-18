@@ -128,9 +128,14 @@ ul {
   float: left;
 }
 
-.scale-nums {
+.scale-btn {
   padding: 5px;
   float: left;
+}
+
+.scale-btn-selected {
+  @extend .scale-btn;
+  font-weight: 500;
 }
 
 .instrument-li {

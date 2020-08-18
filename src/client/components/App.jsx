@@ -14,11 +14,10 @@ const App = (props) => {
   return (
     <div>
       <MainContainer />
-      <input onChange={(e) => setInputText(e.target.value)} type="text" />
-      <button onClick={() => send()}>send</button>
+      {/* <input onChange={(e) => setInputText(e.target.value)} type="text" /> */}
+      {/* <button onClick={() => send()}>send</button> */}
     </div>
   );
 };
 
 export default App;
-    

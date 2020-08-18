@@ -14,7 +14,9 @@ const VisualContainer = ({
       <div className="VisualContainer">
         <ControlBar 
           scales={scales}
-          selectedScal={selectedScale}
+          localUserId={localUserId}
+          selectedScale={selectedScale}
+          dispatch={dispatch}
         />
         <div className="row">
           <div className="column">
