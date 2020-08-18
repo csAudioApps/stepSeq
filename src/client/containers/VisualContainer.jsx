@@ -7,7 +7,7 @@ import Knobs from '../components/Knobs';
 const VisualContainer = ({
     scales, selectedScale,
     numRows, numColumns, curStepColNum, gridState, dispatch, 
-    instruments, localUserId
+    instruments, localUserId, selectedInstr
   }) => {
   return (
     <div className="body">
@@ -21,6 +21,7 @@ const VisualContainer = ({
             <InstrumentColumn 
               instruments={instruments}
               localUserId={localUserId}
+              selectedInstr={selectedInstr}
               dispatch={dispatch}
             />
             <Knobs />

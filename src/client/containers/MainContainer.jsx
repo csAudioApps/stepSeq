@@ -26,17 +26,17 @@ import uuid from "uuid";
 Tone.Transport.bpm.value = 180;
 let selectedScale = 2;
 
-const drumTrack = { 
-  name: "Drums", soundPreset: "BasicDrumset", mono: null, legato: false, grid:
-    // [ [3], [3], [4], [], [0], [], [], [], [], [2], [], [0], [], [0], [1], [2] ] 
-    [ [4], [], [], [], [4], [], [], [], [4], [], [], [], [4], [], [], [] ] 
-};
+// const drumTrack = { 
+//   name: "Drums", soundPreset: "BasicDrumset", mono: null, legato: false, grid:
+//     // [ [3], [3], [4], [], [0], [], [], [], [], [2], [], [0], [], [0], [1], [2] ] 
+//     [ [4], [], [], [], [4], [], [], [], [4], [], [], [], [4], [], [], [] ] 
+// };
 
-const bassTrack = { 
-name: "Bass", soundPreset: "ClassicBassSynth", mono: true, legato: true, grid: 
-  [ [14], [4], [4], [13], [0], [14], [7], [], [0], [2], [7], [0], [7], [0], [1], [] ] 
-  // [ [14], [3], [4], [13], [0], [14], [], [], [], [0], [], [0], [7], [0], [1], [] ] 
-};
+// const bassTrack = { 
+// name: "Bass", soundPreset: "ClassicBassSynth", mono: true, legato: true, grid: 
+//   [ [14], [4], [4], [13], [0], [14], [7], [], [0], [2], [7], [0], [7], [0], [1], [] ] 
+//   // [ [14], [3], [4], [13], [0], [14], [], [], [], [0], [], [0], [7], [0], [1], [] ] 
+// };
 // ***************************
 
 const MainContainer = () => {
@@ -69,9 +69,6 @@ const MainContainer = () => {
         // console.log('they are equal')
       }
     });
-
-
-    
     
     return () => socket.disconnect();
   }, []);
@@ -136,7 +133,16 @@ const MainContainer = () => {
       return () => drumSynthSeq.dispose();
     }
   }, [state.instruments[0].grid, selectedScale])
-  let gridNumber = state.users[state.local.localUserId] ? state.instruments[state.users[state.local.localUserId].instrumentSelected].grid : 1
+
+  let gridNumber = state.users[state.local.localUserId] 
+                  ? state.instruments[state.users[state.local.localUserId].instrumentSelected].grid
+                  : 1
+  
+  let selectedInstr = state.users[state.local.localUserId] 
+                  ? state.users[state.local.localUserId].instrumentSelected
+                  : 1;
+
+  // console.log("MainContainer -> gridNumber", gridNumber)
 
   return (
     <div className="MainContainer">
@@ -202,6 +208,7 @@ const MainContainer = () => {
         // gridState={state.instruments[1].grid}
         dispatch={dispatch}
         instruments={state.instruments}
+        selectedInstr={selectedInstr}
         scales={scales}
         selectedScale={state.local.localScale}
         localUserId={state.local.localUserId}

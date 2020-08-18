@@ -1,5 +1,5 @@
 @import '_variables';
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&display=swap');
 // @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;200;300;400&display=swap');
 // @import url('https://fonts.googleapis.com/css2?family=Josefin+Slab:wght@300;400;600&display=swap');
 // @import url('https://fonts.googleapis.com/css2?family=Josefin+Slab:wght@400;600&display=swap');
@@ -9,6 +9,10 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+*:focus {
+  outline: 0;
 }
 
 html,
@@ -133,14 +137,18 @@ ul {
   margin: 0.7em;
 }
 
-.instrument-btn {
+.instr-btn {
   margin: 0.7em;
   background-color: transparent;
-  // margin-left: 10px;
   font-size: 100%;
   font-family: inherit;
   color: $superlight;
   font-weight: 200;
+}
+
+.instr-btn-selected {
+  @extend .instr-btn;
+  font-weight: 500;
 }
 
 .btn-row-root {
