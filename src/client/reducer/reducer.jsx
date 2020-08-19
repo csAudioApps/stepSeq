@@ -103,7 +103,7 @@ export const reducer = (state, action) => {
         return newState;
 
       case reducerConstants.SET_SELECTED_INSTRUMENT: 
-        console.log('in reducer->set selected instrument')
+        console.log('in reducer->set selected instrument. localUserId:', action.payload.localUserId)
         instrumentSelected = state.users[state.local.localUserId].instrumentSelected;
 
         newState = {

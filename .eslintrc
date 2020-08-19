@@ -1,0 +1,12 @@
+{
+  "extends": ["airbnb", "airbnb/hooks"],
+  "rules": {
+    "no-console": "off",
+    "no-plusplus": "off",
+    "brace-style": ["error", "stroustrup", { "allowSingleLine": true }]
+  },
+  "globals": {
+    "document": true,
+    "window": true
+  },
+}
