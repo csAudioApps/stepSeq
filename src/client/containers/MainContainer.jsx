@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import React, {
   useState, useEffect, useRef, useReducer, useCallback,
 } from 'react';
@@ -16,7 +17,7 @@ import { socket } from '../helpers/socket';
 // ***** PULL FROM STATE *****
 // const seqLen = 16;
 Tone.Transport.bpm.value = 120;
-let selectedScale = 0;
+// let selectedScale = 0;
 
 const MainContainer = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -27,7 +28,7 @@ const MainContainer = () => {
   let dly;
   let dist;
 
-  selectedScale = state.users && state.local && state.users[state.local.localUserId]
+  const selectedScale = state.users && state.local && state.users[state.local.localUserId]
     ? state.users[state.local.localUserId].selectedScale
     : 0;
 
@@ -116,7 +117,8 @@ const MainContainer = () => {
       // clean up side effects
       return () => bassSynthSeq.dispose();
     }
-  }, [state.instruments]);
+    return null;
+  }, [state.instruments, selectedScale]);
 
   // Drum Synth
   useEffect(() => {
@@ -134,28 +136,44 @@ const MainContainer = () => {
   }, [state.instruments]);
 
   const handleUserKeyPress = useCallback((event) => {
-    const { key, altKey } = event;
-    console.log('MainContainer -> key', key);
+    const { code, altKey } = event;
+    console.log('handleUserKeyPress -> code', code);
 
     // toggle playback
-    if (key === ' ') {
-      togglePlayback();
-    }
-    else if (Number(key) >= 0 && Number(key) <= 9) {
-      // alt + nums change scale
-      if (altKey === true && Number(key) <= 7) {
-        dispatch({
-          type: reducerConstants.SET_SELECTED_SCALE,
-          payload: { localUserId: state.local.localUserId, selectedScale: Number(key) - 1 },
-        });
+    switch (code) {
+      case 'Space':
+        togglePlayback();
+        break;
+      case 'Digit1':
+      case 'Digit2':
+      case 'Digit3':
+      case 'Digit4':
+      case 'Digit5':
+      case 'Digit6':
+      case 'Digit7':
+      case 'Digit8':
+      case 'Digit9':
+      case 'Digit0': {
+        const selectedIndex = Number(code[code.length - 1]) - 1;
+        console.log('handleUserKeyPress -> selectedIndex', selectedIndex);
+        if (altKey === true) {
+          console.log('in alt fuck; selectedIndex: ', selectedIndex);
+          dispatch({
+            type: reducerConstants.SET_SELECTED_SCALE,
+            payload: { localUserId: state.local.localUserId, selectedScale: selectedIndex },
+          });
+        }
+        // nums alone change instrument
+        else {
+          dispatch({
+            type: reducerConstants.SET_SELECTED_INSTRUMENT,
+            payload: { localUserId: state.local.localUserId, instrumentSelected: selectedIndex },
+          });
+        }
+        break;
       }
-      // nums alone change instrument
-      else if (altKey === false && Number(key) <= 9) {
-        dispatch({
-          type: reducerConstants.SET_SELECTED_INSTRUMENT,
-          payload: { localUserId: state.local.localUserId, instrumentSelected: Number(key) - 1 },
-        });
-      }
+      default:
+        break;
     }
   }, [state.local.localUserId]);
 

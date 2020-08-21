@@ -96,8 +96,13 @@ const reducer = (state, action) => {
       return newState;
     }
     case reducerConstants.SET_SELECTED_INSTRUMENT: {
-      console.log('in reducer->set selected instrument. localUserId:', action.payload.localUserId);
-      instrumentSelected = state.users[state.local.localUserId].instrumentSelected;
+      let numSelected = action.payload.instrumentSelected;
+      if (numSelected < state.instruments.length) {
+        numSelected = action.payload.instrumentSelected;
+      }
+      else {
+        return state;
+      }
 
       newState = {
         ...state,
@@ -105,11 +110,10 @@ const reducer = (state, action) => {
           ...state.users,
           [action.payload.localUserId]: {
             ...state.users[action.payload.localUserId],
-            instrumentSelected: action.payload.instrumentSelected,
+            instrumentSelected: numSelected,
           },
         },
       };
-      console.log('reducer -> set selected instrument', newState);
       socket.emit('updateServerState', newState, socket.id);
       return newState;
     }
