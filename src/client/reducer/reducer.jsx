@@ -1,9 +1,6 @@
 import * as reducerConstants from './reducerConstants';
 import { socket } from '../helpers/socket';
-// dispatch({ type: TOGGLE_GRID_BUTTON, payload: {
-//   x: 4,
-//   y: 3
-// }})
+
 const reducer = (state, action) => {
   // console.log('reducing, state: ', state);
   // console.log('reducing, action: ', action);

@@ -8,7 +8,7 @@ import Footer from '../components/Footer';
 import { scales } from '../constants/scales';
 import { updateNoteArray, togglePlayback } from '../helpers/audioHelpers';
 import { initialState } from '../constants/initBoardState';
-import { reducer } from '../reducer/reducer';
+import reducer from '../reducer/reducer';
 import * as reducerConstants from '../reducer/reducerConstants';
 import { socket } from '../helpers/socket';
 // import uuid from "uuid";
@@ -143,14 +143,14 @@ const MainContainer = () => {
     }
     else if (Number(key) >= 0 && Number(key) <= 9) {
       // alt + nums change scale
-      if(altKey === true && Number(key) <=7) {
+      if (altKey === true && Number(key) <= 7) {
         dispatch({
           type: reducerConstants.SET_SELECTED_SCALE,
-          payload: { localUserId: state.local.localUserId, instrumentSelected: Number(key) - 1 },
+          payload: { localUserId: state.local.localUserId, selectedScale: Number(key) - 1 },
         });
       }
       // nums alone change instrument
-      else (altKey === false && Number(key) <= 9) {
+      else if (altKey === false && Number(key) <= 9) {
         dispatch({
           type: reducerConstants.SET_SELECTED_INSTRUMENT,
           payload: { localUserId: state.local.localUserId, instrumentSelected: Number(key) - 1 },
