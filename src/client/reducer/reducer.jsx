@@ -1,5 +1,6 @@
 import * as reducerConstants from './reducerConstants';
 import { socket } from '../helpers/socket';
+import scales from '../constants/scales';
 
 const reducer = (state, action) => {
   // console.log('reducing, state: ', state);
@@ -120,6 +121,14 @@ const reducer = (state, action) => {
     case reducerConstants.SET_SELECTED_SCALE: {
       console.log('in reducer->set selected scale');
       console.log(action.payload);
+      let numSelected = action.payload.selectedScale;
+      if (numSelected < scales.length) {
+        numSelected = action.payload.selectedScale;
+      }
+      else {
+        return state;
+      }
+
       newState = {
         ...state,
         users: {

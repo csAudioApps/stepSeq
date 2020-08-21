@@ -1,4 +1,4 @@
-export const scales = [
+const scales = [
   ['C', 'D', 'E', 'F', 'G', 'A', 'B'],
   ['C', 'D', 'Eb', 'F', 'G', 'A', 'Bb'],
   ['C', 'Db', 'Eb', 'F', 'G', 'Ab', 'B'],
@@ -7,3 +7,5 @@ export const scales = [
   ['C', 'D', 'Eb', 'F', 'G', 'Ab', 'Bb'],
   ['C', 'Db', 'Eb', 'F', 'Gb', 'Ab', 'Bb'],
 ];
+
+export default scales;

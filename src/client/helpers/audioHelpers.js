@@ -1,5 +1,5 @@
 import * as Tone from 'tone';
-import { scales } from '../constants/scales';
+import scales from '../constants/scales';
 
 export const updateNoteArray = (grid, scaleNum, rootOctaveNum) => {
   const retArr = [];
