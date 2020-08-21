@@ -11,7 +11,7 @@ import { SET_SELECTED_SCALE } from '../reducer/reducerConstants';
 const ControlBar = React.memo(({
   scales, selectedScale, dispatch, localUserId,
 }) => {
-  console.log("Tone.Transport.state ", Tone.Transport.state )
+  console.log('Tone.Transport.state ', Tone.Transport.state);
   return (
     <div className="NavBar">
       <ul>
@@ -19,8 +19,8 @@ const ControlBar = React.memo(({
           <button type="button" onClick={togglePlayback} className="btn-play-pause">
             {
               (Tone.Transport.state === 'stopped' || Tone.Transport.state === 'paused')
-              ? 'Play'
-              : 'Pause'
+                ? 'Play'
+                : 'Pause'
             }
           </button>
         </li>
@@ -54,4 +54,3 @@ const ControlBar = React.memo(({
 // }
 
 export default ControlBar;
-

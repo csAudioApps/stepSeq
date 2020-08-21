@@ -8,15 +8,15 @@ import * as reducerConstants from '../reducer/reducerConstants';
 
 const InstrumentColumn = React.memo(({
   instruments, dispatch, localUserId, selectedInstr,
-}) => {
-  return (
-    <div className="InstrumentColumn">
-      <ul>
-        {
+}) => (
+  <div className="InstrumentColumn">
+    <ul>
+      {
         instruments
           ? instruments.map((item, i) => (
             <div key={i}>
               <button
+                type="button"
                 className={selectedInstr === i ? 'instr-btn-selected' : 'instr-btn'}
                 key={instruments[i].name}
                 onClick={() => dispatch({
@@ -30,22 +30,21 @@ const InstrumentColumn = React.memo(({
           ))
           : <p>Loading...</p>
       }
-      </ul>
-    </div>
-  );
-});
+    </ul>
+  </div>
+));
 
-  // InstrumentColumn.propTypes = {
-  //   instruments: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.shape({
-  //     name: string,
-  //     soundPreset: string,
-  //     mono: bool,
-  //     legato: bool,
-  //     grid: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number))
-  //   }))).isRequired,
-  //   dispatch: PropTypes.func.isRequired,
-  //   localUserId: PropTypes.string.isRequired,
-  //   selectedInstr: PropTypes.number.isRequired,
-  // }
-  
+// InstrumentColumn.propTypes = {
+//   instruments: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.shape({
+//     name: string,
+//     soundPreset: string,
+//     mono: bool,
+//     legato: bool,
+//     grid: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number))
+//   }))).isRequired,
+//   dispatch: PropTypes.func.isRequired,
+//   localUserId: PropTypes.string.isRequired,
+//   selectedInstr: PropTypes.number.isRequired,
+// }
+
 export default InstrumentColumn;

@@ -1,3 +1,4 @@
+/* eslint-disable no-multi-spaces */
 /* eslint-disable consistent-return */
 import React, {
   useState, useEffect, useRef, useReducer, useCallback,
@@ -14,45 +15,30 @@ import * as reducerConstants from '../reducer/reducerConstants';
 import { socket } from '../helpers/socket';
 // import uuid from "uuid";
 
-// ***** PULL FROM STATE *****
 // const seqLen = 16;
 Tone.Transport.bpm.value = 120;
-// let selectedScale = 0;
 
 const MainContainer = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [step, setStep] = useState(0);
+
+  const { users, local, instruments } = state;
+  const { localUserId } = local;
+  const selectedScale = (users[localUserId]) ? users[localUserId].selectedScale : 0;
+  const selectedInstr = (users[localUserId]) ? users[localUserId].instrumentSelected : 1;
+  const gridForCurInstr = (users[localUserId]) ? instruments[selectedInstr].grid : 1;
+
   const transport = useRef(null);
   const bassSynth = useRef(null);
   const drumSynth = useRef(null);
-  const [step, setStep] = useState(0);
   let dly;
   let dist;
-
-  const selectedScale = state.users && state.local && state.users[state.local.localUserId]
-    ? state.users[state.local.localUserId].selectedScale
-    : 0;
-
-  // is this a clear var name?
-  const gridNumber = state.users[state.local.localUserId]
-    ? state.instruments[state.users[state.local.localUserId].instrumentSelected].grid
-    : 1;
-
-  const selectedInstr = state.users[state.local.localUserId]
-    ? state.users[state.local.localUserId].instrumentSelected
-    : 1;
 
   // open socket connection
   useEffect(() => {
     // get initial state
     console.log('socket: ', socket);
     socket.emit('getInitialState');
-    // if we are first user, create state in the server
-    // socket.on('firstUser', () => {
-    //   console.log('first')
-    //   socket.emit('updateServerState', state, socket.id);
-    // })
-    // when we receive and updated state from server, update local state
-    // only update if update was sent fron another user
     socket.on('updateClientState', (msg, senderId) => {
       if (socket.id !== senderId) {
         // console.log('***not equal****')
@@ -62,13 +48,13 @@ const MainContainer = () => {
         // console.log('they are equal')
       }
     });
-
     return () => socket.disconnect();
   }, []);
 
+  // Add User
   useEffect(() => {
-    if (!Object.keys(state.users).includes(state.local.localUserId)) {
-      const id = state.local.localUserId;
+    if (!Object.keys(users).includes(localUserId)) {
+      const id = localUserId;
       dispatch({
         type: reducerConstants.ADD_USER,
         payload: {
@@ -78,7 +64,7 @@ const MainContainer = () => {
         },
       });
     }
-  }, [state.users, state.local.localUserId]);
+  }, [users, localUserId]);
 
   // Transport and Setup
   useEffect(() => {
@@ -108,7 +94,7 @@ const MainContainer = () => {
   useEffect(() => {
     console.log('C');
     if (bassSynth && bassSynth.current) {
-      const bassNoteArr = updateNoteArray(state.instruments[1].grid, selectedScale, 2);
+      const bassNoteArr = updateNoteArray(instruments[1].grid, selectedScale, 2);
       console.log('MainContainer -> bassNoteArr', bassNoteArr);
       const bassSynthSeq = new Tone.Sequence((time, note) => {
         bassSynth.current.triggerAttackRelease(note, '8n', time);
@@ -118,14 +104,14 @@ const MainContainer = () => {
       return () => bassSynthSeq.dispose();
     }
     return null;
-  }, [state.instruments, selectedScale]);
+  }, [instruments, selectedScale]);
 
   // Drum Synth
   useEffect(() => {
     console.log('D');
     if (drumSynth && drumSynth.current) {
       // const drumNoteArr = ['A-1', null, null, null, 'A-1', null, null, null];
-      const drumNoteArr = updateNoteArray(state.instruments[0].grid, selectedScale, 0);
+      const drumNoteArr = updateNoteArray(instruments[0].grid, selectedScale, 0);
       const drumSynthSeq = new Tone.Sequence((time, note) => {
         drumSynth.current.triggerAttackRelease(note, '8n', time);
       }, drumNoteArr).start(0);
@@ -133,19 +119,17 @@ const MainContainer = () => {
       // clean up side effects
       return () => drumSynthSeq.dispose();
     }
-  }, [state.instruments]);
+  }, [instruments]);
 
   const handleUserKeyPress = useCallback((event) => {
     const { code, altKey } = event;
-    console.log('handleUserKeyPress -> code', code);
+    // console.log('handleUserKeyPress -> code', code);
 
-    // toggle playback
     switch (code) {
       case 'Space':
-        // togglePlayback();
-        dispatch({ 
+        dispatch({                // Toggle Playback
           type: reducerConstants.TOGGLE_IS_PLAYING,
-          payload: { localUserId: state.local.localUserId }
+          payload: { localUserId },
         });
         break;
       case 'Digit1':
@@ -159,19 +143,16 @@ const MainContainer = () => {
       case 'Digit9':
       case 'Digit0': {
         const selectedIndex = Number(code[code.length - 1]) - 1;
-        console.log('handleUserKeyPress -> selectedIndex', selectedIndex);
-        if (altKey === true) {
-          console.log('in alt fuck; selectedIndex: ', selectedIndex);
+        if (altKey === true) {    // Numbers with alt key switch scale
           dispatch({
             type: reducerConstants.SET_SELECTED_SCALE,
-            payload: { localUserId: state.local.localUserId, selectedScale: selectedIndex },
+            payload: { localUserId, selectedScale: selectedIndex },
           });
         }
-        // nums alone change instrument
-        else {
+        else {                    // Numbers without modifier keys switch instrument
           dispatch({
             type: reducerConstants.SET_SELECTED_INSTRUMENT,
-            payload: { localUserId: state.local.localUserId, instrumentSelected: selectedIndex },
+            payload: { localUserId, instrumentSelected: selectedIndex },
           });
         }
         break;
@@ -179,7 +160,7 @@ const MainContainer = () => {
       default:
         break;
     }
-  }, [state.local.localUserId]);
+  }, [localUserId]);
 
   // Add event listeners
   useEffect(() => {
@@ -196,13 +177,13 @@ const MainContainer = () => {
         numRows={15}
         numColumns={16}
         curStepColNum={step}
-        gridState={gridNumber}
+        gridState={gridForCurInstr}
         dispatch={dispatch}
-        instruments={state.instruments}
+        instruments={instruments}
         selectedInstr={selectedInstr}
         scales={scales}
         selectedScale={selectedScale}
-        localUserId={state.local.localUserId}
+        localUserId={localUserId}
       />
       <Footer />
     </div>
@@ -210,3 +191,11 @@ const MainContainer = () => {
 };
 
 export default MainContainer;
+
+// if we are first user, create state in the server
+// socket.on('firstUser', () => {
+//   console.log('first')
+//   socket.emit('updateServerState', state, socket.id);
+// })
+// when we receive and updated state from server, update local state
+// only update if update was sent fron another user

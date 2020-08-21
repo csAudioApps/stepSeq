@@ -84,15 +84,24 @@ const reducer = (state, action) => {
       socket.emit('updateServerState', newState, socket.id);
       return newState;
     }
-    // no payload
+
     case reducerConstants.TOGGLE_IS_PLAYING: {
       newState = {
         ...state,
-        status: {
-          ...state.status,
-          isPlaying: !state.status.isPlaying,
+        users: {
+          ...state.users,
+          [action.payload.localUserId]: {
+            ...state.users[action.payload.localUserId],
+            isPlaying: !isPlaying,
+          },
         },
       };
+      // users: {
+      //           ...state.users,
+      //           [action.payload.localUserId]: {
+      //           isPlaying: !state.status.isPlaying,
+      //         },
+      //       };
       socket.emit('updateServerState', newState, socket.id);
       return newState;
     }

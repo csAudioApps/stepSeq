@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 // import io from 'socket.io-client';
 import MainContainer from '../containers/MainContainer';
-import { socket } from '../helpers/socket'
+import { socket } from '../helpers/socket';
 
 const App = (props) => {
-
   const [inputText, setInputText] = useState('');
   const send = () => {
     console.log('sending text ', inputText);

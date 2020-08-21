@@ -1,11 +1,7 @@
 import React from 'react';
 
-const Share = () => {
-  return (
-    <div className="Share">
-
-    </div>
-  )
-}
+const Share = () => (
+  <div className="Share" />
+);
 
 export default Share;
