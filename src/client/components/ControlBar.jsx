@@ -1,16 +1,22 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+// import PropTypes from 'prop-types';
+// import * as Tone from 'tone';
 import React from 'react';
+import { Player } from 'tone';
 import { togglePlayback } from '../helpers/audioHelpers';
 import { SET_SELECTED_SCALE } from '../reducer/reducerConstants';
 
 const ControlBar = React.memo(({
   scales, selectedScale, dispatch, localUserId,
 }) => {
-  console.log('ControlBar -> selectedScale', selectedScale);
-
   return (
     <div className="NavBar">
       <ul>
-        <li><button onClick={togglePlayback} className="btn-play-pause">Play | Pause</button></li>
+        <li>
+          <button type="button" onClick={togglePlayback} className="btn-play-pause">Balls</button>
+        </li>
         <li className="scales">Scales</li>
         {
           scales
@@ -33,4 +39,17 @@ const ControlBar = React.memo(({
   );
 });
 
+// ControlBar.propTypes = {
+//   scales: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)).isRequired,
+//   selectedScale: PropTypes.number.isRequired,
+//   dispatch: PropTypes.func.isRequired,
+//   localUserId: PropTypes.string.isRequired,
+// }
+
 export default ControlBar;
+
+           /* {
+              (Tone.Transport.state === 'stopped' || Tone.Transport.state === 'paused')
+              ? Play
+              : Pause
+          } */

@@ -24,6 +24,7 @@
     "@babel/runtime": "^7.10.5",
     "express": "^4.17.1",
     "nexusui": "^2.1.4",
+    "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-nexusui": "^0.1.7",

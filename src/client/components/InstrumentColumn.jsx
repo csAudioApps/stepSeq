@@ -1,11 +1,15 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+
+// import PropTypes from 'prop-types';
 import React from 'react';
 import * as reducerConstants from '../reducer/reducerConstants';
 
 const InstrumentColumn = React.memo(({
   instruments, dispatch, localUserId, selectedInstr,
-}) =>
-  // console.log("InstrumentColumn -> instruments", instruments)
-  (
+}) => {
+  return (
     <div className="InstrumentColumn">
       <ul>
         {
@@ -28,6 +32,14 @@ const InstrumentColumn = React.memo(({
       }
       </ul>
     </div>
-  ));
+  );
+});
 
+  // InstrumentColumn.propTypes = {
+  //   instruments: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)).isRequired,
+  //   dispatch: PropTypes.func.isRequired,
+  //   localUserId: PropTypes.string.isRequired,
+  //   selectedInstr: PropTypes.number.isRequired,
+  // }
+  
 export default InstrumentColumn;
