@@ -73,7 +73,7 @@ const MainContainer = () => {
         type: reducerConstants.ADD_USER,
         payload: {
           [id]: {
-            userName: '', instrumentSelected: 1, selectedScale: 0, color: 'red',
+            userName: '', instrumentSelected: 1, selectedScale: 0, color: 'red', isPlaying: false,
           },
         },
       });
@@ -142,7 +142,11 @@ const MainContainer = () => {
     // toggle playback
     switch (code) {
       case 'Space':
-        togglePlayback();
+        // togglePlayback();
+        dispatch({ 
+          type: reducerConstants.TOGGLE_IS_PLAYING,
+          payload: { localUserId: state.local.localUserId }
+        });
         break;
       case 'Digit1':
       case 'Digit2':

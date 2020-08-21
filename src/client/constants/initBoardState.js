@@ -29,7 +29,7 @@ export const initialState = {
   status: {
     secsRemaining: 300,
     bpm: 120,
-    isPlaying: false,
+    // isPlaying: false,
   },
 
   users: {

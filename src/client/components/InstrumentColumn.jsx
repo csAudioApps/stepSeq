@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import React from 'react';
 import * as reducerConstants from '../reducer/reducerConstants';
 
@@ -36,7 +36,13 @@ const InstrumentColumn = React.memo(({
 });
 
   // InstrumentColumn.propTypes = {
-  //   instruments: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)).isRequired,
+  //   instruments: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.shape({
+  //     name: string,
+  //     soundPreset: string,
+  //     mono: bool,
+  //     legato: bool,
+  //     grid: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number))
+  //   }))).isRequired,
   //   dispatch: PropTypes.func.isRequired,
   //   localUserId: PropTypes.string.isRequired,
   //   selectedInstr: PropTypes.number.isRequired,
