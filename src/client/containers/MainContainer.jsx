@@ -9,7 +9,7 @@ import HeaderContainer from './HeaderContainer';
 import Footer from '../components/Footer';
 import scales from '../constants/scales';
 import { updateNoteArray, togglePlayback } from '../helpers/audioHelpers';
-import { initialState } from '../constants/initBoardState';
+import initialState from '../constants/initBoardState';
 import reducer from '../reducer/reducer';
 import * as reducerConstants from '../reducer/reducerConstants';
 import { socket } from '../helpers/socket';
@@ -119,7 +119,7 @@ const MainContainer = () => {
       // clean up side effects
       return () => drumSynthSeq.dispose();
     }
-  }, [instruments]);
+  }, [instruments, selectedScale]);
 
   const handleUserKeyPress = useCallback((event) => {
     const { code, altKey } = event;

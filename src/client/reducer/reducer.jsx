@@ -3,7 +3,7 @@ import { socket } from '../helpers/socket';
 import scales from '../constants/scales';
 
 const reducer = (state, action) => {
-  // console.log('reducing, state: ', state);
+  console.log('reducing, state: ', state);
   // console.log('reducing, action: ', action);
   let newState;
   let instrumentSelected;
@@ -92,7 +92,7 @@ const reducer = (state, action) => {
           ...state.users,
           [action.payload.localUserId]: {
             ...state.users[action.payload.localUserId],
-            isPlaying: !isPlaying,
+            isPlaying: false,
           },
         },
       };
@@ -105,6 +105,7 @@ const reducer = (state, action) => {
       socket.emit('updateServerState', newState, socket.id);
       return newState;
     }
+
     case reducerConstants.SET_SELECTED_INSTRUMENT: {
       let numSelected = action.payload.instrumentSelected;
       if (numSelected < state.instruments.length) {
