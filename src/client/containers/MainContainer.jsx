@@ -5,8 +5,8 @@ import * as Tone from 'tone';
 import VisualContainer from './VisualContainer';
 import HeaderContainer from './HeaderContainer';
 import Footer from '../components/Footer';
-import { scales } from '../constants/scales.js';
-import { updateNoteArray, togglePlayback } from '../helpers/audioHelpers.js';
+import { scales } from '../constants/scales';
+import { updateNoteArray, togglePlayback } from '../helpers/audioHelpers';
 import { initialState } from '../constants/initBoardState';
 import { reducer } from '../reducer/reducer';
 import * as reducerConstants from '../reducer/reducerConstants';
@@ -20,7 +20,6 @@ let selectedScale = 0;
 
 const MainContainer = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [isLoaded, setLoaded] = useState(false);
   const transport = useRef(null);
   const bassSynth = useRef(null);
   const drumSynth = useRef(null);
@@ -57,7 +56,8 @@ const MainContainer = () => {
       if (socket.id !== senderId) {
         // console.log('***not equal****')
         dispatch({ type: reducerConstants.SET_STATE_FROM_SOCKET, payload: msg });
-      } else {
+      }
+      else {
         // console.log('they are equal')
       }
     });
@@ -133,25 +133,36 @@ const MainContainer = () => {
     }
   }, [state.instruments]);
 
-  // Add event listeners
   const handleUserKeyPress = useCallback((event) => {
-    const { key } = event;
+    const { key, altKey } = event;
     console.log('MainContainer -> key', key);
 
+    // toggle playback
     if (key === ' ') {
       togglePlayback();
     }
     else if (Number(key) >= 0 && Number(key) <= 9) {
-      dispatch({
-        type: reducerConstants.SET_SELECTED_INSTRUMENT,
-        payload: { localUserId: state.local.localUserId, instrumentSelected: Number(key) - 1 },
-      });
+      // alt + nums change scale
+      if(altKey === true && Number(key) <=7) {
+        dispatch({
+          type: reducerConstants.SET_SELECTED_SCALE,
+          payload: { localUserId: state.local.localUserId, instrumentSelected: Number(key) - 1 },
+        });
+      }
+      // nums alone change instrument
+      else (altKey === false && Number(key) <= 9) {
+        dispatch({
+          type: reducerConstants.SET_SELECTED_INSTRUMENT,
+          payload: { localUserId: state.local.localUserId, instrumentSelected: Number(key) - 1 },
+        });
+      }
     }
   }, [state.local.localUserId]);
 
+  // Add event listeners
   useEffect(() => {
     window.addEventListener('keydown', handleUserKeyPress);
-    return () => { window.removeEventListener('keydown', handleUserKeyPress); }
+    return () => { window.removeEventListener('keydown', handleUserKeyPress); };
   }, [handleUserKeyPress]);
 
   return (
@@ -190,55 +201,6 @@ export default MainContainer;
 //   // [ [14], [3], [4], [13], [0], [14], [], [], [], [0], [], [0], [7], [0], [1], [] ]
 // };
 // ***************************
-
-{ /* <button onClick={playPause}>TOGGLE SICK BEATS</button> */ }
-
-{ /* ***TEST BUTTONS*** */ }
-{ /* extra comment */ }
-{ /* <button onClick={() => dispatch({
-        type: reducerConstants.TOGGLE_GRID_BUTTON,
-        payload: { x: 5, y: 3}
-        })}>
-        DISPATCH SICK PAYLOAD (grid button 5,3)
-      </button>
-      <button onClick={() => dispatch({
-        type: reducerConstants.TOGGLE_IS_PLAYING,
-        payload: { x: 5, y: 3}
-        })}>
-        SICK PLAY/PAUSE BUTTON
-      </button>
-      <button onClick={() => dispatch({
-        type: reducerConstants.TOGGLE_IS_PLAYING,
-        payload: initialState2
-        })}>
-        SICK SET STATE2 BUTTON
-      </button>
-      <button onClick={() => dispatch({
-        type: reducerConstants.TOGGLE_IS_PLAYING,
-        payload: initialState3
-        })}>
-        SICK SET STATE3 BUTTON
-      </button>
-      <button onClick={() => dispatch({
-        type: reducerConstants.ADD_USER,
-        payload: {'aaa111': { userName: 'tom', instrumentSelected: 0, color: 'red'}},
-
-        })}>
-        SICK NEW USER BUTTON
-      </button>
-      <button onClick={() => dispatch({
-        type: reducerConstants.REMOVE_USER,
-        payload: 'aaa111',
-
-        })}>
-        SICK REMOVE USER BUTTON
-      </button>
-      <button onClick={() => {
-        socket.emit('updateServerState', state)
-      }}>
-        SICK UPDATE SOCKET BUTTON
-      </button>
- */ }
 
 // bassSynth.current = new Tone.Synth().toDestination();
 // bassSynth.current.triggerAttackRelease('C4', '16n')
