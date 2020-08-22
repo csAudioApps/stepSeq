@@ -5,8 +5,8 @@
 import * as Tone from 'tone';
 import React from 'react';
 import { Player } from 'tone';
-import { togglePlayback } from '../helpers/audioHelpers';
-import { SET_SELECTED_SCALE } from '../reducer/reducerConstants';
+// import { togglePlayback } from '../helpers/audioHelpers';
+import { SET_SELECTED_SCALE, TOGGLE_IS_PLAYING } from '../reducer/reducerConstants';
 
 const ControlBar = React.memo(({
   scales, selectedScale, dispatch, localUserId,
@@ -16,7 +16,14 @@ const ControlBar = React.memo(({
     <div className="NavBar">
       <ul>
         <li>
-          <button type="button" onClick={togglePlayback} className="btn-play-pause">
+          <button
+            type="button"
+            className="btn-play-pause"
+            onClick={() => dispatch({
+              type: TOGGLE_IS_PLAYING,
+              payload: { localUserId },
+            })}
+          >
             {
               (Tone.Transport.state === 'stopped' || Tone.Transport.state === 'paused')
                 ? 'Play'
@@ -24,7 +31,7 @@ const ControlBar = React.memo(({
             }
           </button>
         </li>
-        <li className="scales">Scales</li>
+        <li className="scales">Scale</li>
         {
           scales
             ? scales.map((item, i) => (

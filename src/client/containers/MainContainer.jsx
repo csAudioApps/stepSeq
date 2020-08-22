@@ -8,7 +8,7 @@ import VisualContainer from './VisualContainer';
 import HeaderContainer from './HeaderContainer';
 import Footer from '../components/Footer';
 import scales from '../constants/scales';
-import { updateNoteArray, togglePlayback } from '../helpers/audioHelpers';
+import updateNoteArray from '../helpers/audioHelpers';
 import initialState from '../constants/initBoardState';
 import reducer from '../reducer/reducer';
 import * as reducerConstants from '../reducer/reducerConstants';

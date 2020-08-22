@@ -1,3 +1,4 @@
+import * as Tone from 'tone';
 import * as reducerConstants from './reducerConstants';
 import { socket } from '../helpers/socket';
 import scales from '../constants/scales';
@@ -86,22 +87,30 @@ const reducer = (state, action) => {
     }
 
     case reducerConstants.TOGGLE_IS_PLAYING: {
+      // export const togglePlayback = async (e) => {
+      // await Tone.start();
+
+      if (Tone.Transport.state === 'stopped' || Tone.Transport.state === 'paused') {
+        Tone.Transport.start();
+      }
+      else {
+        Tone.Transport.pause();
+        // };
+      }
+
+      // console.log('Current Play State', state.users[action.payload.localUserId].isPlaying);
+      // const curPlayState = ;
       newState = {
         ...state,
         users: {
           ...state.users,
           [action.payload.localUserId]: {
             ...state.users[action.payload.localUserId],
-            isPlaying: false,
+            isPlaying: !state.users[action.payload.localUserId].isPlaying,
           },
         },
       };
-      // users: {
-      //           ...state.users,
-      //           [action.payload.localUserId]: {
-      //           isPlaying: !state.status.isPlaying,
-      //         },
-      //       };
+      console.log('Current Play State', state.users[action.payload.localUserId].isPlaying);
       socket.emit('updateServerState', newState, socket.id);
       return newState;
     }
@@ -152,6 +161,7 @@ const reducer = (state, action) => {
       console.log('reducer -> set selected scale', newState);
 
       // TODO This is gonna break - other users need to know what scale you're using
+      socket.emit('updateServerState', newState, socket.id);
       return newState;
     }
 
