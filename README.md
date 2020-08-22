@@ -18,8 +18,7 @@ Point browser to localhost:8080 then make sick beats
 - Matt Gin
 
 ## Version History
-* 0.1
-    * Initial Beta Release
+* 0.1 Initial Beta Release
 
 ## License
 This project is licensed under the MIT License - see the LICENSE.md file for details
