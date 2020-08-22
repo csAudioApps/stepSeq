@@ -9,8 +9,7 @@ Allows multiple users to connect and collaborate on a sequence in real-time
 - npm run dev
 
 ### Executing program
-Point browser to localhost:8080
-Make sick beats
+Point browser to localhost:8080 then make sick beats
 
 ## Authors
 - Greg Panciera
