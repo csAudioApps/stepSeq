@@ -1,18 +1,18 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ControlBar from '../components/ControlBar';
 import InstrumentColumn from '../components/InstrumentColumn';
 import Board from '../components/Board';
 import Knobs from '../components/Knobs';
 
 const VisualContainer = ({
-  scales, selectedScale, isPlaying,
-  numRows, numColumns, curStepColNum, gridState, dispatch,
-  instruments, localUserId, selectedInstr,
+  localUserId, selectedScale, dispatch, isPlaying,
+  instruments, selectedInstr,
+  numRows, numColumns, curStepColNum, gridState,
 }) => (
   <div className="body">
     <div className="VisualContainer">
       <ControlBar
-        scales={scales}
         localUserId={localUserId}
         selectedScale={selectedScale}
         dispatch={dispatch}
@@ -41,3 +41,22 @@ const VisualContainer = ({
 );
 
 export default VisualContainer;
+
+VisualContainer.propTypes = {
+  selectedScale: PropTypes.number.isRequired,
+  isPlaying: PropTypes.bool.isRequired,
+  numRows: PropTypes.number.isRequired,
+  numColumns: PropTypes.number.isRequired,
+  curStepColNum: PropTypes.number.isRequired,
+  gridState: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
+  instruments: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    soundPreset: PropTypes.string,
+    mono: PropTypes.bool,
+    legato: PropTypes.bool,
+    grid: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)).isRequired,
+  })).isRequired,
+  dispatch: PropTypes.func.isRequired,
+  localUserId: PropTypes.string.isRequired,
+  selectedInstr: PropTypes.number.isRequired,
+};

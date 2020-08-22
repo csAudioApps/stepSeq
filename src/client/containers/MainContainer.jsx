@@ -7,7 +7,6 @@ import * as Tone from 'tone';
 import VisualContainer from './VisualContainer';
 import HeaderContainer from './HeaderContainer';
 import Footer from '../components/Footer';
-import scales from '../constants/scales';
 import updateNoteArray from '../helpers/audioHelpers';
 import { mainInitState, userInitState } from '../constants/initState';
 import reducer from '../reducer/reducer';
@@ -26,7 +25,7 @@ const MainContainer = () => {
   const { localUserId } = local;
   const selectedScale = (users[localUserId]) ? users[localUserId].selectedScale : 0;
   const selectedInstr = (users[localUserId]) ? users[localUserId].instrumentSelected : 1;
-  const gridForCurInstr = (users[localUserId]) ? instruments[selectedInstr].grid : 1;
+  const gridForCurInstr = (users[localUserId]) ? instruments[selectedInstr].grid : [[]];
   const isPlaying = (users[localUserId]) ? users[localUserId].isPlaying : false;
 
   const transport = useRef(null);
@@ -63,8 +62,8 @@ const MainContainer = () => {
   useEffect(() => {
     // console.log('A');
     Tone.Context.latencyHint = 'playback';
-    transport.current = new Tone.Sequence((time, step) => {
-      setStep(step);
+    transport.current = new Tone.Sequence((time, curStep) => {
+      setStep(curStep);
     }, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], '8n').start(0);
 
     dly = new Tone.FeedbackDelay('8n', 0.5).toDestination();
@@ -174,7 +173,6 @@ const MainContainer = () => {
         dispatch={dispatch}
         instruments={instruments}
         selectedInstr={selectedInstr}
-        scales={scales}
         selectedScale={selectedScale}
         localUserId={localUserId}
         isPlaying={isPlaying}
