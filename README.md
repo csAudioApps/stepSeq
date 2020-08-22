@@ -5,8 +5,8 @@ Collaborative step-sequencer
 Allows multiple users to connect and collaborate on a sequence in real-time
 
 ### Installing
-npm install
-npm run dev
+- npm install
+- npm run dev
 
 ### Executing program
 Point browser to localhost:8080
