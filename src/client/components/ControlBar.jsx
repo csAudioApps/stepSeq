@@ -1,13 +1,13 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import * as Tone from 'tone';
 import React from 'react';
 import { SET_SELECTED_SCALE, TOGGLE_IS_PLAYING } from '../reducer/reducerConstants';
 
 const ControlBar = React.memo(({
-  scales, selectedScale, dispatch, localUserId,
+  scales, selectedScale, dispatch, localUserId, isPlaying,
 }) => {
   console.log('Tone.Transport.state ', Tone.Transport.state);
   return (
@@ -22,11 +22,7 @@ const ControlBar = React.memo(({
               payload: { localUserId },
             })}
           >
-            {
-              (Tone.Transport.state === 'stopped' || Tone.Transport.state === 'paused')
-                ? 'Play'
-                : 'Pause'
-            }
+            { isPlaying ? 'Pause' : 'Play' }
           </button>
         </li>
         <li className="scales">Scale</li>
@@ -51,11 +47,12 @@ const ControlBar = React.memo(({
   );
 });
 
-// ControlBar.propTypes = {
-//   scales: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)).isRequired,
-//   selectedScale: PropTypes.number.isRequired,
-//   dispatch: PropTypes.func.isRequired,
-//   localUserId: PropTypes.string.isRequired,
-// }
+ControlBar.propTypes = {
+  scales: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)).isRequired,
+  selectedScale: PropTypes.number.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  localUserId: PropTypes.string.isRequired,
+  isPlaying: PropTypes.bool.isRequired,
+};
 
 export default ControlBar;

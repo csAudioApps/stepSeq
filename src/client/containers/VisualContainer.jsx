@@ -5,7 +5,7 @@ import Board from '../components/Board';
 import Knobs from '../components/Knobs';
 
 const VisualContainer = ({
-  scales, selectedScale,
+  scales, selectedScale, isPlaying,
   numRows, numColumns, curStepColNum, gridState, dispatch,
   instruments, localUserId, selectedInstr,
 }) => (
@@ -16,6 +16,7 @@ const VisualContainer = ({
         localUserId={localUserId}
         selectedScale={selectedScale}
         dispatch={dispatch}
+        isPlaying={isPlaying}
       />
       <div className="row">
         <div className="column">

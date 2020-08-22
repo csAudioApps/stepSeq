@@ -27,6 +27,7 @@ const MainContainer = () => {
   const selectedScale = (users[localUserId]) ? users[localUserId].selectedScale : 0;
   const selectedInstr = (users[localUserId]) ? users[localUserId].instrumentSelected : 1;
   const gridForCurInstr = (users[localUserId]) ? instruments[selectedInstr].grid : 1;
+  const isPlaying = (users[localUserId]) ? users[localUserId].isPlaying : false;
 
   const transport = useRef(null);
   const bassSynth = useRef(null);
@@ -176,6 +177,7 @@ const MainContainer = () => {
         scales={scales}
         selectedScale={selectedScale}
         localUserId={localUserId}
+        isPlaying={isPlaying}
       />
       <Footer />
     </div>
