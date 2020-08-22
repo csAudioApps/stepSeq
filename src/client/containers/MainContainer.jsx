@@ -9,7 +9,7 @@ import HeaderContainer from './HeaderContainer';
 import Footer from '../components/Footer';
 import scales from '../constants/scales';
 import updateNoteArray from '../helpers/audioHelpers';
-import initialState from '../constants/initBoardState';
+import { mainInitState, userInitState } from '../constants/initState';
 import reducer from '../reducer/reducer';
 import * as reducerConstants from '../reducer/reducerConstants';
 import { socket } from '../helpers/socket';
@@ -19,7 +19,7 @@ import { socket } from '../helpers/socket';
 Tone.Transport.bpm.value = 120;
 
 const MainContainer = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, mainInitState);
   const [step, setStep] = useState(0);
 
   const { users, local, instruments } = state;
@@ -54,21 +54,13 @@ const MainContainer = () => {
   // Add User
   useEffect(() => {
     if (!Object.keys(users).includes(localUserId)) {
-      const id = localUserId;
-      dispatch({
-        type: reducerConstants.ADD_USER,
-        payload: {
-          [id]: {
-            userName: '', instrumentSelected: 1, selectedScale: 0, color: 'red', isPlaying: false,
-          },
-        },
-      });
+      dispatch({ type: reducerConstants.ADD_USER, payload: { [localUserId]: userInitState } });
     }
   }, [users, localUserId]);
 
   // Transport and Setup
   useEffect(() => {
-    console.log('A');
+    // console.log('A');
     Tone.Context.latencyHint = 'playback';
     transport.current = new Tone.Sequence((time, step) => {
       setStep(step);
@@ -78,7 +70,7 @@ const MainContainer = () => {
     dist = new Tone.Distortion(0.4).connect(dly);
     bassSynth.current = new Tone.Synth().connect(dist);
     drumSynth.current = new Tone.MembraneSynth().toDestination();
-    console.log('B');
+    // console.log('B');
 
     // clean up side effects
     return () => {
@@ -92,7 +84,7 @@ const MainContainer = () => {
 
   // Bass Synth
   useEffect(() => {
-    console.log('C');
+    // console.log('C');
     if (bassSynth && bassSynth.current) {
       const bassNoteArr = updateNoteArray(instruments[1].grid, selectedScale, 2);
       console.log('MainContainer -> bassNoteArr', bassNoteArr);
@@ -108,7 +100,7 @@ const MainContainer = () => {
 
   // Drum Synth
   useEffect(() => {
-    console.log('D');
+    // console.log('D');
     if (drumSynth && drumSynth.current) {
       // const drumNoteArr = ['A-1', null, null, null, 'A-1', null, null, null];
       const drumNoteArr = updateNoteArray(instruments[0].grid, selectedScale, 0);

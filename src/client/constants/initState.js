@@ -1,4 +1,8 @@
-const initialState = {
+export const userInitState = {
+  userName: '', instrumentSelected: 1, selectedScale: 0, color: 'red', isPlaying: false,
+};
+
+export const mainInitState = {
   instruments: [
     {
       name: 'Drums',
@@ -29,7 +33,6 @@ const initialState = {
   status: {
     secsRemaining: 300,
     bpm: 120,
-    // isPlaying: false,
   },
 
   users: {
@@ -43,7 +46,7 @@ const initialState = {
   },
 };
 
-export default initialState;
+// export default mainInitState;
 
 // eslint-disable-next-line no-unused-vars
 // const exampleState = {

@@ -20,7 +20,7 @@ const updateNoteArray = (grid, scaleNum, rootOctaveNum) => {
       retArr[i] = null;
     }
   }
-  console.log(retArr);
+  // console.log(retArr);
   return retArr;
 };
 

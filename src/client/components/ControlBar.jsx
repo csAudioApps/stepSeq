@@ -4,8 +4,6 @@
 // import PropTypes from 'prop-types';
 import * as Tone from 'tone';
 import React from 'react';
-import { Player } from 'tone';
-// import { togglePlayback } from '../helpers/audioHelpers';
 import { SET_SELECTED_SCALE, TOGGLE_IS_PLAYING } from '../reducer/reducerConstants';
 
 const ControlBar = React.memo(({
