@@ -13,10 +13,10 @@ Point browser to localhost:8080
 Make sick beats
 
 ## Authors
-Greg Panciera
-Tom Lutz
-Jonathon Escamilla
-Matt Gin
+- Greg Panciera
+- Tom Lutz
+- Jonathon Escamilla
+- Matt Gin
 
 ## Version History
 * 0.1
