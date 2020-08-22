@@ -87,30 +87,27 @@ const reducer = (state, action) => {
     }
 
     case reducerConstants.TOGGLE_IS_PLAYING: {
-      // export const togglePlayback = async (e) => {
-      // await Tone.start();
+      const isCurrentlyPlaying = state.users[action.payload.localUserId].isPlaying;
 
-      if (Tone.Transport.state === 'stopped' || Tone.Transport.state === 'paused') {
+      console.log('Tone.Context.');
+      if (!isCurrentlyPlaying) {
         Tone.Transport.start();
       }
       else {
-        Tone.Transport.pause();
-        // };
+        Tone.Transport.toggle();
+        // Tone.Transport.pause();
       }
 
-      // console.log('Current Play State', state.users[action.payload.localUserId].isPlaying);
-      // const curPlayState = ;
       newState = {
         ...state,
         users: {
           ...state.users,
           [action.payload.localUserId]: {
             ...state.users[action.payload.localUserId],
-            isPlaying: !state.users[action.payload.localUserId].isPlaying,
+            isPlaying: !isCurrentlyPlaying,
           },
         },
       };
-      console.log('Current Play State', state.users[action.payload.localUserId].isPlaying);
       socket.emit('updateServerState', newState, socket.id);
       return newState;
     }

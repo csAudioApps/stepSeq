@@ -90,7 +90,7 @@ const MainContainer = () => {
       console.log('MainContainer -> bassNoteArr', bassNoteArr);
       const bassSynthSeq = new Tone.Sequence((time, note) => {
         bassSynth.current.triggerAttackRelease(note, '8n', time);
-      }, bassNoteArr).start(0);
+      }, bassNoteArr); // .start(0);
 
       // clean up side effects
       return () => bassSynthSeq.dispose();
@@ -106,7 +106,7 @@ const MainContainer = () => {
       const drumNoteArr = updateNoteArray(instruments[0].grid, selectedScale, 0);
       const drumSynthSeq = new Tone.Sequence((time, note) => {
         drumSynth.current.triggerAttackRelease(note, '8n', time);
-      }, drumNoteArr).start(0);
+      }, drumNoteArr); // .start(0);
 
       // clean up side effects
       return () => drumSynthSeq.dispose();
