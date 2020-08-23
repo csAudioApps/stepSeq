@@ -9,6 +9,6 @@ export const TimeDisplay = ({ position }) => (
 
 export default TimeDisplay;
 
-TimeDisplay.propTypes = {
-  position: PropTypes.string.isRequired,
-};
+// TimeDisplay.propTypes = {
+//   position: PropTypes.string,
+// };

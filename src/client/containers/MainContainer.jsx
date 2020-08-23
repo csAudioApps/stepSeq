@@ -185,7 +185,7 @@ const MainContainer = () => {
         selectedScale={selectedScale}
         localUserId={localUserId}
         isPlaying={isPlaying}
-        position={position}
+        // position={position}
       />
       <Footer />
     </div>
