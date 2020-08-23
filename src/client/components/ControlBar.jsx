@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import PlayPauseButton from './PlayPauseButton';
 import ScaleSelector from './ScaleSelector';
-// import TempoSelector from './TempoSelector';
+import TempoSelector from './TempoSelector';
 // import TimeDisplay from './TimeDisplay';
 
 const ControlBar = React.memo(({
@@ -15,7 +15,7 @@ const ControlBar = React.memo(({
     <ul>
       <PlayPauseButton dispatch={dispatch} localUserId={localUserId} isPlaying={isPlaying} />
       <ScaleSelector dispatch={dispatch} localUserId={localUserId} selectedScale={selectedScale} />
-      {/* <TempoSelector dispatch={dispatch} /> */}
+      <TempoSelector dispatch={dispatch} />
       {/* <TimeDisplay position={position} /> */}
     </ul>
   </div>

@@ -15,12 +15,12 @@ import { socket } from '../helpers/socket';
 // import uuid from "uuid";
 
 // const seqLen = 16;
-Tone.Transport.bpm.value = 120;
+// Tone.Transport.bpm.value = 260;
 
 const MainContainer = () => {
   const [state, dispatch] = useReducer(reducer, mainInitState);
   const [step, setStep] = useState(0);
-  const [position, setPosition] = useState('0:0:0');
+  // const [position, setPosition] = useState('0:0:0');
 
   const { users, local, instruments } = state;
   const { localUserId } = local;
@@ -58,10 +58,11 @@ const MainContainer = () => {
     }
   }, [users, localUserId]);
 
-  // Transport and Setup
+  // Initial (one-time) Tone and Tranpost Setup
   useEffect(() => {
     // console.log('A');
     Tone.Context.latencyHint = 'playback';
+    Tone.Transport.bpm.value = state.status.tempo ? state.status.tempo : 120;
     transport.current = new Tone.Sequence((time, curStep) => {
       setStep(curStep);
     }, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], '8n').start(0);
