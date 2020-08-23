@@ -76,25 +76,14 @@ const MainContainer = () => {
     // clean up side effects
     return () => {
       transport.current.dispose();
-      dly.dispose();
-      dist.dispose();
       drumSynth.current.dispose();
       bassSynth.current.dispose();
+      dly.dispose();
+      dist.dispose();
     };
   }, []);
 
-  // Update Transport Position Display
-  // useEffect(() => {
-  //   const id = Tone.Transport.scheduleRepeat(() =>  {
-  //     const curPosition = Tone.Transport.position.toString().split('.')[0];
-  //     console.log('Updating position -> curPosition', curPosition);
-  //     setPosition(curPosition);
-  //   }, '8n');
-
-  //   return () => { Tone.Transport.clear(id); };
-  // }, []);
-
-  // Bass Synth
+  // Bass Sequence
   useEffect(() => {
     // console.log('C');
     if (bassSynth && bassSynth.current) {
@@ -110,7 +99,7 @@ const MainContainer = () => {
     return null;
   }, [instruments, selectedScale]);
 
-  // Drum Synth
+  // Drum Sequence
   useEffect(() => {
     // console.log('D');
     if (drumSynth && drumSynth.current) {
@@ -122,6 +111,7 @@ const MainContainer = () => {
       // clean up side effects
       return () => drumSynthSeq.dispose();
     }
+    return null;
   }, [instruments, selectedScale]);
 
   const handleUserKeyPress = useCallback((event) => {
@@ -201,3 +191,14 @@ export default MainContainer;
 // })
 // when we receive and updated state from server, update local state
 // only update if update was sent fron another user
+
+// Update Transport Position Display
+// useEffect(() => {
+//   const id = Tone.Transport.scheduleRepeat(() =>  {
+//     const curPosition = Tone.Transport.position.toString().split('.')[0];
+//     console.log('Updating position -> curPosition', curPosition);
+//     setPosition(curPosition);
+//   }, '8n');
+
+//   return () => { Tone.Transport.clear(id); };
+// }, []);
