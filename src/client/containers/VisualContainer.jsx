@@ -6,7 +6,7 @@ import Board from '../components/Board';
 import Knobs from '../components/Knobs';
 
 const VisualContainer = React.memo(({
-  localUserId, selectedScale, dispatch, isPlaying,
+  localUserId, selectedScale, dispatch, isPlaying, position,
   instruments, selectedInstr,
   numRows, numColumns, curStepColNum, gridState,
 }) => (
@@ -17,6 +17,7 @@ const VisualContainer = React.memo(({
         selectedScale={selectedScale}
         dispatch={dispatch}
         isPlaying={isPlaying}
+        position={position}
       />
       <div className="row">
         <div className="column">
@@ -43,6 +44,7 @@ const VisualContainer = React.memo(({
 export default VisualContainer;
 
 VisualContainer.propTypes = {
+  position: PropTypes.string.isRequired,
   selectedScale: PropTypes.number.isRequired,
   isPlaying: PropTypes.bool.isRequired,
   numRows: PropTypes.number.isRequired,

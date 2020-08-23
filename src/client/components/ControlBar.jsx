@@ -4,39 +4,25 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import PlayPauseButton from './PlayPauseButton';
-import scales from '../constants/scales';
-import { SET_SELECTED_SCALE } from '../reducer/reducerConstants';
+import ScaleSelector from './ScaleSelector';
+// import TempoSelector from './TempoSelector';
+// import TimeDisplay from './TimeDisplay';
 
 const ControlBar = React.memo(({
-  selectedScale, dispatch, localUserId, isPlaying,
+  selectedScale, dispatch, localUserId, isPlaying, // position,
 }) => (
   <div className="NavBar">
     <ul>
-      <li>
-        <PlayPauseButton dispatch={dispatch} localUserId={localUserId} isPlaying={isPlaying} />
-      </li>
-      <li className="scales">Scale</li>
-      {
-          scales
-            ? scales.map((item, scaleIndex) => (
-              <li
-                className={selectedScale === scaleIndex ? 'scale-btn-selected' : 'scale-btn'}
-                onClick={() => dispatch({
-                  type: SET_SELECTED_SCALE,
-                  payload: { localUserId, selectedScale: scaleIndex },
-                })}
-                key={`scaleBtn${scaleIndex.toString()}`}
-              >
-                {scaleIndex + 1}
-              </li>
-            ))
-            : <p>Loading...</p>
-        }
+      <PlayPauseButton dispatch={dispatch} localUserId={localUserId} isPlaying={isPlaying} />
+      <ScaleSelector dispatch={dispatch} localUserId={localUserId} selectedScale={selectedScale} />
+      {/* <TempoSelector dispatch={dispatch} /> */}
+      {/* <TimeDisplay position={position} /> */}
     </ul>
   </div>
 ));
 
 ControlBar.propTypes = {
+  // position: PropTypes.string.isRequired,
   selectedScale: PropTypes.number.isRequired,
   dispatch: PropTypes.func.isRequired,
   localUserId: PropTypes.string.isRequired,

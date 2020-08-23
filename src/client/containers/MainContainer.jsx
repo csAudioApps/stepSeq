@@ -20,6 +20,7 @@ Tone.Transport.bpm.value = 120;
 const MainContainer = () => {
   const [state, dispatch] = useReducer(reducer, mainInitState);
   const [step, setStep] = useState(0);
+  const [position, setPosition] = useState('0:0:0');
 
   const { users, local, instruments } = state;
   const { localUserId } = local;
@@ -80,6 +81,17 @@ const MainContainer = () => {
       bassSynth.current.dispose();
     };
   }, []);
+
+  // Update Transport Position Display
+  // useEffect(() => {
+  //   const id = Tone.Transport.scheduleRepeat(() =>  {
+  //     const curPosition = Tone.Transport.position.toString().split('.')[0];
+  //     console.log('Updating position -> curPosition', curPosition);
+  //     setPosition(curPosition);
+  //   }, '8n');
+
+  //   return () => { Tone.Transport.clear(id); };
+  // }, []);
 
   // Bass Synth
   useEffect(() => {
@@ -172,6 +184,7 @@ const MainContainer = () => {
         selectedScale={selectedScale}
         localUserId={localUserId}
         isPlaying={isPlaying}
+        position={position}
       />
       <Footer />
     </div>
