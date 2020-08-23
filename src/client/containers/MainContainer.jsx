@@ -7,10 +7,10 @@ import * as Tone from 'tone';
 import VisualContainer from './VisualContainer';
 import HeaderContainer from './HeaderContainer';
 import Footer from '../components/Footer';
-import updateNoteArray from '../helpers/audioHelpers';
+import { updateNoteArray, toggleToneTransport } from '../helpers/audioHelpers';
 import { mainInitState, userInitState } from '../constants/initState';
 import reducer from '../reducer/reducer';
-import * as reducerConstants from '../reducer/reducerConstants';
+import * as types from '../reducer/reducerConstants';
 import { socket } from '../helpers/socket';
 // import uuid from "uuid";
 
@@ -41,8 +41,7 @@ const MainContainer = () => {
     socket.emit('getInitialState');
     socket.on('updateClientState', (msg, senderId) => {
       if (socket.id !== senderId) {
-        // console.log('***not equal****')
-        dispatch({ type: reducerConstants.SET_STATE_FROM_SOCKET, payload: msg });
+        dispatch({ type: types.SET_STATE_FROM_SOCKET, payload: msg });
       }
       else {
         // console.log('they are equal')
@@ -54,7 +53,7 @@ const MainContainer = () => {
   // Add User
   useEffect(() => {
     if (!Object.keys(users).includes(localUserId)) {
-      dispatch({ type: reducerConstants.ADD_USER, payload: { [localUserId]: userInitState } });
+      dispatch({ type: types.ADD_USER, payload: { [localUserId]: userInitState } });
     }
   }, [users, localUserId]);
 
@@ -90,7 +89,7 @@ const MainContainer = () => {
       console.log('MainContainer -> bassNoteArr', bassNoteArr);
       const bassSynthSeq = new Tone.Sequence((time, note) => {
         bassSynth.current.triggerAttackRelease(note, '8n', time);
-      }, bassNoteArr); // .start(0);
+      }, bassNoteArr).start(0);
 
       // clean up side effects
       return () => bassSynthSeq.dispose();
@@ -102,11 +101,10 @@ const MainContainer = () => {
   useEffect(() => {
     // console.log('D');
     if (drumSynth && drumSynth.current) {
-      // const drumNoteArr = ['A-1', null, null, null, 'A-1', null, null, null];
       const drumNoteArr = updateNoteArray(instruments[0].grid, selectedScale, 0);
       const drumSynthSeq = new Tone.Sequence((time, note) => {
         drumSynth.current.triggerAttackRelease(note, '8n', time);
-      }, drumNoteArr); // .start(0);
+      }, drumNoteArr).start(0);
 
       // clean up side effects
       return () => drumSynthSeq.dispose();
@@ -115,15 +113,13 @@ const MainContainer = () => {
 
   const handleUserKeyPress = useCallback((event) => {
     const { code, altKey } = event;
-    // console.log('handleUserKeyPress -> code', code);
-
     switch (code) {
-      case 'Space':
-        dispatch({                // Toggle Playback
-          type: reducerConstants.TOGGLE_IS_PLAYING,
-          payload: { localUserId },
-        });
+      case 'Space': {
+        if (toggleToneTransport()) {
+          dispatch({ type: types.TOGGLE_PLAY_STATE, payload: { localUserId } });
+        }
         break;
+      }
       case 'Digit1':
       case 'Digit2':
       case 'Digit3':
@@ -135,15 +131,15 @@ const MainContainer = () => {
       case 'Digit9':
       case 'Digit0': {
         const selectedIndex = Number(code[code.length - 1]) - 1;
-        if (altKey === true) {    // Numbers with alt key switch scale
+        if (altKey === true) {    // Numbers + alt key change scale
           dispatch({
-            type: reducerConstants.SET_SELECTED_SCALE,
+            type: types.SET_SELECTED_SCALE,
             payload: { localUserId, selectedScale: selectedIndex },
           });
         }
-        else {                    // Numbers without modifier keys switch instrument
+        else {                    // Numbers alone change instrument
           dispatch({
-            type: reducerConstants.SET_SELECTED_INSTRUMENT,
+            type: types.SET_SELECTED_INSTRUMENT,
             payload: { localUserId, instrumentSelected: selectedIndex },
           });
         }
@@ -154,7 +150,7 @@ const MainContainer = () => {
     }
   }, [localUserId]);
 
-  // Add event listeners
+  // Add keyboard event listener
   useEffect(() => {
     window.addEventListener('keydown', handleUserKeyPress);
     return () => { window.removeEventListener('keydown', handleUserKeyPress); };

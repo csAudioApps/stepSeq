@@ -1,7 +1,7 @@
-// import * as Tone from 'tone';
+import * as Tone from 'tone';
 import scales from '../constants/scales';
 
-const updateNoteArray = (grid, scaleNum, rootOctaveNum) => {
+export const updateNoteArray = (grid, scaleNum, rootOctaveNum) => {
   const retArr = [];
   let curNote;
   let oct;
@@ -23,16 +23,16 @@ const updateNoteArray = (grid, scaleNum, rootOctaveNum) => {
   // console.log(retArr);
   return retArr;
 };
+// export default updateNoteArray;
 
-export default updateNoteArray;
+export const toggleToneTransport = async () => {
+  await Tone.start();
 
-// export const togglePlayback = async (e) => {
-//   await Tone.start();
-
-//   if (Tone.Transport.state === 'stopped' || Tone.Transport.state === 'paused') {
-//     Tone.Transport.start();
-//   }
-//   else {
-//     Tone.Transport.pause();
-//   }
-// };
+  if (Tone.Transport.state === 'stopped' || Tone.Transport.state === 'paused') {
+    Tone.Transport.start();
+  }
+  else {
+    Tone.Transport.pause();
+  }
+  return true;
+};

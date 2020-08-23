@@ -1,4 +1,3 @@
-import * as Tone from 'tone';
 import * as reducerConstants from './reducerConstants';
 import { socket } from '../helpers/socket';
 import scales from '../constants/scales';
@@ -86,17 +85,16 @@ const reducer = (state, action) => {
       return newState;
     }
 
-    case reducerConstants.TOGGLE_IS_PLAYING: {
-      const isCurrentlyPlaying = state.users[action.payload.localUserId].isPlaying;
-
-      console.log('Tone.Context.');
-      if (!isCurrentlyPlaying) {
-        Tone.Transport.start();
-      }
-      else {
-        Tone.Transport.toggle();
-        // Tone.Transport.pause();
-      }
+    case reducerConstants.TOGGLE_PLAY_STATE: {
+      // const isCurrentlyPlaying = state.users[action.payload.localUserId].isPlaying;
+      // console.log('Tone.Context.');
+      // if (!isCurrentlyPlaying) {
+      //   Tone.Transport.start();
+      // }
+      // else {
+      //   Tone.Transport.toggle();
+      //   // Tone.Transport.pause();
+      // }
 
       newState = {
         ...state,
@@ -104,7 +102,7 @@ const reducer = (state, action) => {
           ...state.users,
           [action.payload.localUserId]: {
             ...state.users[action.payload.localUserId],
-            isPlaying: !isCurrentlyPlaying,
+            isPlaying: !state.users[action.payload.localUserId].isPlaying,
           },
         },
       };

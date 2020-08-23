@@ -5,7 +5,7 @@ import InstrumentColumn from '../components/InstrumentColumn';
 import Board from '../components/Board';
 import Knobs from '../components/Knobs';
 
-const VisualContainer = ({
+const VisualContainer = React.memo(({
   localUserId, selectedScale, dispatch, isPlaying,
   instruments, selectedInstr,
   numRows, numColumns, curStepColNum, gridState,
@@ -38,7 +38,7 @@ const VisualContainer = ({
       </div>
     </div>
   </div>
-);
+));
 
 export default VisualContainer;
 
