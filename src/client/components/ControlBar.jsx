@@ -3,9 +3,9 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import PropTypes from 'prop-types';
 import React from 'react';
+import PlayPauseButton from './PlayPauseButton';
 import scales from '../constants/scales';
-import { toggleToneTransport } from '../helpers/audioHelpers';
-import { SET_SELECTED_SCALE, TOGGLE_PLAY_STATE } from '../reducer/reducerConstants';
+import { SET_SELECTED_SCALE } from '../reducer/reducerConstants';
 
 const ControlBar = React.memo(({
   selectedScale, dispatch, localUserId, isPlaying,
@@ -13,17 +13,7 @@ const ControlBar = React.memo(({
   <div className="NavBar">
     <ul>
       <li>
-        <button
-          type="button"
-          className="btn-play-pause"
-          onClick={() => {
-            if (toggleToneTransport()) {
-              dispatch({ type: TOGGLE_PLAY_STATE, payload: { localUserId } });
-            }
-          }}
-        >
-          { isPlaying ? 'Pause' : 'Play' }
-        </button>
+        <PlayPauseButton dispatch={dispatch} localUserId={localUserId} isPlaying={isPlaying} />
       </li>
       <li className="scales">Scale</li>
       {
