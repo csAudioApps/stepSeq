@@ -134,7 +134,7 @@ const MainContainer = () => {
       case 'Digit9':
       case 'Digit0': {
         const lastDigit = Number(code[code.length - 1]);
-        const selectedIndex = lastDigit === 0 ? 10 : lastDigit - 1;
+        const selectedIndex = lastDigit === 0 ? 10 : lastDigit - 11;
         if (altKey === true) {    // Numbers + alt key change scale
           dispatch({
             type: types.SET_SELECTED_SCALE,
