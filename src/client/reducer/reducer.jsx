@@ -162,7 +162,7 @@ const reducer = (state, action) => {
     }
 
     case reducerConstants.SET_TEMPO: {
-      Tone.Transport.bpm.value = Number(action.payload.newTempo);
+      Tone.Transport.bpm.value = action.payload.newTempo;
       console.log('reducer -> Tone.Transport.bpm.value', Tone.Transport.bpm.value);
       newState = {
         ...state,

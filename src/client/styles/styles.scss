@@ -18,9 +18,6 @@
 
 html,
 body {
-  // font-family: courier-std,monospace;
-  // font-weight: 400;
-  // font-style: normal;
   font-family: century-gothic, sans-serif;
   font-weight: 400;
   font-style: normal;
@@ -30,9 +27,17 @@ body {
   letter-spacing: 0.15em;
   color: $superlight;
   // color: #989898;
-
   background-color: #242424;
   height: 100%;
+
+  background-image: url('../assets/night-sky.jpg'),
+  linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9));
+  background-blend-mode: overlay;
+  background-size: cover;
+  background-attachment: fixed;
+  height: 110vh;
+  overflow-x:hidden;
+  overflow-y:hidden;
 }
 
 .MainContainer {
@@ -228,13 +233,12 @@ ul {
   cursor: pointer;
 }
 
-.inline-text_copy--hidden,
-.inline-text_input--hidden {
-  display: none;
-  width: 80px;
-}
-
 .inline-text_input--active {
   width: 80px;
   border-bottom: 1px solid red;
+}
+
+.inline-text_copy--hidden,
+.inline-text_input--hidden {
+  display: none;
 }

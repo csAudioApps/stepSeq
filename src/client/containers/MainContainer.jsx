@@ -70,6 +70,7 @@ const MainContainer = () => {
 
     dly = new Tone.FeedbackDelay('8n', 0.5).toDestination();
     dist = new Tone.Distortion(0.4).connect(dly);
+    // dist = new Tone.Distortion(0.4).toDestination();
     bassSynth.current = new Tone.Synth().connect(dist);
     drumSynth.current = new Tone.MembraneSynth().toDestination();
     // console.log('B');
@@ -83,6 +84,12 @@ const MainContainer = () => {
       dist.dispose();
     };
   }, []);
+
+  // PRETTY SURE THIS IS WRONG WAY TO DO THIS, but trying to update delay tempo on tempo change
+  useEffect(() => {
+    console.log('in useEffect delay update');
+    dly = new Tone.FeedbackDelay('8n', 0.5).toDestination();
+  }, [dly, state.status.tempo]);
 
   // Bass Sequence
   useEffect(() => {
@@ -156,10 +163,10 @@ const MainContainer = () => {
   }, [localUserId]);
 
   // Add keyboard event listener
-  // useEffect(() => {
-  //   window.addEventListener('keydown', handleUserKeyPress);
-  //   return () => { window.removeEventListener('keydown', handleUserKeyPress); };
-  // }, [handleUserKeyPress]);
+  useEffect(() => {
+    window.addEventListener('keydown', handleUserKeyPress);
+    return () => { window.removeEventListener('keydown', handleUserKeyPress); };
+  }, [handleUserKeyPress]);
 
   return (
     <div className="MainContainer">

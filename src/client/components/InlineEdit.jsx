@@ -64,7 +64,10 @@ const InlineEdit = ({ text, onSetText }) => {
   const handleInputChange = useCallback(
     (event) => {
       // sanitize the input a little
-      setInputValue(DOMPurify.sanitize(event.target.value));
+      const sanitizedText = DOMPurify.sanitize(event.target.value);
+      console.log('InlineEdit -> sanitizedText', sanitizedText);
+
+      setInputValue(sanitizedText);
     },
     [setInputValue],
   );

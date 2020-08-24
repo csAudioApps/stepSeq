@@ -10,11 +10,13 @@ const TempoSelector = ({ dispatch, curTempo }) => (
       Tempo
       {' '}
       <InlineEdit
-        text={curTempo}
-        onSetText={(newText) => dispatch({
-          type: SET_TEMPO,
-          payload: { newTempo: newText },
-        })}
+        text={curTempo.toString()}
+        onSetText={(newText) => {
+          let newTempo = Number(newText);
+          // Make sure it's a valid number, otherwise keep current tempo
+          newTempo = Number.isNaN(newTempo) ? curTempo : newTempo;
+          dispatch({ type: SET_TEMPO, payload: { newTempo } });
+        }}
       />
     </div>
   </li>
