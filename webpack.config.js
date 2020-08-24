@@ -62,10 +62,19 @@ module.exports = {
           },
         },
       },
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        use: ['file-loader'],
+      },
     ],
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.jsx'],
   },
-  plugins: [new HtmlWebpackPlugin({})],
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: 'stepSeq',
+      favicon: 'public/favicon-32x32.png',
+    }),
+  ],
 };

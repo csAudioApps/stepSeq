@@ -1,25 +1,27 @@
+/* eslint-disable object-curly-newline */
 /* eslint-disable no-multi-spaces */
 /* eslint-disable consistent-return */
-import React, {
-  useState, useEffect, useRef, useReducer, useCallback,
-} from 'react';
+import React, { useState, useEffect, useRef, useReducer, useCallback } from 'react';
 import * as Tone from 'tone';
-import VisualContainer from './VisualContainer';
 import HeaderContainer from './HeaderContainer';
+import ControlBar from '../components/ControlBar';
+import InstrumentColumn from '../components/InstrumentColumn';
+import Board from '../components/Board';
+import Knobs from '../components/Knobs';
 import Footer from '../components/Footer';
-import updateNoteArray from '../helpers/audioHelpers';
+import { updateNoteArray, toggleToneTransport } from '../helpers/audioHelpers';
 import { mainInitState, userInitState } from '../constants/initState';
 import reducer from '../reducer/reducer';
-import * as reducerConstants from '../reducer/reducerConstants';
+import * as types from '../reducer/reducerConstants';
 import { socket } from '../helpers/socket';
 // import uuid from "uuid";
 
 // const seqLen = 16;
-Tone.Transport.bpm.value = 120;
 
 const MainContainer = () => {
   const [state, dispatch] = useReducer(reducer, mainInitState);
   const [step, setStep] = useState(0);
+  // const [position, setPosition] = useState('0:0:0');
 
   const { users, local, instruments } = state;
   const { localUserId } = local;
@@ -41,8 +43,7 @@ const MainContainer = () => {
     socket.emit('getInitialState');
     socket.on('updateClientState', (msg, senderId) => {
       if (socket.id !== senderId) {
-        // console.log('***not equal****')
-        dispatch({ type: reducerConstants.SET_STATE_FROM_SOCKET, payload: msg });
+        dispatch({ type: types.SET_STATE_FROM_SOCKET, payload: msg });
       }
       else {
         // console.log('they are equal')
@@ -54,20 +55,22 @@ const MainContainer = () => {
   // Add User
   useEffect(() => {
     if (!Object.keys(users).includes(localUserId)) {
-      dispatch({ type: reducerConstants.ADD_USER, payload: { [localUserId]: userInitState } });
+      dispatch({ type: types.ADD_USER, payload: { [localUserId]: userInitState } });
     }
   }, [users, localUserId]);
 
-  // Transport and Setup
+  // Initial (one-time) Tone and Tranpost Setup
   useEffect(() => {
     // console.log('A');
     Tone.Context.latencyHint = 'playback';
+    Tone.Transport.bpm.value = state.status.tempo ? state.status.tempo : 120;
     transport.current = new Tone.Sequence((time, curStep) => {
       setStep(curStep);
     }, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], '8n').start(0);
 
     dly = new Tone.FeedbackDelay('8n', 0.5).toDestination();
     dist = new Tone.Distortion(0.4).connect(dly);
+    // dist = new Tone.Distortion(0.4).toDestination();
     bassSynth.current = new Tone.Synth().connect(dist);
     drumSynth.current = new Tone.MembraneSynth().toDestination();
     // console.log('B');
@@ -75,14 +78,20 @@ const MainContainer = () => {
     // clean up side effects
     return () => {
       transport.current.dispose();
-      dly.dispose();
-      dist.dispose();
       drumSynth.current.dispose();
       bassSynth.current.dispose();
+      dly.dispose();
+      dist.dispose();
     };
   }, []);
 
-  // Bass Synth
+  // PRETTY SURE THIS IS WRONG WAY TO DO THIS, but trying to update delay tempo on tempo change
+  useEffect(() => {
+    console.log('in useEffect delay update');
+    dly = new Tone.FeedbackDelay('8n', 0.5).toDestination();
+  }, [dly, state.status.tempo]);
+
+  // Bass Sequence
   useEffect(() => {
     // console.log('C');
     if (bassSynth && bassSynth.current) {
@@ -98,11 +107,10 @@ const MainContainer = () => {
     return null;
   }, [instruments, selectedScale]);
 
-  // Drum Synth
+  // Drum Sequence
   useEffect(() => {
     // console.log('D');
     if (drumSynth && drumSynth.current) {
-      // const drumNoteArr = ['A-1', null, null, null, 'A-1', null, null, null];
       const drumNoteArr = updateNoteArray(instruments[0].grid, selectedScale, 0);
       const drumSynthSeq = new Tone.Sequence((time, note) => {
         drumSynth.current.triggerAttackRelease(note, '8n', time);
@@ -111,19 +119,18 @@ const MainContainer = () => {
       // clean up side effects
       return () => drumSynthSeq.dispose();
     }
+    return null;
   }, [instruments, selectedScale]);
 
   const handleUserKeyPress = useCallback((event) => {
     const { code, altKey } = event;
-    // console.log('handleUserKeyPress -> code', code);
-
     switch (code) {
-      case 'Space':
-        dispatch({                // Toggle Playback
-          type: reducerConstants.TOGGLE_IS_PLAYING,
-          payload: { localUserId },
-        });
+      case 'Space': {
+        if (toggleToneTransport()) {
+          dispatch({ type: types.TOGGLE_PLAY_STATE, payload: { localUserId } });
+        }
         break;
+      }
       case 'Digit1':
       case 'Digit2':
       case 'Digit3':
@@ -134,16 +141,17 @@ const MainContainer = () => {
       case 'Digit8':
       case 'Digit9':
       case 'Digit0': {
-        const selectedIndex = Number(code[code.length - 1]) - 1;
-        if (altKey === true) {    // Numbers with alt key switch scale
+        const lastDigit = Number(code[code.length - 1]);
+        const selectedIndex = lastDigit === 0 ? 10 : lastDigit - 1;
+        if (altKey === true) {    // Numbers + alt key change scale
           dispatch({
-            type: reducerConstants.SET_SELECTED_SCALE,
+            type: types.SET_SELECTED_SCALE,
             payload: { localUserId, selectedScale: selectedIndex },
           });
         }
-        else {                    // Numbers without modifier keys switch instrument
+        else {                    // Numbers alone change instrument
           dispatch({
-            type: reducerConstants.SET_SELECTED_INSTRUMENT,
+            type: types.SET_SELECTED_INSTRUMENT,
             payload: { localUserId, instrumentSelected: selectedIndex },
           });
         }
@@ -154,7 +162,7 @@ const MainContainer = () => {
     }
   }, [localUserId]);
 
-  // Add event listeners
+  // Add keyboard event listener
   useEffect(() => {
     window.addEventListener('keydown', handleUserKeyPress);
     return () => { window.removeEventListener('keydown', handleUserKeyPress); };
@@ -165,18 +173,35 @@ const MainContainer = () => {
       <div id="time" />
       <div id="seconds" />
       <HeaderContainer />
-      <VisualContainer
-        numRows={15}
-        numColumns={16}
-        curStepColNum={step}
-        gridState={gridForCurInstr}
-        dispatch={dispatch}
-        instruments={instruments}
-        selectedInstr={selectedInstr}
-        selectedScale={selectedScale}
-        localUserId={localUserId}
-        isPlaying={isPlaying}
-      />
+      <div className="body">
+        <div className="VisualContainer">
+          <ControlBar
+            localUserId={localUserId}
+            selectedScale={selectedScale}
+            dispatch={dispatch}
+            isPlaying={isPlaying}
+            curTempo={state.status.tempo}
+          />
+          <div className="row">
+            <div className="column">
+              <InstrumentColumn
+                instruments={instruments}
+                localUserId={localUserId}
+                selectedInstr={selectedInstr}
+                dispatch={dispatch}
+              />
+              <Knobs />
+            </div>
+            <Board
+              numRows={15}
+              numColumns={16}
+              curStepColNum={step}
+              gridState={gridForCurInstr}
+              dispatch={dispatch}
+            />
+          </div>
+        </div>
+      </div>
       <Footer />
     </div>
   );
@@ -191,3 +216,14 @@ export default MainContainer;
 // })
 // when we receive and updated state from server, update local state
 // only update if update was sent fron another user
+
+// Update Transport Position Display
+// useEffect(() => {
+//   const id = Tone.Transport.scheduleRepeat(() =>  {
+//     const curPosition = Tone.Transport.position.toString().split('.')[0];
+//     console.log('Updating position -> curPosition', curPosition);
+//     setPosition(curPosition);
+//   }, '8n');
+
+//   return () => { Tone.Transport.clear(id); };
+// }, []);

@@ -86,20 +86,17 @@ const reducer = (state, action) => {
       return newState;
     }
 
-    case reducerConstants.TOGGLE_IS_PLAYING: {
-      // export const togglePlayback = async (e) => {
-      // await Tone.start();
+    case reducerConstants.TOGGLE_PLAY_STATE: {
+      // const isCurrentlyPlaying = state.users[action.payload.localUserId].isPlaying;
+      // console.log('Tone.Context.');
+      // if (!isCurrentlyPlaying) {
+      //   Tone.Transport.start();
+      // }
+      // else {
+      //   Tone.Transport.toggle();
+      //   // Tone.Transport.pause();
+      // }
 
-      if (Tone.Transport.state === 'stopped' || Tone.Transport.state === 'paused') {
-        Tone.Transport.start();
-      }
-      else {
-        Tone.Transport.pause();
-        // };
-      }
-
-      // console.log('Current Play State', state.users[action.payload.localUserId].isPlaying);
-      // const curPlayState = ;
       newState = {
         ...state,
         users: {
@@ -110,7 +107,6 @@ const reducer = (state, action) => {
           },
         },
       };
-      console.log('Current Play State', state.users[action.payload.localUserId].isPlaying);
       socket.emit('updateServerState', newState, socket.id);
       return newState;
     }
@@ -165,16 +161,19 @@ const reducer = (state, action) => {
       return newState;
     }
 
-    // not working yet
-    // case UPDATE_STATUS:
-    //   return {
-    //     ...state,
-    //     status: {
-    //       ...state.status,
-    //     }
-    //   }
-    // toggle playback
-    // trigger helper pause, return updated state
+    case reducerConstants.SET_TEMPO: {
+      Tone.Transport.bpm.value = action.payload.newTempo;
+      console.log('reducer -> Tone.Transport.bpm.value', Tone.Transport.bpm.value);
+      newState = {
+        ...state,
+        status: {
+          tempo: action.payload.newTempo,
+        },
+      };
+      socket.emit('updateServerState', newState, socket.id);
+      return newState;
+    }
+
     default: {
       throw new Error('Error: invalid reducer action type');
     }

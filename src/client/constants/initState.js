@@ -32,7 +32,7 @@ export const mainInitState = {
 
   status: {
     secsRemaining: 300,
-    bpm: 120,
+    tempo: 120,
   },
 
   users: {
