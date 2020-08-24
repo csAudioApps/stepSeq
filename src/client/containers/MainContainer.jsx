@@ -1,11 +1,13 @@
+/* eslint-disable object-curly-newline */
 /* eslint-disable no-multi-spaces */
 /* eslint-disable consistent-return */
-import React, {
-  useState, useEffect, useRef, useReducer, useCallback,
-} from 'react';
+import React, { useState, useEffect, useRef, useReducer, useCallback } from 'react';
 import * as Tone from 'tone';
-import VisualContainer from './VisualContainer';
 import HeaderContainer from './HeaderContainer';
+import ControlBar from '../components/ControlBar';
+import InstrumentColumn from '../components/InstrumentColumn';
+import Board from '../components/Board';
+import Knobs from '../components/Knobs';
 import Footer from '../components/Footer';
 import { updateNoteArray, toggleToneTransport } from '../helpers/audioHelpers';
 import { mainInitState, userInitState } from '../constants/initState';
@@ -15,7 +17,6 @@ import { socket } from '../helpers/socket';
 // import uuid from "uuid";
 
 // const seqLen = 16;
-// Tone.Transport.bpm.value = 260;
 
 const MainContainer = () => {
   const [state, dispatch] = useReducer(reducer, mainInitState);
@@ -134,7 +135,7 @@ const MainContainer = () => {
       case 'Digit9':
       case 'Digit0': {
         const lastDigit = Number(code[code.length - 1]);
-        const selectedIndex = lastDigit === 0 ? 10 : lastDigit - 11;
+        const selectedIndex = lastDigit === 0 ? 10 : lastDigit - 1;
         if (altKey === true) {    // Numbers + alt key change scale
           dispatch({
             type: types.SET_SELECTED_SCALE,
@@ -155,29 +156,45 @@ const MainContainer = () => {
   }, [localUserId]);
 
   // Add keyboard event listener
-  useEffect(() => {
-    window.addEventListener('keydown', handleUserKeyPress);
-    return () => { window.removeEventListener('keydown', handleUserKeyPress); };
-  }, [handleUserKeyPress]);
+  // useEffect(() => {
+  //   window.addEventListener('keydown', handleUserKeyPress);
+  //   return () => { window.removeEventListener('keydown', handleUserKeyPress); };
+  // }, [handleUserKeyPress]);
 
   return (
     <div className="MainContainer">
       <div id="time" />
       <div id="seconds" />
       <HeaderContainer />
-      <VisualContainer
-        numRows={15}
-        numColumns={16}
-        curStepColNum={step}
-        gridState={gridForCurInstr}
-        dispatch={dispatch}
-        instruments={instruments}
-        selectedInstr={selectedInstr}
-        selectedScale={selectedScale}
-        localUserId={localUserId}
-        isPlaying={isPlaying}
-        // position={position}
-      />
+      <div className="body">
+        <div className="VisualContainer">
+          <ControlBar
+            localUserId={localUserId}
+            selectedScale={selectedScale}
+            dispatch={dispatch}
+            isPlaying={isPlaying}
+            curTempo={state.status.tempo}
+          />
+          <div className="row">
+            <div className="column">
+              <InstrumentColumn
+                instruments={instruments}
+                localUserId={localUserId}
+                selectedInstr={selectedInstr}
+                dispatch={dispatch}
+              />
+              <Knobs />
+            </div>
+            <Board
+              numRows={15}
+              numColumns={16}
+              curStepColNum={step}
+              gridState={gridForCurInstr}
+              dispatch={dispatch}
+            />
+          </div>
+        </div>
+      </div>
       <Footer />
     </div>
   );

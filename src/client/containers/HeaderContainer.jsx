@@ -4,7 +4,7 @@ import Users from '../components/Users';
 
 const HeaderContainer = () => (
   <div className="HeaderContainer">
-    {/* <p>header</p> */}
+    {/* <div className="title">stepSeq</div> */}
     <Share />
     <Users />
   </div>

@@ -1,3 +1,4 @@
+import * as Tone from 'tone';
 import * as reducerConstants from './reducerConstants';
 import { socket } from '../helpers/socket';
 import scales from '../constants/scales';
@@ -160,16 +161,19 @@ const reducer = (state, action) => {
       return newState;
     }
 
-    // not working yet
-    // case UPDATE_STATUS:
-    //   return {
-    //     ...state,
-    //     status: {
-    //       ...state.status,
-    //     }
-    //   }
-    // toggle playback
-    // trigger helper pause, return updated state
+    case reducerConstants.SET_TEMPO: {
+      Tone.Transport.bpm.value = Number(action.payload.newTempo);
+      console.log('reducer -> Tone.Transport.bpm.value', Tone.Transport.bpm.value);
+      newState = {
+        ...state,
+        status: {
+          tempo: action.payload.newTempo,
+        },
+      };
+      socket.emit('updateServerState', newState, socket.id);
+      return newState;
+    }
+
     default: {
       throw new Error('Error: invalid reducer action type');
     }

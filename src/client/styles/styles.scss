@@ -1,5 +1,6 @@
 @import '_variables';
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500&display=swap');
+@import url("https://use.typekit.net/trv5vec.css");
 // @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;200;300;400&display=swap');
 // @import url('https://fonts.googleapis.com/css2?family=Josefin+Slab:wght@300;400;600&display=swap');
 // @import url('https://fonts.googleapis.com/css2?family=Josefin+Slab:wght@400;600&display=swap');
@@ -17,14 +18,20 @@
 
 html,
 body {
-  font-family: 'Montserrat', sans-serif;
-  font-size: .95em;
-  font-weight: 200;
+  // font-family: courier-std,monospace;
+  // font-weight: 400;
+  // font-style: normal;
+  font-family: century-gothic, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  // font-family: 'Montserrat', sans-serif;
+  // font-size: .95em;
+  // font-weight: 200;
   letter-spacing: 0.15em;
   color: $superlight;
   // color: #989898;
 
-  background-color: #2b2b2b;
+  background-color: #242424;
   height: 100%;
 }
 
@@ -37,39 +44,34 @@ body {
 }
 
 .HeaderContainer {
-  border: 0.5px solid gray;
+  // border: 1px solid rgba(255, 255, 255, .2);
   width: 100%;
-  text-align: center;
+  height: 50px;
+  // text-align: center;
+}
+
+.title {
+  font-size: 1.3em;
+  margin: 20px;
 }
 
 .Footer {
-  border: 0.5px solid gray;
+  // border: 1px solid rgba(255, 255, 255, .2);
   width: 100%;
   text-align: center;
 }
 
 .body {
-  border: 0.5px solid blue;
-  display: flex;
-  height: 100%;
-  width: 100%;
-  justify-content: center;
+  // border: 0.5px solid blue;
+  // display: flex;
+  // height: 100%;
+  // width: 100%;
+  // justify-content: center;
 
-  .VisualContainer {
-    display: flex;
-    flex-direction: column;
-    padding: 30px;
-    border: 0.5px solid green;
-    max-width: 1500px;
-    min-width: 700px;
-    min-height: 300px;
-    justify-content: center;
-    flex-grow: 1;
-
-    .NavBar {
+    .control-bar {
       height: 50px;
       padding: 10px;
-      border: 0.5px solid gray;
+      // border: 1px solid rgba(255, 255, 255, .2);
     }
 
     .row {
@@ -79,26 +81,26 @@ body {
       .column {
         display: flex;
         flex-direction: column;
+
         .InstrumentColumn {
-          border: 0.5px solid gray;
+          // border: 1px solid rgba(255, 255, 255, .2);
           padding: 10px;
-          min-width: 200px;
+          min-width: 100px;
           flex-grow: 2;
         }
         .Knobs {
-          border: 0.5px solid gray;
+          // border: 1px solid rgba(255, 255, 255, .2);
           padding: 10px;
           flex-grow: 1;
         }
       }
 
       .Board {
-        border: 0.5px solid gray;
+        // border: 1px solid rgba(255, 255, 255, .2);
         flex-grow: 1;
         padding: 10px;
       }
     }
-  }
 }
 
 button {
@@ -149,7 +151,7 @@ ul {
 
 .scale-btn-selected {
   @extend .scale-btn;
-  font-weight: 500;
+  font-weight: 700;
 }
 
 .instr-btn {
@@ -164,7 +166,7 @@ ul {
 
 .instr-btn-selected {
   @extend .instr-btn;
-  font-weight: 500;
+  font-weight: 700;
 }
 
 .btn-row-root {
@@ -201,7 +203,38 @@ ul {
 }
 
 
-  // font-family: 'Mulish', sans-serif;
-  // font-family: 'Ruda', sans-serif;
-  // font-family: 'Josefin Slab', serif;
-  // font-family: 'Roboto Mono', monospace;
+
+.tempo-selector {
+  font-family: inherit;
+  padding: 5px;
+  float: right
+}
+  
+  /* these make sure it can work in any text element */
+.inline-text_copy--active,
+.inline-text_input--active {
+  width: 80px;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  padding: 8px;
+  background: none;
+  border: 0.1px solid #999999;;
+  // border-bottom: 1px dashed #999999;
+  outline: none;
+}
+
+.inline-text_copy--active {
+  cursor: pointer;
+}
+
+.inline-text_copy--hidden,
+.inline-text_input--hidden {
+  display: none;
+  width: 80px;
+}
+
+.inline-text_input--active {
+  width: 80px;
+  border-bottom: 1px solid red;
+}
