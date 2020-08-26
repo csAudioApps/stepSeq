@@ -1,30 +1,32 @@
+/* eslint-disable object-curly-newline */
+/* eslint-disable jsx-a11y/control-has-associated-label */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+import { number, func, string, bool } from 'prop-types';
 import React from 'react';
-import { togglePlayback } from '../helpers/audioHelpers.js';
-import { SET_SELECTED_SCALE } from '../reducer/reducerConstants'
+import PlayPauseButton from './PlayPauseButton';
+import ScaleSelector from './ScaleSelector';
+import TempoSelector from './TempoSelector';
+// import TimeDisplay from './TimeDisplay';
 
-const ControlBar = React.memo(({scales, selectedScale, dispatch, localUserId }) => {
-  console.log("ControlBar -> selectedScale", selectedScale)
+const ControlBar = React.memo(({ selectedScale, dispatch, localUserId, isPlaying, curTempo }) => (
+  <div className="control-bar">
+    <ul>
+      <PlayPauseButton dispatch={dispatch} localUserId={localUserId} isPlaying={isPlaying} />
+      <ScaleSelector dispatch={dispatch} localUserId={localUserId} selectedScale={selectedScale} />
+      <TempoSelector dispatch={dispatch} curTempo={curTempo} />
+      {/* <TimeDisplay position={position} /> */}
+    </ul>
+  </div>
+));
 
-  return (
-    <div className="NavBar">
-      <ul>
-        <li><button onClick={togglePlayback} className="btn-play-pause">Play | Pause</button></li>
-        <li className="scales">Scales</li>
-        {
-          scales 
-          ? scales.map((item, i) => {
-            return <li className={selectedScale === i ? 'scale-btn-selected' : 'scale-btn'} 
-                        onClick={() => dispatch({
-                          type: SET_SELECTED_SCALE, 
-                          payload: { localUserId: localUserId, selectedScale: i }
-                        })}
-                        key={'scaleBtn'+i.toString()}>{i+1}</li>;
-          })
-          : <p>Loading...</p>
-        }
-      </ul>
-    </div>
-  )
-})
+ControlBar.propTypes = {
+  // position: PropTypes.string.isRequired,
+  selectedScale: number.isRequired,
+  dispatch: func.isRequired,
+  localUserId: string.isRequired,
+  isPlaying: bool.isRequired,
+  curTempo: number.isRequired,
+};
 
 export default ControlBar;

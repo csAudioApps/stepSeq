@@ -7,8 +7,8 @@ module.exports = {
   entry: './src/client/index.js',
 
   // Enable sourcemaps for debugging webpack's output.
-  devtool: "source-map",
-  
+  devtool: 'source-map',
+
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: './',
@@ -37,13 +37,13 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: [
-              "@babel/preset-env",
-              "@babel/preset-react",
+              '@babel/preset-env',
+              '@babel/preset-react',
               // "@babel/preset-typescript",
             ],
             plugins: [
-              '@babel/transform-runtime'
-          ],
+              '@babel/transform-runtime',
+            ],
           },
         },
       },
@@ -58,14 +58,23 @@ module.exports = {
           options: {
             name: '[name].[contenthash].[ext]',
             outputPath: 'assets/audio/',
-            publicPath: 'assets/audio/'
-          }
-        }
+            publicPath: 'assets/audio/',
+          },
+        },
       },
-    ]
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        use: ['file-loader'],
+      },
+    ],
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.jsx'],
   },
-  plugins: [new HtmlWebpackPlugin({})],
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: 'stepSeq',
+      favicon: 'public/favicon-32x32.png',
+    }),
+  ],
 };
