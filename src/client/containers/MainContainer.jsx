@@ -68,10 +68,11 @@ const MainContainer = () => {
       setStep(curStep);
     }, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], '8n').start(0);
 
-    dly = new Tone.FeedbackDelay('8n', 0.5).toDestination();
-    dist = new Tone.Distortion(0.4).connect(dly);
-    // dist = new Tone.Distortion(0.4).toDestination();
+    // dly = new Tone.FeedbackDelay('8n', 0.5).toDestination();
+    // dist = new Tone.Distortion(0.4).connect(dly);
+    dist = new Tone.Distortion(0.4).toDestination();
     bassSynth.current = new Tone.Synth().connect(dist);
+    // bassSynth.current = new Tone.Synth().toDestination();
     drumSynth.current = new Tone.MembraneSynth().toDestination();
     // console.log('B');
 

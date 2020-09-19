@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 // import io from 'socket.io-client';
-import MainContainer from '../containers/MainContainer';
+import MainContainer from './MainContainer';
 import { socket } from '../helpers/socket';
 
 const App = (props) => {
