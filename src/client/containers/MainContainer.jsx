@@ -33,8 +33,8 @@ const MainContainer = () => {
   const transport = useRef(null);
   const bassSynth = useRef(null);
   const drumSynth = useRef(null);
-  let dly;
-  let dist;
+  const dly = useRef(null);
+  const dist = useRef(null);
 
   // open socket connection
   useEffect(() => {
@@ -61,36 +61,39 @@ const MainContainer = () => {
 
   // Initial (one-time) Tone and Tranpost Setup
   useEffect(() => {
-    // console.log('A');
     Tone.Context.latencyHint = 'playback';
     Tone.Transport.bpm.value = state.status.tempo ? state.status.tempo : 120;
     transport.current = new Tone.Sequence((time, curStep) => {
       setStep(curStep);
     }, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], '8n').start(0);
 
-    // dly = new Tone.FeedbackDelay('8n', 0.5).toDestination();
-    // dist = new Tone.Distortion(0.4).connect(dly);
-    dist = new Tone.Distortion(0.4).toDestination();
-    bassSynth.current = new Tone.Synth().connect(dist);
-    // bassSynth.current = new Tone.Synth().toDestination();
-    drumSynth.current = new Tone.MembraneSynth().toDestination();
-    // console.log('B');
-
-    // clean up side effects
     return () => {
       transport.current.dispose();
-      drumSynth.current.dispose();
-      bassSynth.current.dispose();
-      dly.dispose();
-      dist.dispose();
     };
   }, []);
 
-  // PRETTY SURE THIS IS WRONG WAY TO DO THIS, but trying to update delay tempo on tempo change
+  // Set up instrumentation
+  useEffect(() => {
+    dly.current = new Tone.FeedbackDelay('8n', 0.5).toDestination();
+    // dly.current.wet = 0.9;
+    dist.current = new Tone.Distortion(0.4).connect(dly.current);
+    bassSynth.current = new Tone.Synth().connect(dist.current);
+
+    drumSynth.current = new Tone.MembraneSynth().toDestination();
+
+    return () => {
+      bassSynth.current.dispose();
+      dist.current.dispose();
+      dly.current.dispose();
+      drumSynth.current.dispose();
+    };
+  }, []);
+
+  // If user changes tempo, update delayTime
   useEffect(() => {
     console.log('in useEffect delay update');
-    dly = new Tone.FeedbackDelay('8n', 0.5).toDestination();
-  }, [dly, state.status.tempo]);
+    dly.current.delayTime.value = '8n';
+  }, [state.status.tempo]);
 
   // Bass Sequence
   useEffect(() => {
@@ -102,7 +105,7 @@ const MainContainer = () => {
         bassSynth.current.triggerAttackRelease(note, '8n', time);
       }, bassNoteArr).start(0);
 
-      // clean up side effects
+      // dispose on component tear-down
       return () => bassSynthSeq.dispose();
     }
     return null;
@@ -117,7 +120,7 @@ const MainContainer = () => {
         drumSynth.current.triggerAttackRelease(note, '8n', time);
       }, drumNoteArr).start(0);
 
-      // clean up side effects
+      // dispose on component tear-down
       return () => drumSynthSeq.dispose();
     }
     return null;

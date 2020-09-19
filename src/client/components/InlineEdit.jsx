@@ -1,15 +1,15 @@
 /* eslint-disable object-curly-newline */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { func, string } from 'prop-types';
-import DOMPurify from 'dompurify';
-import useKeypress from '../hooks/useKeypress';
-import useOnClickOutside from '../hooks/useOnClickOutside';
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { func, string } from "prop-types";
+import DOMPurify from "dompurify";
+import useKeypress from "../hooks/useKeypress";
+import useOnClickOutside from "../hooks/useOnClickOutside";
 
 const InlineEdit = ({ text, onSetText }) => {
-  console.log('InlineEdit -> text', text);
-  console.log('InlineEdit -> onSetText', onSetText);
+  // console.log('InlineEdit -> text', text);
+  // console.log('InlineEdit -> onSetText', onSetText);
   const [isInputActive, setIsInputActive] = useState(false);
   const [inputValue, setInputValue] = useState(text);
 
@@ -17,12 +17,12 @@ const InlineEdit = ({ text, onSetText }) => {
   const textRef = useRef(null);
   const inputRef = useRef(null);
 
-  const enter = useKeypress('Enter');
-  const esc = useKeypress('Escape');
+  const enter = useKeypress("Enter");
+  const esc = useKeypress("Escape");
 
   // check to see if the user clicked outside of this component
   useOnClickOutside(wrapperRef, () => {
-    console.log('OUTSIDE CLICK');
+    // console.log('OUTSIDE CLICK');
     if (isInputActive) {
       onSetText(inputValue);
       setIsInputActive(false);
@@ -30,7 +30,7 @@ const InlineEdit = ({ text, onSetText }) => {
   });
 
   const onEnter = useCallback(() => {
-    console.log('ENTER');
+    // console.log('ENTER');
     if (enter) {
       onSetText(inputValue);
       setIsInputActive(false);
@@ -38,7 +38,7 @@ const InlineEdit = ({ text, onSetText }) => {
   }, [enter, inputValue, onSetText]);
 
   const onEsc = useCallback(() => {
-    console.log('ESCAPE');
+    // console.log('ESCAPE');
     if (esc) {
       setInputValue(text);
       setIsInputActive(false);
@@ -65,11 +65,11 @@ const InlineEdit = ({ text, onSetText }) => {
     (event) => {
       // sanitize the input a little
       const sanitizedText = DOMPurify.sanitize(event.target.value);
-      console.log('InlineEdit -> sanitizedText', sanitizedText);
+      // console.log('InlineEdit -> sanitizedText', sanitizedText);
 
       setInputValue(sanitizedText);
     },
-    [setInputValue],
+    [setInputValue]
   );
 
   const handleSpanClick = useCallback(() => setIsInputActive(true), [
@@ -82,7 +82,7 @@ const InlineEdit = ({ text, onSetText }) => {
         ref={textRef}
         onClick={handleSpanClick}
         className={`inline-text_copy inline-text_copy--${
-          !isInputActive ? 'active' : 'hidden'
+          !isInputActive ? "active" : "hidden"
         }`}
       >
         {text}
@@ -95,7 +95,7 @@ const InlineEdit = ({ text, onSetText }) => {
         value={inputValue}
         onChange={handleInputChange}
         className={`inline-text_input inline-text_input--${
-          isInputActive ? 'active' : 'hidden'
+          isInputActive ? "active" : "hidden"
         }`}
       />
     </span>
