@@ -2,17 +2,18 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import scales from '../constants/scales';
 import { SET_SELECTED_SCALE } from '../reducer/reducerConstants';
 
 const ScaleSelector = React.memo(({ dispatch, localUserId, selectedScale }) => (
   <>
-    <li className="scales">Scale</li>
+    <ScaleTitle>Scale</ScaleTitle>
     {
         scales
           ? scales.map((item, scaleIndex) => (
-            <li
-              className={selectedScale === scaleIndex ? 'scale-btn-selected' : 'scale-btn'}
+            <ScaleOption
+              isSelected={selectedScale === scaleIndex}
               onClick={() => dispatch({
                 type: SET_SELECTED_SCALE,
                 payload: { localUserId, selectedScale: scaleIndex },
@@ -20,7 +21,7 @@ const ScaleSelector = React.memo(({ dispatch, localUserId, selectedScale }) => (
               key={`scaleBtn${scaleIndex.toString()}`}
             >
               {scaleIndex + 1}
-            </li>
+            </ScaleOption>
           ))
           : <p>Loading...</p>
       }
@@ -34,3 +35,16 @@ ScaleSelector.propTypes = {
 };
 
 export default ScaleSelector;
+
+const ScaleTitle = styled.li`
+  margin: auto 0.4em;
+  padding: 5px;
+  float: left;
+`;
+
+const ScaleOption = styled.button`
+  margin: 0.4em;
+  float: left;
+  background: transparent;
+  font-weight: ${(props) => (props.isSelected ? 700 : 200)};
+`;

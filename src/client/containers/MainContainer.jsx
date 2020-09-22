@@ -3,6 +3,7 @@
 /* eslint-disable consistent-return */
 import React, { useState, useEffect, useRef, useReducer, useCallback } from 'react';
 import * as Tone from 'tone';
+import styled from 'styled-components';
 import HeaderContainer from './HeaderContainer';
 import ControlBar from '../components/ControlBar';
 import InstrumentColumn from '../components/InstrumentColumn';
@@ -14,9 +15,6 @@ import { mainInitState, userInitState } from '../constants/initState';
 import reducer from '../reducer/reducer';
 import * as types from '../reducer/reducerConstants';
 import { socket } from '../helpers/socket';
-// import uuid from "uuid";
-
-// const seqLen = 16;
 
 const MainContainer = () => {
   const [state, dispatch] = useReducer(reducer, mainInitState);
@@ -173,43 +171,57 @@ const MainContainer = () => {
   }, [handleUserKeyPress]);
 
   return (
-    <div className="MainContainer">
-      <div id="time" />
-      <div id="seconds" />
+    <StyledMainContainer>
       <HeaderContainer />
-      <div className="body">
-        <div className="VisualContainer">
-          <ControlBar
-            localUserId={localUserId}
-            selectedScale={selectedScale}
-            dispatch={dispatch}
-            isPlaying={isPlaying}
-            curTempo={state.status.tempo}
-          />
-          <div className="row">
-            <div className="column">
-              <InstrumentColumn
-                instruments={instruments}
-                localUserId={localUserId}
-                selectedInstr={selectedInstr}
-                dispatch={dispatch}
-              />
-              <Knobs />
-            </div>
-            <Board
-              numRows={15}
-              numColumns={16}
-              curStepColNum={step}
-              gridState={gridForCurInstr}
+      <div>
+        <ControlBar
+          localUserId={localUserId}
+          selectedScale={selectedScale}
+          dispatch={dispatch}
+          isPlaying={isPlaying}
+          curTempo={state.status.tempo}
+        />
+        <StyledRow>
+          <StyledCol>
+            <InstrumentColumn
+              instruments={instruments}
+              localUserId={localUserId}
+              selectedInstr={selectedInstr}
               dispatch={dispatch}
             />
-          </div>
-        </div>
+            <Knobs />
+          </StyledCol>
+          <Board
+            numRows={15}
+            numColumns={16}
+            curStepColNum={step}
+            gridState={gridForCurInstr}
+            dispatch={dispatch}
+          />
+        </StyledRow>
       </div>
       <Footer />
-    </div>
+    </StyledMainContainer>
   );
 };
+
+const StyledMainContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+`;
+
+const StyledRow = styled.div`
+  display: flex;
+  flex-grow: 1;
+`;
+
+const StyledCol = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 export default MainContainer;
 

@@ -3,20 +3,21 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import PropTypes from 'prop-types';
 import React from 'react';
+import styled from 'styled-components';
 import * as reducerConstants from '../reducer/reducerConstants';
 
 const InstrumentColumn = React.memo(({
   instruments, dispatch, localUserId, selectedInstr,
 }) => (
-  <div className="InstrumentColumn">
+  <InstrumentColumnWrapper>
     <ul>
       {
         instruments
           ? instruments.map((item, i) => (
             <div key={instruments[i].name}>
-              <button
+              <InstrumentButton
                 type="button"
-                className={selectedInstr === i ? 'instr-btn-selected' : 'instr-btn'}
+                isSelected={selectedInstr === i}
                 key={instruments[i].name}
                 onClick={() => dispatch({
                   type: reducerConstants.SET_SELECTED_INSTRUMENT,
@@ -24,13 +25,13 @@ const InstrumentColumn = React.memo(({
                 })}
               >
                 {instruments[i].name}
-              </button>
+              </InstrumentButton>
             </div>
           ))
           : <p>Loading...</p>
       }
     </ul>
-  </div>
+  </InstrumentColumnWrapper>
 ));
 
 InstrumentColumn.propTypes = {
@@ -45,5 +46,24 @@ InstrumentColumn.propTypes = {
   localUserId: PropTypes.string.isRequired,
   selectedInstr: PropTypes.number.isRequired,
 };
+
+const InstrumentColumnWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 17px 0px;
+  min-width: 100px;
+  flex-grow: 2;
+  ${'' /* border: 1px solid grey; */}
+  border-left: 1px solid #444444;
+  border-right: 1px solid #444444;
+  border-bottom: 1px solid #444444;
+`;
+
+const InstrumentButton = styled.button`
+  cursor: pointer;
+  margin: 12px;
+  background-color: transparent;
+  font-weight: ${(props) => (props.isSelected ? 700 : 200)};
+`;
 
 export default InstrumentColumn;

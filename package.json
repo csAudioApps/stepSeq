@@ -32,6 +32,7 @@
     "regenerator-runtime": "^0.13.7",
     "socket.io": "^2.3.0",
     "standardized-audio-context": "^24.1.22",
+    "styled-components": "^5.2.0",
     "tone": "^14.7.32"
   },
   "devDependencies": {

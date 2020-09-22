@@ -1,11 +1,12 @@
 /* eslint-disable object-curly-newline */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { func, string } from "prop-types";
-import DOMPurify from "dompurify";
-import useKeypress from "../hooks/useKeypress";
-import useOnClickOutside from "../hooks/useOnClickOutside";
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { func, string } from 'prop-types';
+import DOMPurify from 'dompurify';
+import styled from 'styled-components';
+import useKeypress from '../hooks/useKeypress';
+import useOnClickOutside from '../hooks/useOnClickOutside';
 
 const InlineEdit = ({ text, onSetText }) => {
   // console.log('InlineEdit -> text', text);
@@ -17,8 +18,8 @@ const InlineEdit = ({ text, onSetText }) => {
   const textRef = useRef(null);
   const inputRef = useRef(null);
 
-  const enter = useKeypress("Enter");
-  const esc = useKeypress("Escape");
+  const enter = useKeypress('Enter');
+  const esc = useKeypress('Escape');
 
   // check to see if the user clicked outside of this component
   useOnClickOutside(wrapperRef, () => {
@@ -69,7 +70,7 @@ const InlineEdit = ({ text, onSetText }) => {
 
       setInputValue(sanitizedText);
     },
-    [setInputValue]
+    [setInputValue],
   );
 
   const handleSpanClick = useCallback(() => setIsInputActive(true), [
@@ -77,28 +78,21 @@ const InlineEdit = ({ text, onSetText }) => {
   ]);
 
   return (
-    <span className="inline-text" ref={wrapperRef}>
-      <span
+    <StyledInlineEdit ref={wrapperRef}>
+      <StyledInputInactive
         ref={textRef}
         onClick={handleSpanClick}
-        className={`inline-text_copy inline-text_copy--${
-          !isInputActive ? "active" : "hidden"
-        }`}
+        isVisible={!isInputActive}
       >
         {text}
-      </span>
-      <input
+      </StyledInputInactive>
+      <StyledActiveInput
         ref={inputRef}
-        // set the width to the input length multiplied by the x height
-        // it's not quite right but gets it close
-        // style={{ width: '8ch' }}
         value={inputValue}
         onChange={handleInputChange}
-        className={`inline-text_input inline-text_input--${
-          isInputActive ? "active" : "hidden"
-        }`}
+        isVisible={isInputActive}
       />
-    </span>
+    </StyledInlineEdit>
   );
 };
 
@@ -108,3 +102,25 @@ InlineEdit.propTypes = {
   text: string.isRequired,
   onSetText: func.isRequired,
 };
+
+const StyledInlineEdit = styled.span`
+  background: #205846;
+  padding: 0.3em;
+  margin: auto 12px auto 0.1em;
+  width: 2.7em;
+`;
+
+const StyledInputInactive = styled.span`
+  display: ${(props) => (props.isVisible ? 'inline' : 'none')};
+`;
+
+const StyledActiveInput = styled.input`
+  background: grey;
+  width: 2.7em;
+  color: inherit;
+  text-align: inherit;
+  letter-spacing: inherit;
+  border: inherit;
+  cursor: pointer;
+  display: ${(props) => (props.isVisible ? 'inline' : 'none')};
+`;

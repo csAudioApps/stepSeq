@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
-// import io from 'socket.io-client';
 import MainContainer from './MainContainer';
+import GlobalStyle from '../styles/globalStyles';
 import { socket } from '../helpers/socket';
+import ImagePath from '../assets/night-sky.jpg';
 
-const App = (props) => {
-  const [inputText, setInputText] = useState('');
+const App = () => {
+  const [inputText] = useState('');
   const send = () => {
     console.log('sending text ', inputText);
     socket.emit('updateServerState', inputText);
   };
 
   return (
-    <div>
+    <>
+      <GlobalStyle img={ImagePath} />
       <MainContainer />
-      {/* <input onChange={(e) => setInputText(e.target.value)} type="text" /> */}
-      {/* <button onClick={() => send()}>send</button> */}
-    </div>
+    </>
   );
 };
 
