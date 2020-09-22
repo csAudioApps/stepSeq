@@ -37,8 +37,8 @@ ScaleSelector.propTypes = {
 export default ScaleSelector;
 
 const ScaleTitle = styled.li`
-  margin: auto 0.4em;
-  padding: 5px;
+  margin: auto 0.4em auto 20px;
+  ${'' /* padding: 5px; */}
   float: left;
 `;
 
