@@ -3,15 +3,22 @@ import styled from 'styled-components';
 import Share from '../components/Share';
 import Users from '../components/Users';
 
-const HeaderContainer = () => (
+const HeaderContainer = ({ localUserId, username }) => (
   <StyledDiv>
     <Share />
-    <Users />
+    <Users
+      localUserId={localUserId}
+      username={username}
+    />
   </StyledDiv>
 );
 
 const StyledDiv = styled.div`
-  height: 60px;
+  display: flex;
+  justify-content: flex-end;
+  color: white;
+  background-color: #282828;
+  height: 50px;
   width: 100%;
 `;
 

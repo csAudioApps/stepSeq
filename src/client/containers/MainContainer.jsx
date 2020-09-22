@@ -25,6 +25,7 @@ const MainContainer = () => {
   const { localUserId } = local;
   const selectedScale = (users[localUserId]) ? users[localUserId].selectedScale : 0;
   const selectedInstr = (users[localUserId]) ? users[localUserId].instrumentSelected : 1;
+  const username = (users[localUserId]) ? users[localUserId].username : '';
   const gridForCurInstr = (users[localUserId]) ? instruments[selectedInstr].grid : [[]];
   const isPlaying = (users[localUserId]) ? users[localUserId].isPlaying : false;
 
@@ -172,8 +173,11 @@ const MainContainer = () => {
 
   return (
     <StyledMainContainer>
-      <HeaderContainer />
-      <div>
+      <HeaderContainer
+        localUserId={localUserId}
+        username={username}
+      />
+      <StyledWrapper>
         <ControlBar
           localUserId={localUserId}
           selectedScale={selectedScale}
@@ -199,11 +203,15 @@ const MainContainer = () => {
             dispatch={dispatch}
           />
         </StyledRow>
-      </div>
+      </StyledWrapper>
       <Footer />
     </StyledMainContainer>
   );
 };
+
+const StyledWrapper = styled.div`
+  margin-top: 50px;
+`;
 
 const StyledMainContainer = styled.div`
   display: flex;

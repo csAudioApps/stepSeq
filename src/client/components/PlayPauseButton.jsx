@@ -5,7 +5,7 @@ import { toggleToneTransport } from '../helpers/audioHelpers';
 import { TOGGLE_PLAY_STATE } from '../reducer/reducerConstants';
 
 const PlayPauseButton = React.memo(({ dispatch, localUserId, isPlaying }) => (
-  <li>
+  <StyledLi>
     <StyledPlayPauseButton
       type="button"
       className="btn-play-pause"
@@ -17,7 +17,7 @@ const PlayPauseButton = React.memo(({ dispatch, localUserId, isPlaying }) => (
     >
       { isPlaying ? 'Pause' : 'Play' }
     </StyledPlayPauseButton>
-  </li>
+  </StyledLi>
 ));
 
 PlayPauseButton.propTypes = {
@@ -26,13 +26,18 @@ PlayPauseButton.propTypes = {
   isPlaying: PropTypes.bool.isRequired,
 };
 
+const StyledLi = styled.li`
+  margin-left: 25px;
+  align-self: center;
+`;
+
 const StyledPlayPauseButton = styled.button`
-  width: 80px;
+  width: 120px;
+  height: 35px;
+  border-radius: 3px;
   background-color: #5b5b5b;
-  color: white;
-  margin: 13px 0.5em 13px 25px;
+  color: #eaeaea;
   padding: 5px;
-  float: left;
 `;
 
 export default PlayPauseButton;

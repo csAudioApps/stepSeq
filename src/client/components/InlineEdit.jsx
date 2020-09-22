@@ -104,7 +104,7 @@ InlineEdit.propTypes = {
 };
 
 const StyledInlineEdit = styled.span`
-  background: #205846;
+  background: #222222;
   padding: 0.3em;
   margin: auto 12px auto 0.1em;
   width: 2.7em;
@@ -115,9 +115,9 @@ const StyledInputInactive = styled.span`
 `;
 
 const StyledActiveInput = styled.input`
+  color: #bbbbbb;
   background: grey;
   width: 2.7em;
-  color: inherit;
   text-align: inherit;
   letter-spacing: inherit;
   border: inherit;

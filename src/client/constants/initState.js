@@ -1,5 +1,5 @@
 export const userInitState = {
-  userName: '', instrumentSelected: 1, selectedScale: 0, color: 'red', isPlaying: false,
+  username: 'fullstack6754', instrumentSelected: 1, selectedScale: 0, color: 'red', isPlaying: false,
 };
 
 export const mainInitState = {
@@ -40,7 +40,7 @@ export const mainInitState = {
   },
 
   local: {
-    localUserId: '',
+    localUserId: '12345',
     seqLen: 16,
     // localOctaveStart: 'C2'
   },

@@ -26,6 +26,7 @@ TempoSelector.propTypes = {
 
 const TempoTitle = styled.li`
   margin: auto 0.4em auto auto;
+  color: #ababab;
 `;
 
 export default TempoSelector;
