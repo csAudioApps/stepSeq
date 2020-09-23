@@ -36,7 +36,7 @@ const MainContainer = () => {
   const dly = useRef(null);
   const dist = useRef(null);
 
-  const [k1Val, setk1Val] = useState(-12);
+  const [k1Val, setk1Val] = useState(0.7);
   const [k2Val, setk2Val] = useState(0.5);
   const [k3Val, setk3Val] = useState(0.6);
   const [k4Val, setk4Val] = useState(0);
@@ -45,7 +45,10 @@ const MainContainer = () => {
   const handleK1Change = useCallback((val) => { setk1Val(val); }, []);
   useEffect(() => {
     if (bassSynth && bassSynth.current) {
-      bassSynth.current.volume.value = k1Val;
+      // console.log('handleK1Change -> k1Val', k1Val);
+      // console.log('handleK1Change -> log of k1Val', Math.log(k1Val));
+      // console.log('VOL: ', Math.log(k1Val) * 12);
+      bassSynth.current.volume.value = (Math.log(k1Val) * 8).toFixed(2);
       // console.log('bassSynth: ', bassSynth.current);
     }
   }, [k1Val]);
