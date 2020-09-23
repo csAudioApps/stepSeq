@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Share from '../components/Share';
 import Users from '../components/Users';
 
-const HeaderContainer = ({ localUserId, username }) => (
+const HeaderContainer = React.memo(({ localUserId, username }) => (
   <StyledDiv>
     <Share />
     <Users
@@ -11,7 +11,7 @@ const HeaderContainer = ({ localUserId, username }) => (
       username={username}
     />
   </StyledDiv>
-);
+));
 
 const StyledDiv = styled.div`
   display: flex;

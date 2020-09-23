@@ -5,7 +5,7 @@ export const userInitState = {
 export const mainInitState = {
   instruments: [
     {
-      name: 'Drums',
+      name: 'Percussion',
       soundPreset: 'BasicDrumset',
       mono: null,
       legato: false,
@@ -21,7 +21,7 @@ export const mainInitState = {
         [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
     },
     {
-      name: 'Synth1',
+      name: 'Polysynth 1',
       soundPreset: 'SpaceySynth',
       mono: false,
       legato: false,

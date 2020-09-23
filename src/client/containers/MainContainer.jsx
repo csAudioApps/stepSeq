@@ -9,13 +9,13 @@ import ControlBar from '../components/ControlBar';
 import KnobPanel from '../components/KnobPanel';
 import InstrumentColumn from '../components/InstrumentColumn';
 import Board from '../components/Board';
-import Knobs from '../components/KnobPanel';
 import Footer from '../components/Footer';
-import { updateNoteArray, toggleToneTransport } from '../helpers/audioHelpers';
-import { mainInitState, userInitState } from '../constants/initState';
+import { socket } from '../helpers/socket';
 import reducer from '../reducer/reducer';
 import * as types from '../reducer/reducerConstants';
-import { socket } from '../helpers/socket';
+import { updateNoteArray, toggleToneTransport } from '../helpers/audioHelpers';
+import { mainInitState, userInitState } from '../constants/initState';
+import { soundPresets } from '../constants/soundPresets';
 
 const MainContainer = () => {
   const [state, dispatch] = useReducer(reducer, mainInitState);
@@ -35,6 +35,44 @@ const MainContainer = () => {
   const drumSynth = useRef(null);
   const dly = useRef(null);
   const dist = useRef(null);
+
+  const [k1Val, setk1Val] = useState(-12);
+  const [k2Val, setk2Val] = useState(0.5);
+  const [k3Val, setk3Val] = useState(0.6);
+  const [k4Val, setk4Val] = useState(0);
+
+  // VOLUME
+  const handleK1Change = useCallback((val) => { setk1Val(val); }, []);
+  useEffect(() => {
+    if (bassSynth && bassSynth.current) {
+      bassSynth.current.volume.value = k1Val;
+      // console.log('bassSynth: ', bassSynth.current);
+    }
+  }, [k1Val]);
+
+  // DISTORTION
+  const handleK2Change = useCallback((val) => { setk2Val(val); }, []);
+  useEffect(() => {
+    if (dist && dist.current) {
+      dist.current.distortion = k2Val;
+      // console.log('dist: ', dist.current);
+    }
+  }, [k2Val]);
+
+  // DELAY FEEDBACK
+  const handleK3Change = useCallback((val) => { setk3Val(val); }, []);
+  useEffect(() => {
+    if (dly && dly.current) {
+      dly.current.feedback.value = k3Val;
+      // console.log('dly: ', dly.current);
+    }
+  }, [k3Val]);
+
+  // UNUSED
+  const handleK4Change = useCallback((val) => { setk4Val(val); }, []);
+  useEffect(() => {
+    console.log('knob 4:');
+  }, [k4Val]);
 
   // open socket connection
   useEffect(() => {
@@ -74,12 +112,11 @@ const MainContainer = () => {
 
   // Set up instrumentation
   useEffect(() => {
-    dly.current = new Tone.FeedbackDelay('8n', 0.5).toDestination();
+    dly.current = new Tone.FeedbackDelay('8n', k3Val).toDestination();
     // dly.current.wet = 0.9;
-    dist.current = new Tone.Distortion(0.4).connect(dly.current);
-    bassSynth.current = new Tone.Synth().connect(dist.current);
-
-    drumSynth.current = new Tone.MembraneSynth().toDestination();
+    dist.current = new Tone.Distortion(k2Val).connect(dly.current);
+    bassSynth.current = new Tone.Synth({ volume: k1Val }).connect(dist.current);
+    drumSynth.current = new Tone.MembraneSynth({ volume: -12 }).toDestination();
 
     return () => {
       bassSynth.current.dispose();
@@ -100,7 +137,7 @@ const MainContainer = () => {
     // console.log('C');
     if (bassSynth && bassSynth.current) {
       const bassNoteArr = updateNoteArray(instruments[1].grid, selectedScale, 2);
-      console.log('MainContainer -> bassNoteArr', bassNoteArr);
+      // console.log('MainContainer -> bassNoteArr', bassNoteArr);
       const bassSynthSeq = new Tone.Sequence((time, note) => {
         bassSynth.current.triggerAttackRelease(note, '8n', time);
       }, bassNoteArr).start(0);
@@ -188,7 +225,16 @@ const MainContainer = () => {
         />
         <StyledRow>
           <StyledCol>
-            <KnobPanel />
+            <KnobPanel
+              k1Val={k1Val}
+              handleK1Change={handleK1Change}
+              k2Val={k2Val}
+              handleK2Change={handleK2Change}
+              k3Val={k3Val}
+              handleK3Change={handleK3Change}
+              k4Val={k4Val}
+              handleK4Change={handleK4Change}
+            />
             <InstrumentColumn
               instruments={instruments}
               localUserId={localUserId}

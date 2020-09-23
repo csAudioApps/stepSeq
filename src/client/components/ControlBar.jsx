@@ -11,12 +11,12 @@ import TempoSelector from './TempoSelector';
 // import TimeDisplay from './TimeDisplay';
 
 const ControlBar = React.memo(({ selectedScale, dispatch, localUserId, isPlaying, curTempo }) => (
-  <StyledUL>
-    <ScaleSelector dispatch={dispatch} localUserId={localUserId} selectedScale={selectedScale} />
+  <ControlBarWrapper>
     <PlayPauseButton dispatch={dispatch} localUserId={localUserId} isPlaying={isPlaying} />
+    <ScaleSelector dispatch={dispatch} localUserId={localUserId} selectedScale={selectedScale} />
     <TempoSelector dispatch={dispatch} curTempo={curTempo} />
     {/* <TimeDisplay position={position} /> */}
-  </StyledUL>
+  </ControlBarWrapper>
 ));
 
 ControlBar.propTypes = {
@@ -28,7 +28,7 @@ ControlBar.propTypes = {
   curTempo: number.isRequired,
 };
 
-const StyledUL = styled.ul`
+const ControlBarWrapper = styled.ul`
   display: flex;
   height: 55px;
   border: 1px solid #444444;

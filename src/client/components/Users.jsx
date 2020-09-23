@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Users = ({ localUserId, username }) => {
+const Users = React.memo(({ localUserId, username }) => {
   console.log('username:', username, 'localUserId:', localUserId);
 
   return (
@@ -14,7 +14,7 @@ const Users = ({ localUserId, username }) => {
       </StyledUserListDisplay>
     </>
   );
-};
+});
 
 const StyledUserTitle = styled.span`
   color: #ababab;

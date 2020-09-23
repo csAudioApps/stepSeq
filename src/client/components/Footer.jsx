@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Footer = () => (
+const Footer = React.memo(() => (
   <StyledFooter>
     {/* <p>footer</p> */}
   </StyledFooter>
-);
+));
 
 export default Footer;
 

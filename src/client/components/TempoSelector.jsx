@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import InlineEdit from './InlineEdit';
 import { SET_TEMPO } from '../reducer/reducerConstants';
 
-const TempoSelector = ({ dispatch, curTempo }) => (
+const TempoSelector = React.memo(({ dispatch, curTempo }) => (
   <>
     <TempoTitle>Tempo</TempoTitle>
     <InlineEdit
@@ -17,7 +17,7 @@ const TempoSelector = ({ dispatch, curTempo }) => (
       }}
     />
   </>
-);
+));
 
 TempoSelector.propTypes = {
   dispatch: func.isRequired,
