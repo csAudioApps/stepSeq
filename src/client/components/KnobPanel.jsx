@@ -1,6 +1,7 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
-import { Dial } from 'react-nexusui';
+// import { Dial } from 'react-nexusui';
+import Dial from './Knob';
 
 const Knobs = React.memo(() => {
   const [k1Val, setk1Val] = useState(0);
