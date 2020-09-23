@@ -6,9 +6,10 @@ import * as Tone from 'tone';
 import styled from 'styled-components';
 import HeaderContainer from './HeaderContainer';
 import ControlBar from '../components/ControlBar';
+import KnobPanel from '../components/KnobPanel';
 import InstrumentColumn from '../components/InstrumentColumn';
 import Board from '../components/Board';
-import Knobs from '../components/Knobs';
+import Knobs from '../components/KnobPanel';
 import Footer from '../components/Footer';
 import { updateNoteArray, toggleToneTransport } from '../helpers/audioHelpers';
 import { mainInitState, userInitState } from '../constants/initState';
@@ -177,7 +178,7 @@ const MainContainer = () => {
         localUserId={localUserId}
         username={username}
       />
-      <StyledWrapper>
+      <MainWrapper>
         <ControlBar
           localUserId={localUserId}
           selectedScale={selectedScale}
@@ -187,13 +188,13 @@ const MainContainer = () => {
         />
         <StyledRow>
           <StyledCol>
+            <KnobPanel />
             <InstrumentColumn
               instruments={instruments}
               localUserId={localUserId}
               selectedInstr={selectedInstr}
               dispatch={dispatch}
             />
-            <Knobs />
           </StyledCol>
           <Board
             numRows={15}
@@ -203,13 +204,13 @@ const MainContainer = () => {
             dispatch={dispatch}
           />
         </StyledRow>
-      </StyledWrapper>
+      </MainWrapper>
       <Footer />
     </StyledMainContainer>
   );
 };
 
-const StyledWrapper = styled.div`
+const MainWrapper = styled.div`
   margin-top: 50px;
 `;
 
@@ -219,6 +220,7 @@ const StyledMainContainer = styled.div`
   align-items: center;
   height: 100vh;
   width: 100vw;
+    <KnobPanel />
 `;
 
 const StyledRow = styled.div`

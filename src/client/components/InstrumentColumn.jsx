@@ -50,7 +50,7 @@ InstrumentColumn.propTypes = {
 const InstrumentColumnWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 20px 0px;
+  padding: 24px 0px;
   min-width: 130px;
   flex-grow: 2;
   ${'' /* border: 1px solid grey; */}
@@ -61,8 +61,7 @@ const InstrumentColumnWrapper = styled.div`
 
 const InstrumentButton = styled.button`
   cursor: pointer;
-  margin-top: 24px;
-  margin-left: 20px;
+  margin: 0px 0px 24px 20px;
   background-color: transparent;
   font-weight: ${(props) => (props.isSelected ? 700 : 200)};
 `;
