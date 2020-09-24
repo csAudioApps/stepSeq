@@ -39,14 +39,16 @@ export default ScaleSelector;
 const ScaleTitle = styled.li`
   margin: auto 0.4em auto 20px;
   ${'' /* padding: 5px; */}
+  font-size: 0.95em;
   float: left;
   color: #eaeaea;
 `;
 
 const ScaleOption = styled.button`
   color: #ababab;
-  margin: 0.4em;
+  margin: 0.3em;
   float: left;
+  font-size: 0.95em;
   background: transparent;
   font-weight: ${(props) => (props.isSelected ? 700 : 200)};
 `;

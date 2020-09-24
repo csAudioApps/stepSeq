@@ -1,11 +1,11 @@
 export const userInitState = {
-  username: 'fullstack6754', instrumentSelected: 1, selectedScale: 0, color: 'red', isPlaying: false,
+  username: 'beatsmith519', instrumentSelected: 0, selectedScale: 0, color: 'red', isPlaying: false,
 };
 
 export const mainInitState = {
   instruments: [
     {
-      name: 'Percussion',
+      name: 'Percussion Synth',
       soundPreset: 'BasicDrumset',
       mono: null,
       legato: false,
@@ -13,7 +13,15 @@ export const mainInitState = {
         [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
     },
     {
-      name: 'Bass',
+      name: 'Classic 808',
+      soundPreset: 'BasicDrumset',
+      mono: null,
+      legato: false,
+      grid:
+      [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    },
+    {
+      name: 'Monobass',
       soundPreset: 'ClassicBassSynth',
       mono: true,
       legato: true,
@@ -21,8 +29,16 @@ export const mainInitState = {
         [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
     },
     {
-      name: 'Polysynth 1',
+      name: 'Spacey Poly',
       soundPreset: 'SpaceySynth',
+      mono: false,
+      legato: false,
+      grid:
+        [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    },
+    {
+      name: 'Meatwave',
+      soundPreset: 'Meatwave',
       mono: false,
       legato: false,
       grid:

@@ -39,43 +39,27 @@ const MainContainer = () => {
   const [k1Val, setk1Val] = useState(0.7);
   const [k2Val, setk2Val] = useState(0.5);
   const [k3Val, setk3Val] = useState(0.6);
-  const [k4Val, setk4Val] = useState(0);
+  const [k4Val, setk4Val] = useState(0.5);
 
-  // VOLUME
+  // BASS VOLUME KNOB
   const handleK1Change = useCallback((val) => { setk1Val(val); }, []);
   useEffect(() => {
     if (bassSynth && bassSynth.current) {
-      // console.log('handleK1Change -> k1Val', k1Val);
-      // console.log('handleK1Change -> log of k1Val', Math.log(k1Val));
-      // console.log('VOL: ', Math.log(k1Val) * 12);
       bassSynth.current.volume.value = (Math.log(k1Val) * 8).toFixed(2);
-      // console.log('bassSynth: ', bassSynth.current);
     }
   }, [k1Val]);
 
-  // DISTORTION
+  // BASS DISTORTION KNOB
   const handleK2Change = useCallback((val) => { setk2Val(val); }, []);
-  useEffect(() => {
-    if (dist && dist.current) {
-      dist.current.distortion = k2Val;
-      // console.log('dist: ', dist.current);
-    }
-  }, [k2Val]);
+  useEffect(() => { if (dist && dist.current) { dist.current.distortion = k2Val; } }, [k2Val]);
 
-  // DELAY FEEDBACK
+  // BASS DELAY FEEDBACK KNOB
   const handleK3Change = useCallback((val) => { setk3Val(val); }, []);
-  useEffect(() => {
-    if (dly && dly.current) {
-      dly.current.feedback.value = k3Val;
-      // console.log('dly: ', dly.current);
-    }
-  }, [k3Val]);
+  useEffect(() => { if (dly && dly.current) { dly.current.feedback.value = k3Val; } }, [k3Val]);
 
-  // UNUSED
+  // BASS DELAY MIX KNOB
   const handleK4Change = useCallback((val) => { setk4Val(val); }, []);
-  useEffect(() => {
-    console.log('knob 4:');
-  }, [k4Val]);
+  useEffect(() => { if (dly && dly.current) { dly.current.wet.value = k4Val; } }, [k4Val]);
 
   // open socket connection
   useEffect(() => {
@@ -113,58 +97,57 @@ const MainContainer = () => {
     };
   }, []);
 
-  // Set up instrumentation
+  // Set up Bass synth
   useEffect(() => {
     dly.current = new Tone.FeedbackDelay('8n', k3Val).toDestination();
-    // dly.current.wet = 0.9;
+    dly.current.wet.value = k4Val;
     dist.current = new Tone.Distortion(k2Val).connect(dly.current);
     bassSynth.current = new Tone.Synth({ volume: k1Val }).connect(dist.current);
-    drumSynth.current = new Tone.MembraneSynth({ volume: -12 }).toDestination();
 
     return () => {
       bassSynth.current.dispose();
       dist.current.dispose();
       dly.current.dispose();
-      drumSynth.current.dispose();
     };
   }, []);
 
-  // If user changes tempo, update delayTime
+  // Set up Percussion synth
   useEffect(() => {
-    console.log('in useEffect delay update');
-    dly.current.delayTime.value = '8n';
-  }, [state.status.tempo]);
+    drumSynth.current = new Tone.MembraneSynth({ volume: -12 }).toDestination();
+    return () => { drumSynth.current.dispose(); };
+  }, []);
 
-  // Bass Sequence
+  // Set up and handle changes to SEQUENCE for Bass
   useEffect(() => {
-    // console.log('C');
     if (bassSynth && bassSynth.current) {
-      const bassNoteArr = updateNoteArray(instruments[1].grid, selectedScale, 2);
-      // console.log('MainContainer -> bassNoteArr', bassNoteArr);
+      const bassNoteArr = updateNoteArray(instruments[2].grid, selectedScale, 2);
       const bassSynthSeq = new Tone.Sequence((time, note) => {
         bassSynth.current.triggerAttackRelease(note, '8n', time);
       }, bassNoteArr).start(0);
 
-      // dispose on component tear-down
       return () => bassSynthSeq.dispose();
     }
     return null;
   }, [instruments, selectedScale]);
 
-  // Drum Sequence
+  // Set up and handle changes to SEQUENCE for Percussion Synth
   useEffect(() => {
-    // console.log('D');
     if (drumSynth && drumSynth.current) {
       const drumNoteArr = updateNoteArray(instruments[0].grid, selectedScale, 0);
       const drumSynthSeq = new Tone.Sequence((time, note) => {
         drumSynth.current.triggerAttackRelease(note, '8n', time);
       }, drumNoteArr).start(0);
 
-      // dispose on component tear-down
       return () => drumSynthSeq.dispose();
     }
     return null;
   }, [instruments, selectedScale]);
+
+  // If user changes tempo, update delayTime
+  useEffect(() => {
+    console.log('in useEffect delay update');
+    dly.current.delayTime.value = '8n';
+  }, [state.status.tempo]);
 
   const handleUserKeyPress = useCallback((event) => {
     const { code, altKey } = event;

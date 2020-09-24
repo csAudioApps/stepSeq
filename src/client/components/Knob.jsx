@@ -32,7 +32,8 @@ const Dial = memo(({
       mode,
     });
     onReady(dial.current);
-    dial.current.colorize('accent', '#c9f9ff');
+    // dial.current.colorize('accent', 'rgba(201, 249, 255, 0.7)');
+    dial.current.colorize('accent', '#c1c1c1');
     dial.current.colorize('fill', '#333');
     dial.current.on('change', (newState) => {
       onChange(newState);

@@ -8,7 +8,7 @@ const Knobs = React.memo(({
   k1Val, k2Val, k3Val, k4Val,
   handleK1Change, handleK2Change, handleK3Change, handleK4Change,
 }) => {
-  console.log('Knobs, k1Val: ', k1Val, 'k2Val', k2Val);
+  // console.log('Knobs, k1Val: ', k1Val, 'k2Val', k2Val);
 
   return (
     <KnobPanelWrapper>
