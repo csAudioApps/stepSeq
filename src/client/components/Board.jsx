@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import GridButton from './GridButton';
 
 const Board = ({
@@ -38,14 +39,21 @@ const Board = ({
   };
 
   return (
-    <div className="Board">
+    <StyledBoard>
       <table>
         <tbody>
           {renderButtons()}
         </tbody>
       </table>
-    </div>
+    </StyledBoard>
   );
 };
+
+const StyledBoard = styled.div`
+  padding: 12px;
+  ${'' /* border: 1px solid grey; */}
+  border-bottom: 1px solid #444444;
+  border-right: 1px solid #444444;
+`;
 
 export default Board;

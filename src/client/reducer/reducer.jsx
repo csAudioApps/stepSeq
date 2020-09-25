@@ -4,11 +4,11 @@ import { socket } from '../helpers/socket';
 import scales from '../constants/scales';
 
 const reducer = (state, action) => {
-  console.log('reducing, state: ', state);
+  // console.log('reducing, state: ', state);
   // console.log('reducing, action: ', action);
   let newState;
   let instrumentSelected;
-  console.log('action.type: ', action.type);
+  // console.log('action.type: ', action.type);
   switch (action.type) {
     case reducerConstants.SET_LOCAL_USERID: {
       return {

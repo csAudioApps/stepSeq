@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './components/App';
-import _styles from './styles/styles.scss';
+import App from './containers/App';
 
 const root = document.createElement('div');
 root.id = 'root';
