@@ -3,20 +3,19 @@
 /* eslint-disable consistent-return */
 import React, { useState, useEffect, useRef, useReducer, useCallback } from 'react';
 import * as Tone from 'tone';
+import styled from 'styled-components';
 import HeaderContainer from './HeaderContainer';
 import ControlBar from '../components/ControlBar';
+import KnobPanel from '../components/KnobPanel';
 import InstrumentColumn from '../components/InstrumentColumn';
 import Board from '../components/Board';
-import Knobs from '../components/Knobs';
 import Footer from '../components/Footer';
-import { updateNoteArray, toggleToneTransport } from '../helpers/audioHelpers';
-import { mainInitState, userInitState } from '../constants/initState';
+import { socket } from '../helpers/socket';
 import reducer from '../reducer/reducer';
 import * as types from '../reducer/reducerConstants';
-import { socket } from '../helpers/socket';
-// import uuid from "uuid";
-
-// const seqLen = 16;
+import { updateNoteArray, toggleToneTransport } from '../helpers/audioHelpers';
+import { mainInitState, userInitState } from '../constants/initState';
+import { soundPresets } from '../constants/soundPresets';
 
 const MainContainer = () => {
   const [state, dispatch] = useReducer(reducer, mainInitState);
@@ -27,14 +26,40 @@ const MainContainer = () => {
   const { localUserId } = local;
   const selectedScale = (users[localUserId]) ? users[localUserId].selectedScale : 0;
   const selectedInstr = (users[localUserId]) ? users[localUserId].instrumentSelected : 1;
+  const username = (users[localUserId]) ? users[localUserId].username : '';
   const gridForCurInstr = (users[localUserId]) ? instruments[selectedInstr].grid : [[]];
   const isPlaying = (users[localUserId]) ? users[localUserId].isPlaying : false;
 
   const transport = useRef(null);
   const bassSynth = useRef(null);
   const drumSynth = useRef(null);
-  let dly;
-  let dist;
+  const dly = useRef(null);
+  const dist = useRef(null);
+
+  const [k1Val, setk1Val] = useState(0.7);
+  const [k2Val, setk2Val] = useState(0.5);
+  const [k3Val, setk3Val] = useState(0.6);
+  const [k4Val, setk4Val] = useState(0.5);
+
+  // BASS VOLUME KNOB
+  const handleK1Change = useCallback((val) => { setk1Val(val); }, []);
+  useEffect(() => {
+    if (bassSynth && bassSynth.current) {
+      bassSynth.current.volume.value = (Math.log(k1Val) * 8).toFixed(2);
+    }
+  }, [k1Val]);
+
+  // BASS DISTORTION KNOB
+  const handleK2Change = useCallback((val) => { setk2Val(val); }, []);
+  useEffect(() => { if (dist && dist.current) { dist.current.distortion = k2Val; } }, [k2Val]);
+
+  // BASS DELAY FEEDBACK KNOB
+  const handleK3Change = useCallback((val) => { setk3Val(val); }, []);
+  useEffect(() => { if (dly && dly.current) { dly.current.feedback.value = k3Val; } }, [k3Val]);
+
+  // BASS DELAY MIX KNOB
+  const handleK4Change = useCallback((val) => { setk4Val(val); }, []);
+  useEffect(() => { if (dly && dly.current) { dly.current.wet.value = k4Val; } }, [k4Val]);
 
   // open socket connection
   useEffect(() => {
@@ -61,66 +86,68 @@ const MainContainer = () => {
 
   // Initial (one-time) Tone and Tranpost Setup
   useEffect(() => {
-    // console.log('A');
     Tone.Context.latencyHint = 'playback';
     Tone.Transport.bpm.value = state.status.tempo ? state.status.tempo : 120;
     transport.current = new Tone.Sequence((time, curStep) => {
       setStep(curStep);
     }, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], '8n').start(0);
 
-    dly = new Tone.FeedbackDelay('8n', 0.5).toDestination();
-    dist = new Tone.Distortion(0.4).connect(dly);
-    // dist = new Tone.Distortion(0.4).toDestination();
-    bassSynth.current = new Tone.Synth().connect(dist);
-    drumSynth.current = new Tone.MembraneSynth().toDestination();
-    // console.log('B');
-
-    // clean up side effects
     return () => {
       transport.current.dispose();
-      drumSynth.current.dispose();
-      bassSynth.current.dispose();
-      dly.dispose();
-      dist.dispose();
     };
   }, []);
 
-  // PRETTY SURE THIS IS WRONG WAY TO DO THIS, but trying to update delay tempo on tempo change
+  // Set up Bass synth
   useEffect(() => {
-    console.log('in useEffect delay update');
-    dly = new Tone.FeedbackDelay('8n', 0.5).toDestination();
-  }, [dly, state.status.tempo]);
+    dly.current = new Tone.FeedbackDelay('8n', k3Val).toDestination();
+    dly.current.wet.value = k4Val;
+    dist.current = new Tone.Distortion(k2Val).connect(dly.current);
+    bassSynth.current = new Tone.Synth({ volume: k1Val }).connect(dist.current);
 
-  // Bass Sequence
+    return () => {
+      bassSynth.current.dispose();
+      dist.current.dispose();
+      dly.current.dispose();
+    };
+  }, []);
+
+  // Set up Percussion synth
   useEffect(() => {
-    // console.log('C');
+    drumSynth.current = new Tone.MembraneSynth({ volume: -12 }).toDestination();
+    return () => { drumSynth.current.dispose(); };
+  }, []);
+
+  // Set up and handle changes to SEQUENCE for Bass
+  useEffect(() => {
     if (bassSynth && bassSynth.current) {
-      const bassNoteArr = updateNoteArray(instruments[1].grid, selectedScale, 2);
-      console.log('MainContainer -> bassNoteArr', bassNoteArr);
+      const bassNoteArr = updateNoteArray(instruments[2].grid, selectedScale, 2);
       const bassSynthSeq = new Tone.Sequence((time, note) => {
         bassSynth.current.triggerAttackRelease(note, '8n', time);
       }, bassNoteArr).start(0);
 
-      // clean up side effects
       return () => bassSynthSeq.dispose();
     }
     return null;
   }, [instruments, selectedScale]);
 
-  // Drum Sequence
+  // Set up and handle changes to SEQUENCE for Percussion Synth
   useEffect(() => {
-    // console.log('D');
     if (drumSynth && drumSynth.current) {
       const drumNoteArr = updateNoteArray(instruments[0].grid, selectedScale, 0);
       const drumSynthSeq = new Tone.Sequence((time, note) => {
         drumSynth.current.triggerAttackRelease(note, '8n', time);
       }, drumNoteArr).start(0);
 
-      // clean up side effects
       return () => drumSynthSeq.dispose();
     }
     return null;
   }, [instruments, selectedScale]);
+
+  // If user changes tempo, update delayTime
+  useEffect(() => {
+    console.log('in useEffect delay update');
+    dly.current.delayTime.value = '8n';
+  }, [state.status.tempo]);
 
   const handleUserKeyPress = useCallback((event) => {
     const { code, altKey } = event;
@@ -169,43 +196,74 @@ const MainContainer = () => {
   }, [handleUserKeyPress]);
 
   return (
-    <div className="MainContainer">
-      <div id="time" />
-      <div id="seconds" />
-      <HeaderContainer />
-      <div className="body">
-        <div className="VisualContainer">
-          <ControlBar
-            localUserId={localUserId}
-            selectedScale={selectedScale}
-            dispatch={dispatch}
-            isPlaying={isPlaying}
-            curTempo={state.status.tempo}
-          />
-          <div className="row">
-            <div className="column">
-              <InstrumentColumn
-                instruments={instruments}
-                localUserId={localUserId}
-                selectedInstr={selectedInstr}
-                dispatch={dispatch}
-              />
-              <Knobs />
-            </div>
-            <Board
-              numRows={15}
-              numColumns={16}
-              curStepColNum={step}
-              gridState={gridForCurInstr}
+    <StyledMainContainer>
+      <HeaderContainer
+        localUserId={localUserId}
+        username={username}
+      />
+      <MainWrapper>
+        <ControlBar
+          localUserId={localUserId}
+          selectedScale={selectedScale}
+          dispatch={dispatch}
+          isPlaying={isPlaying}
+          curTempo={state.status.tempo}
+        />
+        <StyledRow>
+          <StyledCol>
+            <KnobPanel
+              k1Val={k1Val}
+              handleK1Change={handleK1Change}
+              k2Val={k2Val}
+              handleK2Change={handleK2Change}
+              k3Val={k3Val}
+              handleK3Change={handleK3Change}
+              k4Val={k4Val}
+              handleK4Change={handleK4Change}
+            />
+            <InstrumentColumn
+              instruments={instruments}
+              localUserId={localUserId}
+              selectedInstr={selectedInstr}
               dispatch={dispatch}
             />
-          </div>
-        </div>
-      </div>
+          </StyledCol>
+          <Board
+            numRows={15}
+            numColumns={16}
+            curStepColNum={step}
+            gridState={gridForCurInstr}
+            dispatch={dispatch}
+          />
+        </StyledRow>
+      </MainWrapper>
       <Footer />
-    </div>
+    </StyledMainContainer>
   );
 };
+
+const MainWrapper = styled.div`
+  margin-top: 50px;
+`;
+
+const StyledMainContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+    <KnobPanel />
+`;
+
+const StyledRow = styled.div`
+  display: flex;
+  flex-grow: 1;
+`;
+
+const StyledCol = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 export default MainContainer;
 

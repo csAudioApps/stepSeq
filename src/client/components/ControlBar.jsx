@@ -4,20 +4,19 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import { number, func, string, bool } from 'prop-types';
 import React from 'react';
+import styled from 'styled-components';
 import PlayPauseButton from './PlayPauseButton';
 import ScaleSelector from './ScaleSelector';
 import TempoSelector from './TempoSelector';
 // import TimeDisplay from './TimeDisplay';
 
 const ControlBar = React.memo(({ selectedScale, dispatch, localUserId, isPlaying, curTempo }) => (
-  <div className="control-bar">
-    <ul>
-      <PlayPauseButton dispatch={dispatch} localUserId={localUserId} isPlaying={isPlaying} />
-      <ScaleSelector dispatch={dispatch} localUserId={localUserId} selectedScale={selectedScale} />
-      <TempoSelector dispatch={dispatch} curTempo={curTempo} />
-      {/* <TimeDisplay position={position} /> */}
-    </ul>
-  </div>
+  <ControlBarWrapper>
+    <PlayPauseButton dispatch={dispatch} localUserId={localUserId} isPlaying={isPlaying} />
+    <ScaleSelector dispatch={dispatch} localUserId={localUserId} selectedScale={selectedScale} />
+    <TempoSelector dispatch={dispatch} curTempo={curTempo} />
+    {/* <TimeDisplay position={position} /> */}
+  </ControlBarWrapper>
 ));
 
 ControlBar.propTypes = {
@@ -28,5 +27,11 @@ ControlBar.propTypes = {
   isPlaying: bool.isRequired,
   curTempo: number.isRequired,
 };
+
+const ControlBarWrapper = styled.ul`
+  display: flex;
+  height: 55px;
+  border: 1px solid #444444;
+`;
 
 export default ControlBar;
